@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unit Tests</title>
+  </head>
+  <body>
+    <canvas id="gameCanvas" width="50" height="5" style="border:1px solid #000000;">
+      Your browser does not support the HTML5 canvas tag.
+    </canvas>
+
+
+    <script src="libs/polyfill.js"></script>
+    <script src="libs/jszip.js"></script>
+
+    <script src="be/BE.js"></script>
+    <script src="be/util/assert.js"></script>
+    <script src="be/Definitions.js"></script>
+    <script src="be/util/Util.js"></script>
+    <script src="be/util/Random.js"></script>
+    <script src="be/util/Function.js"></script>
+    <script src="be/util/Array.js"></script>
+    <script src="be/util/string.js"></script>
+    <script src="be/util/Timer.js"></script>
+    <script src="be/util/sound.js"></script>
+    <script src="be/geometry/Vector.js"></script>
+    <script src="be/geometry/Rectangle.js"></script>
+    <script src="be/geometry/CoordinatesConversion.js"></script>
+    <script src="be/singleton/Screen.js"></script>
+    <script src="be/singleton/Events.js"></script>
+    <script src="be/singleton/ResourceStore.js"></script>
+    <script src="be/agent/mixin/TimeToLive.js"></script>
+    <script src="be/agent/mixin/SensingWorldBorder.js"></script>
+    <script src="be/agent/mixin/SensingAgent.js"></script>
+    <script src="be/agent/mixin/Animated.js"></script>
+    <script src="be/agent/mixin/ChangesImageWithState.js"></script>
+    <script src="be/agent/mixin/Movable.js"></script>
+    <script src="be/agent/mixin/Turnable.js"></script>
+    <script src="be/agent/Agent.js"></script>
+    <script src="be/agent/Container.js"></script>
+    <script src="be/effect/Color.js"></script>
+    <script src="be/effect/drawingeffect/DrawingEffect.js"></script>
+    <script src="be/effect/drawingeffect/shape/Circle.js"></script>
+    <script src="be/effect/drawingeffect/shape/Square.js"></script>
+    <script src="be/effect/drawingeffect/shape/Star.js"></script>
+    <script src="be/effect/drawingeffect/shape/Triangle.js"></script>
+    <script src="be/effect/ImageFilter/ImageFilter.js"></script>
+    <script src="be/effect/ImageFilter/GrayScale.js"></script>
+    <script src="be/effect/ImageFilter/Invert.js"></script>
+    <script src="be/effect/ImageFilter/Colorize.js"></script>
+    <script src="be/effect/ImageFilter/IncreaseTransparency.js"></script>
+    <script src="be/effect/ImageFilter/Sepia.js"></script>
+    <script src="be/effect/ImageFilter/Noise.js"></script>
+    <script src="be/agent/mixin/ImageFilter/Fade.js"></script>
+    <script src="be/agent/mixin/ImageFilter/Pulsate.js"></script>
+    <script src="be/agent/mixin/ImageFilter/AsyncPulsate.js"    ></script>
+    <script src="be/agent/mixin/ImageFilter/Raster.js"></script>
+    <script src="be/agent/mixin/ImageFilter/Spin.js"></script>
+    <script src="be/agent/mixin/actionscheduling/Action.js"></script>
+    <script src="be/agent/mixin/actionscheduling/ActionScheduler.js"></script>
+    <script src="be/agent/Camera.js"></script>
+    <script src="be/agent/ui/Widget.js"></script>
+    <script src="be/agent/ui/mixin/ChangeOnMouseDown.js"></script>
+    <script src="be/agent/ui/mixin/Draggable.js"></script>
+    <script src="be/agent/ui/Button.js"></script>
+    <script src="be/agent/ui/ToggleButton.js"></script>
+    <script src="be/agent/ui/Label.js"></script>
+    <script src="be/agent/ui/Score.js"></script>
+    <script src="be/agent/ui/BackButton.js"></script>
+
+    <!-- automatically created file -->
+    <script src="js/resource_loading.js"></script>-->
+
+
+    <script src="./js/UnitTests.js"></script>
+    <script src="./js/testsuite.js"></script>
+
+    <script src="./js/util/coordinatesconversiontest.js"></script>
+    <script src="./js/util/functionutiltest.js"></script>
+    <script src="./js/util/arrayutiltest.js"></script>
+    <script src="./js/geometry/vectortest.js"></script>
+    <script src="./js/geometry/rectangletest.js"></script>
+    <script src="./js/singletons/resourcestoretest.js"></script>
+    <script src="./js/resource_loading.js"></script>
+
+<!---
+    <script src="./js/singletons/screentest.js"></script>
+    <script src="./js/event tests not working *** event management needed in test suit
+     <script src="./js/singletons/eventstest.js"></script>
+-->
+    <script src="./js/agents/agenttest.js"></script>
+    <script src="./js/agents/containertest.js"></script>
+    <script src="./js/agents/mixins/timetolivetest.js"></script>
+<!--
+  CANNOT FIND MEDIA!!!! --
+    <script src="./js/agents/mixins/animatedtest.js"></script>
+-->
+    <script src="./js/agents/singletons/cameratest.js"></script>
+
+    <script>
+      BE.UnitTests.testSuite.setPageContainer("messages");  BE.start(new BE.UnitTests.TestApp());
+    </script>
+  </body>
+</html>

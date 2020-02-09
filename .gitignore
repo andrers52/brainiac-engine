@@ -1,0 +1,16 @@
+art/
+*.png
+*.jpg
+*.svg
+*.gif
+*.wav
+*.mp3
+*.ogg
+*.log
+*.log
+*.json
+node_modules/
+libs
+dist/
+media/
+target/
