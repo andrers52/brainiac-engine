@@ -14,3 +14,6 @@ Object.defineProperty(global, "navigator", {
   configurable: true,
 });
 global.Node = window.Node;
+
+// Export the setup for use in tests
+export { jsdom, window };
