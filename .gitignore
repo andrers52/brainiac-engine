@@ -1,0 +1,10 @@
+*.log
+*.log
+node_modules/
+libs
+dist/
+target/
+package-lock.json
+
+# MAC stuff
+.DS_Store

@@ -1,0 +1,4 @@
+--require esm
+--require test/setup.js
+--recursive
+--timeout 5000

@@ -1,0 +1,134 @@
+Todo
+
+- remove bespoke unit test framework
+ - convert all tests to mocha
+
+
+- integrate canvas with html widgets
+  - remove widget children (button, etc...)
+  - change widget to widget placeholder
+
+- move draw world border to z32
+
+create separate examples from interactive tests
+
+- Environment  - Agents behavior execution
+  - add nearby parameter (nearby 2, 3, 4 squares, etc)
+  - execute with nearby user 2 (now is 1)
+
+- add genetic engine to ai agents
+  - create mechanism to recover best agents minds to server
+** FIX THIS **
+- particles overreacting zoom
+
+** REFACTORING **
+move socket management in BEClient to ClientConnector (to be created).
+
+-config.json -> BEConfig object in be/common
+  - create single version option in config
+    - BeServer runs on a webworker
+  - run both z32 and mimi games
+
+
+
+
+
+
+
+
+
+- create events from engine to game
+    -> call from showInitialScreenAndReturnUserName (create and destroy Dom node elements)
+  -> add technique to manual (event names (engine readme) and data to send to update client (client readme))
+
+*** DEVELOPMENT ***
+
+-- Resources loading ---
+- load resource over websocket(? will affect cache?)
+
+-- Performance --
+- think about parallel coordinate convertion
+
+-- Build --
+- build client for mobile
+
+-- UI --
+- refactoring particles (fix and use all possibilities already created)
+- use BE widgets to create a dasboard overlay on the screen that will show informations
+(like scores) and act on actions, like radio buttons for weapon selection, compass, etc...
+
+
+-- Graphics --
+- each agent type must hold its pre (not created yet) and post drawing effects.
+Z32 client must call the apropriate agent to draw the effect, instead of doing it all itself.
+Currently it is being used to show the agent name, energy and particles.
+- Add reference position to particle so it can follow a path relative to the reference (berzier path, circle, etc)
+
+add all kinds of tests to sensing mixin
+  - enemy in front
+  - enemy at Back
+
+ai enemies diversification
+  - define basic ship parent code
+
+---------------------------------------------------
+
+-- Users --
+create support for user accounts
+
+
+
+- AUDIO
+use evoaudio to produce tracks
+
+
+- PERFORMANCE
+  - Definitions.AGENTS_EXECUTION_INTERVAL SHOULD BE EQUAL
+    TO THE MEDIUM NETWORK DELAY.
+
+
+- CONFIG
+  add vector type selection to config file (vector3d, vector2d)
+    vector -> vector2d
+    vector <- configSelect(vector2d, vector3d)
+  add collision type to config
+    - @ otherAgentsOverlappingWithProposedRectangle
+  enable/disable zsorting by vector type selection (vector2d disables)
+
+
+redraw all image elements, making them beautiful (acceptable)
+-- REFERENCE --
+  - http://perfectionkills.com/exploring-canvas-drawing-techniques/
+-- ITEMS --
+
+
+-- Backlog --
+
+add artificial intelligence
+
+create recurrent function functionality (as in updateClientInfo and other with setupInterval)
+
+register all media and transmit only the id (images, sounds, procedural sounds)
+
+add mixin behavior (create splash when die) - used by all weapons in z32
+
+move animation to client (tell the client what is the animation and only update status)
+
+add moviment vector to move test (can move away from colliding agent or to the inside of the world)
+ship and camera actions using scheduler
+
+;----------------------------------------
+
+- Create all image variations before starting client
+  - rotation, fading, pulsate, etc.
+  - draw just bit-blit to be faster
+
+apply memoize to image resize and rotation
+retain world aspect ratio in screen
+
+be version number separated from game version
+  - create BEConfig singleton in be/common
+
+create random color effect for agent (generalizing from shapes)
+-------------------------
+
