@@ -1,6 +1,6 @@
 {
     "name": "brainiac-engine",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Brainiac Engine",
     "repository": "https://github.com/andrers52/brainiac-engine.git",
     "main": "index.js",
