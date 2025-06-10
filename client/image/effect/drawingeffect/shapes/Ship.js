@@ -2,8 +2,11 @@
 
 import { vect } from "../../../../../common/geometry/Vector.js";
 
-//receives size and array of effects to use in order to create new image,
-//store and return new name.
+/**
+ * Draws a ship shape on the canvas context
+ * Creates a triangular ship-like shape with yellow stroke
+ * @param {CanvasRenderingContext2D} context - The canvas 2D rendering context
+ */
 export function Ship(context) {
   //points in canvas orientation (inverted y)
   let padding = 30;

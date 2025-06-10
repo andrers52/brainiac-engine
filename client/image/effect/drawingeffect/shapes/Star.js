@@ -2,7 +2,15 @@
 
 import { vect } from "../../../../../common/geometry/Vector.js";
 
-//(context.canvas context, x of center, y of center, radius, number of points, fraction of radius for inset [0,1))
+/**
+ * Creates a star shape effect on the canvas
+ * @param {CanvasRenderingContext2D} context - The canvas 2D rendering context
+ * @param {number} center_x - X coordinate of the star center
+ * @param {number} center_y - Y coordinate of the star center
+ * @param {number} radius - Outer radius of the star
+ * @param {number} points - Number of star points
+ * @param {number} inset_radius_ratio - Fraction of radius for inset points [0,1)
+ */
 function starEffect(
   context,
   center_x,
@@ -29,8 +37,11 @@ function starEffect(
   context.restore();
 }
 
-//receives size and array of effects to use in order to create new image,
-//store and return new name.
+/**
+ * Draws a star shape on the canvas context
+ * Creates a 5-pointed star centered on the canvas
+ * @param {CanvasRenderingContext2D} context - The canvas 2D rendering context
+ */
 export function Star(context) {
   let position = vect(context.canvas.width / 2, context.canvas.height / 2);
   let radius = Math.min(context.canvas.width, context.canvas.height) / 2;

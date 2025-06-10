@@ -1,11 +1,14 @@
 "use strict";
 
-//parameters are:
-//{
-//  startColor: <color>,
-//  endColor: <color>,
-//  fillRect: [true|false]
-
+/**
+ * Creates a radial gradient effect on the canvas
+ * @param {CanvasRenderingContext2D} context - The canvas 2D rendering context
+ * @param {Object} parameters - Gradient configuration object
+ * @param {string} parameters.startColor - The color at the center of the gradient
+ * @param {string} parameters.endColor - The color at the edge of the gradient
+ * @param {boolean} [parameters.fillRect] - Whether to fill the entire rectangle or just a circle
+ * @param {string} [parameters.combineOption] - The global composite operation to use
+ */
 export function RadialGradient(context, parameters) {
   var radgrad = context.createRadialGradient(
     context.canvas.width / 2,

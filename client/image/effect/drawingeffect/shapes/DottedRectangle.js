@@ -1,7 +1,10 @@
 "use strict";
 
-//receives size and array of effects to use in order to create new image,
-//store and return new name.
+/**
+ * Draws a dotted rectangle pattern on the canvas context
+ * Creates a rectangle border with a grid of dots inside
+ * @param {CanvasRenderingContext2D} context - The canvas 2D rendering context
+ */
 export function DottedRectangle(context) {
   let lineWidth = 2;
   let numDotsPerWidth = 20;

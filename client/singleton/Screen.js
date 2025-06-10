@@ -9,6 +9,16 @@ import { TextToImage } from "../TextToImage.js";
 import { particlesContainer } from "./ParticlesContainer.js";
 import { resourceStore } from "./ResourceStore.js";
 
+/**
+ * @fileoverview Screen management system for canvas rendering and game presentation.
+ * Handles canvas creation, resizing, agent rendering, background drawing, and animation loops.
+ */
+
+/**
+ * Screen constructor - Manages the game canvas and rendering operations.
+ * Provides functionality for drawing agents, backgrounds, and managing the game presentation loop.
+ * @constructor
+ */
 function Screen() {
   let canvas;
   let context;
@@ -18,12 +28,22 @@ function Screen() {
   let canvasId;
   let camera;
   let minScreenDimension;
+
+  /**
+   * @memberof Screen
+   * @type {number}
+   * @description Zoom out factor for scaling display elements.
+   */
   this.zoomOutFactor = 1;
+
   let onBeforeDrawAgent;
   let onAfterDrawAgent;
   let onAfterDrawScreen;
   let getVisibleAgents;
 
+  /**
+   * Creates and adds the canvas element to the DOM.
+   */
   function addCanvas() {
     if (document.getElementById(canvasId)) return;
 
@@ -33,21 +53,45 @@ function Screen() {
     canvas.focus();
   }
 
+  /**
+   * Hides the canvas from view.
+   * @memberof Screen
+   */
   this.hideCanvas = function () {
     canvas.style.visibility = "hidden";
   };
+
+  /**
+   * Shows the canvas.
+   * @memberof Screen
+   */
   this.showCanvas = function () {
     canvas.style.visibility = "visible";
   };
+
+  /**
+   * Gets the 2D rendering context of the canvas.
+   * @memberof Screen
+   * @returns {CanvasRenderingContext2D} The canvas 2D context.
+   */
   this.getContext = function () {
     return context;
   };
 
+  /**
+   * Sets the background image for the screen.
+   * @memberof Screen
+   * @param {string} imageName - Name of the background image resource.
+   */
   this.setBackgroundImageName = function (imageName) {
     backgroundImage =
       !!imageName && resourceStore.retrieveResourceObject(imageName);
   };
 
+  /**
+   * Calculates the zoom out factor based on minimum screen dimension requirements.
+   * @returns {number} The calculated zoom out factor.
+   */
   function defineZoomOutFactor() {
     let resultFactor;
     let screenSize = screen.getSize();
@@ -66,7 +110,20 @@ function Screen() {
     return resultFactor;
   }
 
-  //needs to be initialized before use
+  /**
+   * Initializes the screen with configuration parameters and sets up the canvas.
+   * @memberof Screen
+   * @param {Object} config - Screen configuration object.
+   * @param {Function} config.onBeforeDrawAgentInput - Callback before drawing each agent.
+   * @param {Function} config.onAfterDrawAgentInput - Callback after drawing each agent.
+   * @param {Function} config.onAfterDrawScreenInput - Callback after drawing the screen.
+   * @param {number} config.minScreenDimensionInput - Minimum screen dimension requirement.
+   * @param {Function} config.getVisibleAgentsInput - Function to get visible agents.
+   * @param {Object} config.cameraInput - Camera object reference.
+   * @param {string} config.canvasIdInput - ID for the canvas element.
+   * @param {number} config.worldWidth - Width of the game world.
+   * @param {number} config.worldHeight - Height of the game world.
+   */
   this.start = function ({
     onBeforeDrawAgentInput,
     onAfterDrawAgentInput,
@@ -100,41 +157,73 @@ function Screen() {
     particlesContainer.start(camera);
   };
 
+  /**
+   * Sets the world size to match the camera size.
+   * @memberof Screen
+   */
   this.setWorldToCameraSize = function () {
     worldRectangle.size = camera.rectangle.size.clone();
   };
 
+  /**
+   * Sets the camera size to match the canvas size with zoom factor.
+   * @memberof Screen
+   * @returns {Vector} The camera rectangle size.
+   */
   this.setCameraSizeToCanvas = function () {
     camera.rectangle.size = this.getSize().multiplyByScalar(this.zoomOutFactor);
     return camera.rectangle.size;
   };
 
+  /**
+   * Gets the canvas element.
+   * @memberof Screen
+   * @returns {HTMLCanvasElement} The canvas element.
+   */
   this.getCanvas = function () {
     return canvas;
   };
 
-  // Runs each time the DOM window resize event fires.
-  // Resets the canvas dimensions to match window,
-  // then draws the new borders accordingly.
-  window.addEventListener("onResizeCanvas", (event) => {
-    screen.adjustCanvasToWindowSize();
-  });
+  /**
+   * Adjusts canvas dimensions to match window size and updates zoom factor.
+   * @memberof Screen
+   */
   this.adjustCanvasToWindowSize = function () {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     screen.zoomOutFactor = defineZoomOutFactor();
   };
 
+  /**
+   * Gets the canvas element (duplicate method for compatibility).
+   * @memberof Screen
+   * @returns {HTMLCanvasElement} The canvas element.
+   */
   this.getCanvas = function () {
     return canvas;
   };
+
+  /**
+   * Gets the size of the canvas as a Vector.
+   * @memberof Screen
+   * @returns {Vector} Canvas dimensions.
+   */
   this.getSize = function () {
     return new Vector(canvas.width, canvas.height);
   };
+
+  /**
+   * Gets the canvas as a rectangle starting at origin.
+   * @memberof Screen
+   * @returns {Rectangle} Canvas rectangle.
+   */
   this.getRectangle = function () {
     return rect(0, 0, canvas.width, canvas.height);
   };
 
+  /**
+   * Clears the canvas with a black background.
+   */
   function clear() {
     context.save();
     context.fillStyle = "black";
@@ -142,7 +231,11 @@ function Screen() {
     context.restore();
   }
 
-  //opacity: 0-> opaque, 1-> transparent, undefined -> not set
+  /**
+   * Draws an agent's image on the canvas with proper transformations.
+   * @param {Object} agent - Agent object to draw.
+   * @param {Rectangle} canvasRectangle - Canvas coordinates for drawing.
+   */
   function drawAgentImage(agent, canvasRectangle) {
     context.save();
 
@@ -187,6 +280,9 @@ function Screen() {
     context.restore();
   }
 
+  /**
+   * Draws the background image with proper camera transformations.
+   */
   function drawBackground() {
     if (!camera) return;
     let imageRectangle = rect(
@@ -227,6 +323,10 @@ function Screen() {
     );
   }
 
+  /**
+   * Creates an image from text for agents that have text but no image.
+   * @param {Object} agent - Agent object with text properties.
+   */
   function createImageFromTextForAgent(agent) {
     //try to localize the text
     // NOTE: not using localization for now...
@@ -248,6 +348,11 @@ function Screen() {
     agent.imageName = result.imageName;
   }
 
+  /**
+   * Draws a single agent on the screen.
+   * @memberof Screen
+   * @param {Object} agent - Agent object to draw.
+   */
   this.drawAgent = function (agent) {
     if (!agent.imageName && agent.text) {
       createImageFromTextForAgent(agent); //only once. Creates image
@@ -262,6 +367,10 @@ function Screen() {
     if (agent.imageName) drawAgentImage(agent, canvasRectangle);
   };
 
+  /**
+   * Draws all visible agents on the screen.
+   * @param {Object} agentsToDrawInput - Object containing agents to draw.
+   */
   function drawAllAgents(agentsToDrawInput) {
     let agentsToDraw = Object.values(agentsToDrawInput);
     if (!camera) return; //not ready yet
@@ -269,6 +378,9 @@ function Screen() {
       screen.drawAgent(agentsToDraw[index], camera);
   }
 
+  /**
+   * Draws a red border around the world boundaries.
+   */
   function drawWorldBorder() {
     if (!camera) return;
 
@@ -302,6 +414,10 @@ function Screen() {
     context.restore();
   }
 
+  /**
+   * Main game presentation loop that renders the complete frame.
+   * @memberof Screen
+   */
   this.gamePresentationLoop = function () {
     clear();
     if (backgroundImage) {
@@ -323,6 +439,10 @@ function Screen() {
     );
   };
 
+  /**
+   * Stops the game presentation loop and clears the screen.
+   * @memberof Screen
+   */
   this.stopGamePresentationLoop = function () {
     if (!presentationLoopId) return;
     window.clearTimeout(presentationLoopId);
@@ -330,6 +450,15 @@ function Screen() {
   };
 }
 
+/**
+ * @type {Screen}
+ * @description Global screen instance for managing canvas rendering and game presentation.
+ */
 let screen = new Screen();
+
+// Event listener for window resize to adjust canvas
+window.addEventListener("onResizeCanvas", (event) => {
+  screen.adjustCanvasToWindowSize();
+});
 
 export { Screen, screen };

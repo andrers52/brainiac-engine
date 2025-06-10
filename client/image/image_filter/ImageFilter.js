@@ -4,12 +4,19 @@ import { resourceStore } from "../../singleton/ResourceStore.js";
 
 //http://www.html5rocks.com/en/tutorials/canvas/imagefilters/
 
-//Receives an image name for image in resource store,
-//creates another one, apply effects, store and return new name.
-//If  applyOverOriginalImage is true no new image is created.
-//ImageFiltersArray is and array of effects and arguments like effect1, arg1, effect2, arg2,...effectN, argN
-//    If you need to pass more than one arg to effect, send an object.
-//Each effect receives the image data and the declared argument (if any).
+/**
+ * Applies multiple image filters to an image from the resource store
+ * Receives an image name for image in resource store, creates another one, applies effects, stores and returns new name.
+ * If applyOverOriginalImage is true no new image is created.
+ * ImageFiltersArray is an array of effects and arguments like effect1, arg1, effect2, arg2,...effectN, argN
+ * If you need to pass more than one arg to effect, send an object.
+ * Each effect receives the image data and the declared argument (if any).
+ *
+ * @param {string} imageName - The name of the image in the resource store
+ * @param {boolean} applyOverOriginalImage - Whether to modify the original image or create a new one
+ * @param {...*} ImageFiltersArray - Variable arguments containing filter functions and their parameters
+ * @returns {string} The name of the processed image
+ */
 export function ImageFilter(
   imageName,
   applyOverOriginalImage,
@@ -34,14 +41,29 @@ export function ImageFilter(
   return newImageName;
 }
 
+/** @type {HTMLCanvasElement} Temporary canvas for image operations */
 ImageFilter.tmpCanvas = document.createElement("canvas");
+/** @type {CanvasRenderingContext2D} Temporary canvas context for image operations */
 ImageFilter.tmpCtx = ImageFilter.tmpCanvas.getContext("2d");
 
+/**
+ * Creates ImageData with specified dimensions
+ * @param {number} w - Width of the image data
+ * @param {number} h - Height of the image data
+ * @returns {ImageData} New ImageData object
+ */
 ImageFilter.createImageData = function (w, h) {
   return this.tmpCtx.createImageData(w, h);
 };
 
-//adding support for convolute to be used by effects
+/**
+ * Applies convolution filter to image data using a weight matrix
+ * Adding support for convolute to be used by effects
+ * @param {ImageData} pixels - The source image data
+ * @param {number[]} weights - The convolution matrix weights (should be square array)
+ * @param {boolean} [opaque] - Whether to treat the image as opaque
+ * @returns {ImageData} The convolved image data
+ */
 ImageFilter.convolute = function (pixels, weights, opaque) {
   var side = Math.round(Math.sqrt(weights.length));
   var halfSide = Math.floor(side / 2);
@@ -89,8 +111,17 @@ ImageFilter.convolute = function (pixels, weights, opaque) {
   return output;
 };
 
+/** Fallback for browsers without Float32Array support */
 if (!window.Float32Array) var Float32Array = Array;
 
+/**
+ * Applies convolution filter to image data using Float32Array for extended range
+ * Similar to convolute but uses Float32Array to handle values outside 0-255 range
+ * @param {ImageData} pixels - The source image data
+ * @param {number[]} weights - The convolution matrix weights (should be square array)
+ * @param {boolean} [opaque] - Whether to treat the image as opaque
+ * @returns {Object} Object with width, height, and Float32Array data
+ */
 ImageFilter.convoluteFloat32 = function (pixels, weights, opaque) {
   var side = Math.round(Math.sqrt(weights.length));
   var halfSide = Math.floor(side / 2);

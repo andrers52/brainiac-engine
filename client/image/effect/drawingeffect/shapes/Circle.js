@@ -1,7 +1,10 @@
 "use strict";
 
-//receives size and array of effects to use in order to create new image,
-//store and return new name.
+/**
+ * Draws a circle shape on the canvas context
+ * Receives canvas context and draws a circle centered on the canvas
+ * @param {CanvasRenderingContext2D} context - The canvas 2D rendering context
+ */
 export function Circle(context) {
   let lineWidth = 2;
   let radius =

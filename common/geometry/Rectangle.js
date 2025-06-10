@@ -1,21 +1,37 @@
 "use strict";
-import { Assert, Random } from "arslib";
-import { Vector, vect } from "./Vector.js";
 
-//Note: the operations are destructive! Use clone() for protection.
+/**
+ * Creates a Rectangle with a center point and size.
+ * Note: the operations are destructive! Use clone() for protection.
+ * @param {Vector} [centerPoint=new Vector()] - The center point of the rectangle
+ * @param {Vector} [size=new Vector()] - The size of the rectangle (width, height)
+ * @constructor
+ */
 export function Rectangle(centerPoint = new Vector(), size = new Vector()) {
   this.center = centerPoint;
   this.size = size.abs();
 }
 
+/**
+ * Gets the width of the rectangle
+ * @returns {number} The width of the rectangle
+ */
 Rectangle.prototype.getWidth = function () {
   return this.size.x;
 };
 
+/**
+ * Gets the height of the rectangle
+ * @returns {number} The height of the rectangle
+ */
 Rectangle.prototype.getHeight = function () {
   return this.size.y;
 };
 
+/**
+ * Gets the size vector of the rectangle
+ * @returns {Vector} The size vector containing width and height
+ */
 Rectangle.prototype.getSize = function () {
   return this.size;
 };
@@ -27,56 +43,109 @@ Rectangle.prototype.getSize = function () {
 //  return Vector.parallelogramArea(coordinatesArrayWithFirstPointAtOrigin[1], coordinatesArrayWithFirstPointAtOrigin[3]);
 //};
 
+/**
+ * Calculates the area of the rectangle
+ * @returns {number} The area of the rectangle
+ */
 Rectangle.prototype.area = function () {
   return this.size.x * this.size.y;
 };
 
+/**
+ * Calculates the diagonal length of the rectangle
+ * @returns {number} The diagonal length
+ */
 Rectangle.prototype.diagonal = function () {
   return Math.sqrt(Math.pow(this.size.x, 2) + Math.pow(this.size.y, 2));
 };
 
+/**
+ * Calculates the mean of width and height
+ * @returns {number} The average of width and height
+ */
 Rectangle.prototype.meanSize = function () {
   return (this.size.x + this.size.y) / 2;
 };
 
+/**
+ * Gets the minimum dimension (width or height)
+ * @returns {number} The smaller of width or height
+ */
 Rectangle.prototype.minSize = function () {
   return Math.min(this.size.x, this.size.y);
 };
 
+/**
+ * Gets the maximum dimension (width or height)
+ * @returns {number} The larger of width or height
+ */
 Rectangle.prototype.maxSize = function () {
   return Math.max(this.size.x, this.size.y);
 };
 
+/**
+ * Gets the center point of the rectangle
+ * @returns {Vector} The center point
+ */
 Rectangle.prototype.getCenter = function () {
   return this.center;
 };
 
+/**
+ * Gets the position (same as center) of the rectangle
+ * @returns {Vector} The position/center point
+ */
 Rectangle.prototype.getPosition = function () {
   return this.center;
 };
 
+/**
+ * Sets the size of the rectangle
+ * @param {Vector} vector - The new size vector
+ * @returns {Rectangle} This rectangle for chaining
+ */
 Rectangle.prototype.setSize = function (vector) {
   this.size = vector;
   return this;
 };
 
+/**
+ * Sets the center point of the rectangle
+ * @param {Vector} vector - The new center point
+ * @returns {Rectangle} This rectangle for chaining
+ */
 Rectangle.prototype.setCenter = function (vector) {
   this.center = vector;
   return this;
 };
 
+/**
+ * Sets the position (center) of the rectangle
+ * @param {Vector} position - The new position
+ * @returns {Rectangle} This rectangle for chaining
+ */
 Rectangle.prototype.setPosition = function (position) {
   this.center = position;
   return this;
 };
 
+/**
+ * Sets the 2D position of the rectangle
+ * @param {Vector} position - The new 2D position
+ * @returns {Rectangle} This rectangle for chaining
+ */
 Rectangle.prototype.setPosition2D = function (position) {
   let origCenter = this.center;
   this.center = position;
   return this;
 };
 
-//set rectangle's point of interest at position
+/**
+ * Sets a specific point of interest of the rectangle at the given position
+ * @param {string} pointOfInterest - The point of interest ("topLeft", "topRight", "bottomLeft", "bottomRight", "bottomCenter", "topCenter", "leftCenter", "rightCenter")
+ * @param {Vector} position - The target position for the point of interest
+ * @returns {Rectangle} This rectangle for chaining
+ */
 Rectangle.prototype.setPointOfInterestAtPosition = function (
   pointOfInterest,
   position,
@@ -129,6 +198,12 @@ Rectangle.prototype.setPointOfInterestAtPosition = function (
   return this;
 };
 
+/**
+ * Aligns this rectangle to another rectangle
+ * @param {Rectangle} otherRect - The rectangle to align to
+ * @param {string} alignment - The alignment type ("top", "bottom", "left", "right")
+ * @returns {Rectangle} This rectangle for chaining
+ */
 Rectangle.prototype.allignToRectangle = function (otherRect, alligment) {
   Assert.assertIsValidString(
     alligment,
@@ -152,7 +227,15 @@ Rectangle.prototype.allignToRectangle = function (otherRect, alligment) {
   }
 };
 
-//Note: agents should not call it directly (or the client won't see. Use setPositionRelativeToAgent instead.
+/**
+ * Sets the position of this rectangle relative to another rectangle
+ * Note: agents should not call it directly (or the client won't see. Use setPositionRelativeToAgent instead.
+ * @param {Rectangle} otherRect - The reference rectangle
+ * @param {string} relativePosition - The relative position ("topLeft", "topRight", "randomTop", "bottomLeft", "bottomRight", "randomBottom", "center", "bottomCenter", "topCenter", "leftCenter", "randomLeft", "rightCenter", "randomRight")
+ * @param {string} [insideOutside="inside"] - Whether to position inside or outside ("inside", "outside")
+ * @param {number} [offset=0] - Additional offset distance
+ * @returns {Rectangle} This rectangle for chaining
+ */
 Rectangle.prototype.setPositionRelativeToRectangle = function (
   otherRect,
   relativePosition,
@@ -297,10 +380,19 @@ Rectangle.prototype.setPositionRelativeToRectangle = function (
   return this;
 };
 
+/**
+ * Creates a clone of this rectangle
+ * @returns {Rectangle} A new rectangle that is a copy of this one
+ */
 Rectangle.prototype.clone = function () {
   return new Rectangle(this.getCenter().clone(), this.getSize().clone());
 };
 
+/**
+ * Checks if a point is inside this rectangle
+ * @param {Vector} point - The point to check
+ * @returns {boolean} True if the point is inside the rectangle
+ */
 Rectangle.prototype.checkPointInside = function (point) {
   let insideX = point.x >= this.topLeft().x && point.x <= this.topRight().x;
   if (!insideX) return false;
@@ -309,6 +401,11 @@ Rectangle.prototype.checkPointInside = function (point) {
   return true;
 };
 
+/**
+ * Checks if a point is outside this rectangle
+ * @param {Vector} point - The point to check
+ * @returns {boolean} True if the point is outside the rectangle
+ */
 Rectangle.prototype.checkPointOutside = function (point) {
   let outsideX = point.x < this.topLeft().x || point.x > this.topRight().x;
   if (outsideX) return true;
@@ -317,58 +414,116 @@ Rectangle.prototype.checkPointOutside = function (point) {
   return false;
 };
 
+/**
+ * Gets half the size of the rectangle
+ * @returns {Vector} A vector containing half the width and height
+ */
 Rectangle.prototype.halfSize = function () {
   return new Vector(this.size.x / 2, this.size.y / 2);
 };
 
+/**
+ * Gets the maximum X coordinate of the rectangle
+ * @returns {number} The rightmost X coordinate
+ */
 Rectangle.prototype.getMaxX = function () {
   return this.center.x + this.halfSize().x;
 };
 
+/**
+ * Gets the minimum X coordinate of the rectangle
+ * @returns {number} The leftmost X coordinate
+ */
 Rectangle.prototype.getMinX = function () {
   return this.center.x - this.halfSize().x;
 };
 
+/**
+ * Gets the maximum Y coordinate of the rectangle
+ * @returns {number} The topmost Y coordinate
+ */
 Rectangle.prototype.getMaxY = function () {
   return this.center.y + this.halfSize().y;
 };
 
+/**
+ * Gets the minimum Y coordinate of the rectangle
+ * @returns {number} The bottommost Y coordinate
+ */
 Rectangle.prototype.getMinY = function () {
   return this.center.y - this.halfSize().y;
 };
 
+/**
+ * Gets the top-left corner position
+ * @returns {Vector} The top-left corner coordinates
+ */
 Rectangle.prototype.topLeft = function () {
   return new Vector(this.getMinX(), this.getMaxY());
 };
 
+/**
+ * Gets the top-right corner position
+ * @returns {Vector} The top-right corner coordinates
+ */
 Rectangle.prototype.topRight = function () {
   return new Vector(this.getMaxX(), this.getMaxY());
 };
 
+/**
+ * Gets the bottom-left corner position
+ * @returns {Vector} The bottom-left corner coordinates
+ */
 Rectangle.prototype.bottomLeft = function () {
   return new Vector(this.getMinX(), this.getMinY());
 };
 
+/**
+ * Gets the bottom-right corner position
+ * @returns {Vector} The bottom-right corner coordinates
+ */
 Rectangle.prototype.bottomRight = function () {
   return new Vector(this.getMaxX(), this.getMinY());
 };
 
+/**
+ * Gets the bottom center position
+ * @returns {Vector} The bottom center coordinates
+ */
 Rectangle.prototype.bottomCenter = function () {
   return new Vector(this.center.x, this.getMinY());
 };
 
+/**
+ * Gets the top center position
+ * @returns {Vector} The top center coordinates
+ */
 Rectangle.prototype.topCenter = function () {
   return new Vector(this.center.x, this.getMaxY());
 };
 
+/**
+ * Gets the left center position
+ * @returns {Vector} The left center coordinates
+ */
 Rectangle.prototype.leftCenter = function () {
   return new Vector(this.getMinX(), this.center.y);
 };
 
+/**
+ * Gets the right center position
+ * @returns {Vector} The right center coordinates
+ */
 Rectangle.prototype.rightCenter = function () {
   return new Vector(this.getMaxX(), this.center.y);
 };
 
+/**
+ * Converts the rectangle from one coordinate system to another
+ * @param {Vector} fromBaseSize - The original base size
+ * @param {Vector} toBaseSize - The target base size
+ * @returns {Rectangle} A new rectangle converted to the new coordinate system
+ */
 Rectangle.prototype.convert = function (fromBaseSize, toBaseSize) {
   return new Rectangle(
     this.center.convert(fromBaseSize, toBaseSize),
@@ -376,11 +531,22 @@ Rectangle.prototype.convert = function (fromBaseSize, toBaseSize) {
   );
 };
 
+/**
+ * Moves the rectangle by a given distance
+ * @param {Vector} distance - The distance to move
+ * @returns {Rectangle} This rectangle for chaining
+ */
 Rectangle.prototype.move = function (distance) {
   this.center.add(distance);
   return this;
 };
 
+/**
+ * Checks if moving by the given vector would move this rectangle closer to another rectangle
+ * @param {Vector} movimentVector - The movement vector
+ * @param {Rectangle} otherRectangle - The target rectangle
+ * @returns {boolean} True if the movement brings rectangles closer
+ */
 Rectangle.prototype.isMovingToInsideOfOtherRectangle = function (
   movimentVector,
   otherRectangle,
@@ -398,29 +564,31 @@ Rectangle.prototype.isMovingToInsideOfOtherRectangle = function (
   );
 };
 
-//make rectangle square by making both dimensions equal to the lesser of them
+/**
+ * Makes the rectangle square by using the smaller dimension
+ * @returns {Rectangle} This rectangle for chaining
+ */
 Rectangle.prototype.reduceToSquare = function () {
   let minimumSize = Math.min(this.size.x, this.size.y);
   this.size = new Vector(minimumSize, minimumSize);
   return this;
 };
 
-//make rectangle square by making both dimensions equal to the greater of them
+/**
+ * Makes the rectangle square by using the larger dimension
+ * @returns {Rectangle} This rectangle for chaining
+ */
 Rectangle.prototype.enlargeToSquare = function () {
   let maximumSize = Math.max(this.size.x, this.size.y);
   this.size = new Vector(maximumSize, maximumSize);
   return this;
 };
 
-//return vector with percentage of position inside rectangle, or null if outside
-//input:
-//(-rectangle.size.x/2,rectangle.size.y/2)    (rectangle.size.x/2,rectangle.size.y/2)
-//
-//(-rectangle.size.x/2,-rectangle.size.y/2)   (rectangle.size.x/2,-rectangle.size.y/2)
-//output:
-//(-100,100)    (100,100)
-//
-//(-100,-100)   (100,-100)
+/**
+ * Returns the percentage position of a point within the rectangle
+ * @param {Vector} position - The position to check
+ * @returns {Vector|null} The percentage position vector, or null if outside
+ */
 Rectangle.prototype.positionPercentage = function (position) {
   if (!this.checkPointInside(position)) return null;
   let rectBottomLeft = this.bottomLeft();
@@ -430,15 +598,11 @@ Rectangle.prototype.positionPercentage = function (position) {
   return new Vector(percentagePositionX, percentagePositionY);
 };
 
-//return the position inside rectangle given the percentage vector from center
-//input:
-//(-100,100)    (100,100)
-//
-//(-100,-100)   (100,-100)
-//output:
-//(-rectangle.size.x/2,rectangle.size.y/2)    (rectangle.size.x/2,rectangle.size.y/2)
-//
-//(-rectangle.size.x/2,-rectangle.size.y/2)   (rectangle.size.x/2,-rectangle.size.y/2)
+/**
+ * Converts a percentage position to an actual position within the rectangle
+ * @param {Vector} percentage - The percentage vector
+ * @returns {Vector} The actual position within the rectangle
+ */
 Rectangle.prototype.sizePercentageToPosition = function (percentage) {
   return new Vector(
     (this.size.x * percentage.x) / 100,
@@ -446,6 +610,11 @@ Rectangle.prototype.sizePercentageToPosition = function (percentage) {
   ).subtract(this.size.clone().divideByScalar(2));
 };
 
+/**
+ * Checks if another rectangle is completely inside this rectangle
+ * @param {Rectangle} rectangle - The rectangle to check
+ * @returns {boolean} True if the other rectangle is completely inside
+ */
 Rectangle.prototype.checkInside = function (rectangle) {
   return (
     this.checkPointInside(rectangle.topLeft()) &&
@@ -455,6 +624,11 @@ Rectangle.prototype.checkInside = function (rectangle) {
   );
 };
 
+/**
+ * Checks if another rectangle has at least one corner inside this rectangle
+ * @param {Rectangle} rectangle - The rectangle to check
+ * @returns {boolean} True if at least one corner is inside
+ */
 Rectangle.prototype.checkHasCornerInside = function (rectangle) {
   return (
     this.checkPointInside(rectangle.topLeft()) ||
@@ -464,6 +638,11 @@ Rectangle.prototype.checkHasCornerInside = function (rectangle) {
   );
 };
 
+/**
+ * Checks if another rectangle has at least one corner outside this rectangle
+ * @param {Rectangle} rectangle - The rectangle to check
+ * @returns {boolean} True if at least one corner is outside
+ */
 Rectangle.prototype.checkHasCornerOutside = function (rectangle) {
   return (
     this.checkPointOutside(rectangle.topLeft()) ||
@@ -473,6 +652,12 @@ Rectangle.prototype.checkHasCornerOutside = function (rectangle) {
   );
 };
 
+/**
+ * Helper function to check intersection when one rectangle has corners inside another
+ * @param {Rectangle} rectangle1 - First rectangle
+ * @param {Rectangle} rectangle2 - Second rectangle
+ * @returns {boolean} True if there's intersection with corner inside
+ */
 function intersectionWithCornerInside(rectangle1, rectangle2) {
   return (
     rectangle1.checkHasCornerInside(rectangle2) &&
@@ -480,6 +665,12 @@ function intersectionWithCornerInside(rectangle1, rectangle2) {
   );
 }
 
+/**
+ * Helper function to check intersection when rectangles don't have corners inside each other
+ * @param {Rectangle} rectangle1 - First rectangle
+ * @param {Rectangle} rectangle2 - Second rectangle
+ * @returns {boolean} True if there's intersection without corner inside
+ */
 function intersectionWithoutCornerInside(rectangle1, rectangle2) {
   if (Rectangle.sameSize(rectangle1, rectangle2)) {
     return false;

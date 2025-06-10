@@ -3,9 +3,19 @@ import { Assert } from "arslib";
 import { Vector } from "../../../common/geometry/Vector.js";
 import { environment } from "../../../server/agent/singleton/Environment.js";
 
-//generated event (receives one or more directions ["UP","DOWN","LEFT","RIGHT"])
-//onSensingWorldBorder(directionsArray)
+/**
+ * @fileoverview World boundary sensing system for agents.
+ * Detects when an agent is approaching the edges of the game world.
+ *
+ * Generated Event:
+ * - onSensingWorldBorder(relativeCollisionVector) - Receives collision vector indicating border direction(s)
+ */
 
+/**
+ * Adds world border sensing capabilities to an agent.
+ * @param {number} [sensingDistanceInput] - Distance ahead to sense for world borders.
+ * @throws {Error} If agent doesn't implement onSensingWorldBorder event handler.
+ */
 export function SensingWorldBorder(sensingDistanceInput) {
   Assert.assert(
     this.onSensingWorldBorder,

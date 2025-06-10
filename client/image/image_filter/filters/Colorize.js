@@ -1,4 +1,15 @@
 "use strict";
+
+/**
+ * Applies a color tint to image data by adding color values to each pixel
+ * @param {ImageData} imageData - The image data to colorize
+ * @param {Object} color - The color object containing RGB values
+ * @param {number} color.red - Red component value to add
+ * @param {number} color.green - Green component value to add
+ * @param {number} color.blue - Blue component value to add
+ * @returns {ImageData} The colorized image data
+ * @throws {Error} If color parameter is not provided
+ */
 export function Colorize(imageData, color) {
   Assert.assert(color, "The colorize effect needs a color. Not found");
 

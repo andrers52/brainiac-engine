@@ -1,7 +1,13 @@
 "use strict";
 
 import { Assert } from "arslib";
-//receives an array of primitives to draw
+
+/**
+ * Evolutionary image generator that draws shapes based on encoded instructions
+ * Receives an array of primitives to draw and renders them to the canvas
+ * @param {CanvasRenderingContext2D} context - The canvas 2D rendering context
+ * @param {Array<Array<number>>} code - Array of drawing instructions, each containing shape parameters
+ */
 export function EvoImg(context, code) {
   let fill = true;
   let lineWidth = 1;
@@ -30,6 +36,11 @@ export function EvoImg(context, code) {
     "luminosity",
   ];
 
+  /**
+   * Executes a single drawing instruction
+   * @param {Array<number>} instructionParameters - Array containing shape type, composite operation, position, size, color, orientation, and alpha values
+   * @param {CanvasRenderingContext2D} context - The canvas 2D rendering context
+   */
   function execInstruction(instructionParameters, context) {
     let positionX = instructionParameters[2];
     let positionY = instructionParameters[3];
@@ -98,6 +109,11 @@ export function EvoImg(context, code) {
     context.restore();
   }
 
+  /**
+   * Executes all drawing instructions in the code array
+   * @param {Array<Array<number>>} code - Array of drawing instruction arrays
+   * @param {CanvasRenderingContext2D} context - The canvas 2D rendering context
+   */
   function execDrawingInstructions(code, context) {
     for (let i0 = 0; i0 < code.length; i0++) execInstruction(code[i0], context);
   }

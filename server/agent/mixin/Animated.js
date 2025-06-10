@@ -2,19 +2,36 @@
 
 import { Assert, EArray, EFunction } from "arslib";
 
-//configuration is an object in the format
-//{"defaultState": "<state_nameX>",
-// auto_reverse means hit end and go backwards towards beginning, otherwise restart
-// "auto_reverse": [true|false],
-// "animationStates":
-//  [
-//    {"stateName": <state_name1>, "timeinMilis": <time1>, "animationFrames": [<imageName1_1>,...,<imageName1_N>], "audioName": <audioName1>},
-//    ...,
-//    {"stateName": <state_nameN>, "timeinMilis": <timeN>,  "animationFrames": [<imageNameN_1>,...,<imageNameN_M>], "audioName": <audioName1>}
-//  ]
-//}
-//soundProvider is resposible for playing sound in client
-// must provide: soundProvider.playSoundInClient(audioName)
+/**
+ * @fileoverview Animation system for state-based sprite animations with audio support.
+ * Provides configurable animation states with frame sequences, timing, and audio playback.
+ *
+ * Configuration format:
+ * {
+ *   "defaultState": "<state_nameX>",
+ *   "auto_reverse": [true|false], // hit end and go backwards vs restart
+ *   "animationStates": [
+ *     {
+ *       "stateName": <state_name1>,
+ *       "timeinMilis": <time1>,
+ *       "animationFrames": [<imageName1_1>,...,<imageName1_N>],
+ *       "audioName": <audioName1>
+ *     },
+ *     ...
+ *   ]
+ * }
+ */
+
+/**
+ * Adds animation capabilities to an agent with state-based frame sequences.
+ * @param {Object} configurationObj - Animation configuration object.
+ * @param {string} configurationObj.defaultState - Default animation state name.
+ * @param {boolean} [configurationObj.auto_reverse=false] - Whether to reverse animation direction at end.
+ * @param {Array} configurationObj.animationStates - Array of animation state definitions.
+ * @param {Object} soundProvider - Object responsible for playing sound in client.
+ * @param {Function} soundProvider.playSoundInClient - Function to play audio by name.
+ * @throws {Error} If configuration is invalid or resources are missing.
+ */
 export function Animated(configurationObj, soundProvider) {
   let ANIMATION_DEFAULT_DELAY = 2000;
 
@@ -37,9 +54,20 @@ export function Animated(configurationObj, soundProvider) {
   //actions will be called on "self" context ("this" inside function)
   let actionsToExecuteAtAnimationEnd = {};
 
+  /**
+   * @memberof Animated
+   * @type {string}
+   * @description Current animation state name.
+   */
   this.currentState = "notInitialized"; //TODO: CHANGE TO READ ONLY PROPERTY
+
   let currentStateFrame = 0;
 
+  /**
+   * Initializes the animation system from configuration.
+   * @param {Object} configurationObj - Animation configuration object.
+   * @throws {Error} If configuration is invalid.
+   */
   function start(configurationObj) {
     try {
       defaultState = self.currentState = configurationObj.defaultState;
@@ -65,27 +93,51 @@ export function Animated(configurationObj, soundProvider) {
     self.changeState(defaultState);
   }
 
+  /**
+   * Updates the agent's image and audio based on current state.
+   * @param {string} state - Animation state name.
+   */
   function updateImageAndAudio(state) {
     self.imageName = EArray.first(framesPerState[state]);
     self.audioName = audioPerState[state];
   }
 
+  /**
+   * Checks if a state name is valid.
+   * @param {string} state - State name to validate.
+   * @returns {boolean} True if state is valid.
+   */
   function isValidState(state) {
     return states.includes(state);
   }
 
+  /**
+   * Checks if currently on the last frame of current state.
+   * @returns {boolean} True if on last frame.
+   */
   function isLastFrame() {
     return framesPerState[self.currentState].length - 1 === currentStateFrame;
   }
 
+  /**
+   * Checks if currently on the first frame of current state.
+   * @returns {boolean} True if on first frame.
+   */
   function isFirstFrame() {
     return currentStateFrame === 0;
   }
 
+  /**
+   * Sets the current image name for the agent.
+   * @param {string} imageName - Name of the image to set.
+   */
   function setImageName(imageName) {
     self.imageName = imageName;
   }
 
+  /**
+   * Advances to the next frame in the animation sequence.
+   */
   function changeFrame() {
     //normal case
     if (!(isLastFrame() || isFirstFrame())) {
@@ -120,6 +172,13 @@ export function Animated(configurationObj, soundProvider) {
     setImageName(framesPerState[self.currentState][currentStateFrame]);
   }
 
+  /**
+   * Changes the animation to a new state.
+   * @memberof Animated
+   * @param {string} newState - Name of the new animation state.
+   * @returns {Object} This agent instance for chaining.
+   * @throws {Error} If newState is not valid.
+   */
   this.changeState = function (newState) {
     Assert.assert(isValidState(newState));
 
@@ -137,6 +196,14 @@ export function Animated(configurationObj, soundProvider) {
     return this;
   };
 
+  /**
+   * Adds an action to be executed when a specific animation state completes.
+   * @memberof Animated
+   * @param {string} state - Animation state name.
+   * @param {Function} action - Function to execute when state animation ends.
+   * @returns {Object} This agent instance for chaining.
+   * @throws {Error} If state is invalid or action is not a function.
+   */
   this.addActionToExecuteAtAnimationEnd = function (state, action) {
     Assert.assert(
       isValidState(state),
@@ -150,6 +217,9 @@ export function Animated(configurationObj, soundProvider) {
     return this;
   };
 
+  /**
+   * Cleanup function called when agent dies to clear animation intervals.
+   */
   function animatedDie() {
     clearInterval(intervalId);
   }

@@ -10,22 +10,65 @@ import { CoordinatesConversion } from "../CoordinatesConversion.js";
 import { resourceStore } from "./ResourceStore.js";
 import { screen } from "./Screen.js";
 
+/**
+ * @fileoverview Particle system for creating and managing visual effects.
+ * Handles particle creation, animation, rendering, and emitter systems.
+ */
+
+/**
+ * ParticlesContainer constructor - Manages particle systems and emitters.
+ * Provides functionality for creating particles, particle emitters, and handling their lifecycle.
+ * @constructor
+ */
 function ParticlesContainer() {
   let camera;
 
+  /**
+   * @memberof ParticlesContainer
+   * @type {number}
+   * @description Default radius for particles in pixels.
+   */
   this.DEFAULT_RADIUS = 10;
+
+  /**
+   * @memberof ParticlesContainer
+   * @type {number}
+   * @description Default radius for circular emitters in pixels.
+   */
   this.CIRCULAR_EMITTER_DEFAULT_RADIUS = this.DEFAULT_RADIUS * 5;
+
+  /**
+   * @memberof ParticlesContainer
+   * @type {number}
+   * @description Default time to live for particles in milliseconds.
+   */
   this.DEFAULT_PARTICLE_TIME_TO_LIVE = 1000;
 
   let particleImage;
   let colorToParticleImage;
 
+  /**
+   * @memberof ParticlesContainer
+   * @type {number}
+   * @description Default time to live for emitters in milliseconds.
+   */
   this.DEFAULT_EMITTER_TIME_TO_LIVE = 1000;
+
+  /**
+   * @memberof ParticlesContainer
+   * @type {number}
+   * @description Default latency between particle releases in milliseconds.
+   */
   this.DEFAULT_PARTICLE_RELEASE_LATENCY = 100;
+
   let particles;
   let emitters;
 
-  //needs to be initialized before use
+  /**
+   * Initializes the particle container with camera reference and resources.
+   * @memberof ParticlesContainer
+   * @param {Object} cameraInput - Camera object for coordinate conversions.
+   */
   this.start = function (cameraInput) {
     camera = cameraInput;
     particles = {};
@@ -38,12 +81,30 @@ function ParticlesContainer() {
     };
   };
 
+  /**
+   * Generates a unique random ID for particles.
+   * @returns {number} Random particle ID.
+   */
   function createParticleId() {
     return Random.randomInt(10000000);
   }
-  //NOte2: the particle position and speed (x,-y) are relative to canvas size
-  //Note3: screenParticle defines (true) if a particle position is on the screen or
-  //       (false) on the world.
+
+  /**
+   * Creates a single particle with specified properties.
+   * @memberof ParticlesContainer
+   * @param {Object} options - Particle configuration options.
+   * @param {number} options.positionX - Initial X position.
+   * @param {number} options.positionY - Initial Y position.
+   * @param {number} options.speedX - Horizontal velocity.
+   * @param {number} options.speedY - Vertical velocity.
+   * @param {boolean} options.screenParticle - True if position is screen-relative, false for world-relative.
+   * @param {number} [options.colorRed=255] - Red color component (0-255).
+   * @param {number} [options.colorGreen=255] - Green color component (0-255).
+   * @param {number} [options.colorBlue=255] - Blue color component (0-255).
+   * @param {number} [options.timeToLive] - Particle lifetime in milliseconds.
+   * @param {number} [options.radius] - Particle radius in pixels.
+   * @param {number} [options.occurrenceProbability=1] - Probability of particle creation (0-1) or count if >1.
+   */
   this.createParticle = function ({
     positionX,
     positionY,
@@ -103,7 +164,24 @@ function ParticlesContainer() {
     }
   };
 
-  //add a little variation
+  /**
+   * Creates a particle with random variations for spray effects.
+   * @memberof ParticlesContainer
+   * @param {number} positionX - Initial X position.
+   * @param {number} positionY - Initial Y position.
+   * @param {number} speedX - Base horizontal velocity.
+   * @param {number} speedY - Base vertical velocity.
+   * @param {boolean} [screenParticle=true] - True if position is screen-relative.
+   * @param {number} [colorRed=255] - Base red color component (0-255).
+   * @param {number} [colorGreen=255] - Base green color component (0-255).
+   * @param {number} [colorBlue=255] - Base blue color component (0-255).
+   * @param {number} [timeToLive] - Base particle lifetime in milliseconds.
+   * @param {number} [radius] - Particle radius in pixels.
+   * @param {number} [occurrenceProbability=1] - Probability of particle creation.
+   * @param {number} [speedVariation=1] - Amount of speed randomization.
+   * @param {number} [timeToLiveVariation] - Amount of lifetime randomization.
+   * @param {number} [colorVariation=2] - Amount of color randomization.
+   */
   this.createParticleInSpray = function (
     positionX,
     positionY,
@@ -149,6 +227,9 @@ function ParticlesContainer() {
     });
   };
 
+  /**
+   * Updates particle positions, lifetimes, and removes expired particles.
+   */
   function runParticles() {
     for (let id in particles) {
       let particle = particles[id];
@@ -163,12 +244,22 @@ function ParticlesContainer() {
     }
   }
 
+  /**
+   * Converts color intensity (0-255) to opacity (0-1).
+   * @param {number} colorIntensity - Color intensity value (0-255).
+   * @returns {number} Opacity value (0-1).
+   */
   function fromColorToOpacity(colorIntensity) {
     //255            -> 1
     //colorIntensity -> x
     return colorIntensity / 255;
   }
 
+  /**
+   * Draws individual color components of a particle.
+   * @param {Object} particle - The particle to draw.
+   * @param {CanvasRenderingContext2D} context - Canvas rendering context.
+   */
   function drawParticleComponents(particle, context) {
     //particle.screenParticle
     let adjustedParticlePosition = particle.screenParticle
@@ -194,6 +285,9 @@ function ParticlesContainer() {
     }
   }
 
+  /**
+   * Renders all active particles to the screen.
+   */
   function drawParticles() {
     let context = screen.getContext();
     for (let id in particles) {
@@ -205,10 +299,23 @@ function ParticlesContainer() {
     }
   }
 
-  // Just moves according to speed and releases particles along the way
-  // The emitter can have an onwer. In this case, if it is created multiple times with the same
-  // owner, the effect is that every creation resets its time to live.
-  // This is needed besause in the client we do not have knowledge of creation and death of the agents.
+  /**
+   * Creates a circular particle emitter that releases particles in a circular pattern.
+   * The emitter can have an owner agent. Multiple creations with the same owner reset the time to live.
+   * @memberof ParticlesContainer
+   * @param {number} positionX - Initial X position of emitter.
+   * @param {number} positionY - Initial Y position of emitter.
+   * @param {number} speedX - Emitter horizontal velocity.
+   * @param {number} speedY - Emitter vertical velocity.
+   * @param {boolean} [screenEmitterInput=true] - True if position is screen-relative.
+   * @param {*} [ownerAgentIdInput] - ID of owning agent (for emitter renewal).
+   * @param {number} [colorRed=255] - Red color component (0-255).
+   * @param {number} [colorGreen=255] - Green color component (0-255).
+   * @param {number} [colorBlue=255] - Blue color component (0-255).
+   * @param {number} [particleReleaseLatency] - Time between particle releases in ms.
+   * @param {number} [timeToLive] - Emitter lifetime in milliseconds.
+   * @param {number} [radius] - Emitter radius for particle placement.
+   */
   this.createCircularEmitter = function (
     positionX,
     positionY,
@@ -277,7 +384,21 @@ function ParticlesContainer() {
     emitters.push(emitter);
   };
 
-  // Just moves according to speed and releases particles along the way
+  /**
+   * Creates a spray particle emitter that releases particles in random directions.
+   * @memberof ParticlesContainer
+   * @param {number} positionX - Initial X position of emitter.
+   * @param {number} positionY - Initial Y position of emitter.
+   * @param {number} speedX - Emitter horizontal velocity.
+   * @param {number} speedY - Emitter vertical velocity.
+   * @param {boolean} [screenEmitterInput=true] - True if position is screen-relative.
+   * @param {number} [colorRed=255] - Red color component (0-255).
+   * @param {number} [colorGreen=255] - Green color component (0-255).
+   * @param {number} [colorBlue=255] - Blue color component (0-255).
+   * @param {number} [particleReleaseLatency] - Time between particle releases in ms.
+   * @param {number} [timeToLive] - Emitter lifetime in milliseconds.
+   * @param {number} [radius] - Emitter radius for particle placement.
+   */
   this.createSprayEmitter = function (
     positionX,
     positionY,
@@ -325,6 +446,9 @@ function ParticlesContainer() {
     emitters.push(emitter);
   };
 
+  /**
+   * Removes emitters that have exceeded their time to live.
+   */
   function removeDeadEmitters() {
     emitters = emitters.filter((emitter) => {
       if (!emitter.timeToLive) return true; //never dies
@@ -332,6 +456,9 @@ function ParticlesContainer() {
     });
   }
 
+  /**
+   * Updates all active emitters, running their particle generation and movement.
+   */
   function runEmitters() {
     emitters.forEach(function (emitter) {
       emitter.run();
@@ -340,6 +467,11 @@ function ParticlesContainer() {
     });
   }
 
+  /**
+   * Main animation step that updates and renders all particles and emitters.
+   * Should be called once per frame.
+   * @memberof ParticlesContainer
+   */
   this.animationStep = function () {
     if (particles.length === 0 && emitters.length === 0) return;
     runEmitters();
@@ -349,6 +481,10 @@ function ParticlesContainer() {
   };
 }
 
+/**
+ * @type {ParticlesContainer}
+ * @description Global particle container instance for managing all particle effects.
+ */
 let particlesContainer = new ParticlesContainer();
 
 export { particlesContainer };

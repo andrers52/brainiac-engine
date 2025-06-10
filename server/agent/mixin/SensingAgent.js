@@ -4,16 +4,27 @@ import { Assert } from "arslib";
 import { rect } from "../../../common/geometry/Rectangle.js";
 import { Vector } from "../../../common/geometry/Vector.js";
 import { environment } from "../singleton/Environment.js";
-//detect all agents
-//onSensingAgents({[vector: relativeSensingVetor1, agent: agent1],..., [vector: relativeSensingVetorN, agent: agentN]})
-//detect user agent
-//onSensingUserAgent({vector: relativeSensingVetor1, agent: agent1});
-//detect forward agents (180 degrees forward)
-//onSensingForwardAgents({[vector: relativeSensingVetor1, agent: agent1],..., [vector: relativeSensingVetorN, agent: agentN]})
-//detect agent with smaller angle in front
-//onSensingMostForwardAgent({vector: relativeSensingVetor1, agent: agent1})
-//relative to agent orientation
-//detector(agent) -> true: agent perceived, false: otherwise
+
+/**
+ * @fileoverview Agent sensing system for detecting nearby agents and user interactions.
+ * Provides various sensing capabilities including forward detection, user agent detection, and general agent sensing.
+ *
+ * Generated Events:
+ * - onSensingAgents({[vector: relativeSensingVector1, agent: agent1],...}) - Detect all agents
+ * - onSensingUserAgent({vector: relativeSensingVector1, agent: agent1}) - Detect user agent
+ * - onSensingForwardAgents({[vector: relativeSensingVector1, agent: agent1],...}) - Detect forward agents (180 degrees forward)
+ * - onSensingMostForwardAgent({vector: relativeSensingVector1, agent: agent1}) - Detect agent with smallest angle in front
+ *
+ * All vectors are relative to agent orientation.
+ */
+
+/**
+ * Adds sensing capabilities to an agent for detecting nearby agents.
+ * @param {Function} [detector=() => false] - Function that determines if an agent should be detected.
+ * @param {number} [sensingDistance=100] - Maximum distance for sensing other agents.
+ * @param {number} [delay=250] - Delay between sensing checks in milliseconds.
+ * @throws {Error} If agent doesn't implement any of the required sensing event handlers.
+ */
 export function SensingAgent(
   detector = () => false,
   sensingDistance = 100,
@@ -33,6 +44,11 @@ export function SensingAgent(
   let sensingRect = rect(0, 0, sensingDistance * 2, sensingDistance * 2);
   let self = this;
 
+  /**
+   * Calculates the relative detection vector from this agent to a detected agent.
+   * @param {Object} detectedAgent - The agent that was detected.
+   * @returns {Vector} Relative vector from this agent to the detected agent.
+   */
   function calculateRelativeDetectionVector(detectedAgent) {
     let absoluteDetectionVector = detectedAgent
       .getPosition()
@@ -51,6 +67,10 @@ export function SensingAgent(
     );
   }
 
+  /**
+   * Gets all agents within sensing range that pass the detector function.
+   * @returns {Array|null} Array of objects with vector and agent properties, or null if none detected.
+   */
   function getSensingAgents() {
     //return undefined or first perceived agent
     sensingRect.center = self.getPosition().clone();
@@ -83,11 +103,21 @@ export function SensingAgent(
     return vectorsAndAgents;
   }
 
+  /**
+   * Checks if a vector represents a forward direction (within 90 degrees).
+   * @param {Vector} vector - Vector to check.
+   * @returns {boolean} True if vector is forward-facing.
+   */
   function isForward(vector) {
     let angleToTurn = vector.getAngle();
     return Math.abs(angleToTurn) <= Math.PI / 2;
   }
 
+  /**
+   * Finds the agent that is most directly in front (smallest angle).
+   * @param {Array} forwardVectorsAndAgents - Array of forward-facing agents.
+   * @returns {Object} Object with vector and agent properties for the most forward agent.
+   */
   function findMostForwardAgent(forwardVectorsAndAgents) {
     Assert.assert(forwardVectorsAndAgents.length >= 1);
     let mostForwardVectorAndAgent = forwardVectorsAndAgents[0];
@@ -104,6 +134,11 @@ export function SensingAgent(
     return mostForwardVectorAndAgent;
   }
 
+  /**
+   * Finds the user agent among detected agents.
+   * @param {Array} vectorsAndAgents - Array of detected agents.
+   * @returns {Object|null} Object with vector and agent properties for user agent, or null if not found.
+   */
   function getUserAgentAndVector(vectorsAndAgents) {
     let vectorAndAgent = vectorsAndAgents.filter((vectorAndAgent) =>
       vectorAndAgent.agent.isUserAgent(),
@@ -112,6 +147,9 @@ export function SensingAgent(
     return vectorAndAgent[0];
   }
 
+  /**
+   * Main sensing loop that runs at intervals and triggers appropriate events.
+   */
   function testSensingAtInterval() {
     self.isAlive && setTimeout(testSensingAtInterval, delay);
 

@@ -18,6 +18,11 @@ import { screen } from "./singleton/Screen.js";
 //onkeyDown(pressedkey);
 //onResizeCanvas
 
+/**
+ * Handles user input events and converts them to game events
+ * Manages mouse, keyboard, and touch events for the game engine
+ * @constructor
+ */
 function UserEvents() {
   let self = this;
   let propagate = () => {}; // to be defined at start
@@ -26,6 +31,10 @@ function UserEvents() {
   let mouseCanvasPosition = null;
   let mousePositionChanged = false;
 
+  /**
+   * Gets the current mouse position in world coordinates
+   * @returns {Vector} The mouse position in world coordinates
+   */
   this.mouseWorldPosition = function () {
     // try {
     return CoordinatesConversion.canvasToWorld(
@@ -38,6 +47,11 @@ function UserEvents() {
     // }
   };
 
+  /**
+   * Gets the mouse position relative to the canvas from a mouse event
+   * @param {MouseEvent|TouchEvent} event - The mouse or touch event
+   * @returns {Vector} The mouse position in canvas coordinates
+   */
   function getMouseCanvasPosition(event) {
     if (event.touches) {
       event.clientX = event.touches.item(0).clientX;
@@ -59,10 +73,18 @@ function UserEvents() {
     // }
   }
 
+  /**
+   * Handles keyboard key down events
+   * @param {KeyboardEvent} event - The keyboard event
+   */
   function onKeyDown(event) {
     propagate("onKeyDown", event.key.replace(/\"/g, "")); //remove starting and trailling '"'
   }
 
+  /**
+   * Handles canvas resize events
+   * @param {Event} event - The resize event
+   */
   function onResizeCanvas(event) {
     if (!screen.getCanvas()) return;
     propagate(
@@ -71,6 +93,10 @@ function UserEvents() {
     );
   }
 
+  /**
+   * Handles mouse down events
+   * @param {MouseEvent} event - The mouse event
+   */
   function onMouseDown(event) {
     //if (navigator.userAgent.match(/Android/i)) {
     //event.preventDefault();
@@ -80,11 +106,19 @@ function UserEvents() {
     event.stopPropagation();
   }
 
+  /**
+   * Handles mouse up events
+   * @param {MouseEvent} event - The mouse event
+   */
   function onMouseUp(event) {
     mouseCanvasPosition = getMouseCanvasPosition(event);
     propagate("onMouseUp", self.mouseWorldPosition());
   }
 
+  /**
+   * Handles mouse move events
+   * @param {MouseEvent} event - The mouse event
+   */
   function onMouseMove(event) {
     //if (navigator.userAgent.match(/Android/i)) {
     event.preventDefault();
@@ -106,6 +140,11 @@ function UserEvents() {
     onMouseUp: ["window.onmouseup", "window.touchend", "window.touchleave"],
   };
 
+  /**
+   * Enables a specific event handler
+   * @param {string} handler - The name of the event handler to enable
+   * @throws {Error} If handler is not a valid event handler name
+   */
   this.enableEvent = function (handler) {
     Assert.assertIsValidString(
       handler,
@@ -118,6 +157,11 @@ function UserEvents() {
     );
   };
 
+  /**
+   * Disables a specific event handler
+   * @param {string} handler - The name of the event handler to disable
+   * @throws {Error} If handler is not a valid event handler name
+   */
   this.disableEvent = function (handler) {
     Assert.assertIsValidString(
       handler,
@@ -128,6 +172,9 @@ function UserEvents() {
     eventsMapping[handler].forEach((event) => eval(event + " = null;"));
   };
 
+  /**
+   * Propagates mouse move events at regular intervals to avoid flooding
+   */
   function propagateMouseMoveOnInterval() {
     if (mousePositionChanged) {
       propagate("onMouseMove", self.mouseWorldPosition());
@@ -135,8 +182,12 @@ function UserEvents() {
     }
   }
 
-  // propagateInput is the callback function that will receive
-  // the generated events. It's signature is: propagateInput(event, arg)
+  /**
+   * Starts the user events system
+   * @param {number} mouseMovePropagationLatency - Interval for mouse move event propagation
+   * @param {Function} propagateInput - Callback function to receive generated events
+   * @param {Object} cameraInput - The camera object for coordinate conversion
+   */
   this.start = function (
     mouseMovePropagationLatency,
     propagateInput,
@@ -148,6 +199,9 @@ function UserEvents() {
     setInterval(propagateMouseMoveOnInterval, mouseMovePropagationLatency);
   };
 
+  /**
+   * Stops the user events system by disabling all event handlers
+   */
   this.stop = function () {
     Object.keys(eventsMapping).forEach((handler) => this.disableEvent(handler));
   };
@@ -156,6 +210,10 @@ function UserEvents() {
   window.addEventListener("scroll", preventMotion, false);
   window.addEventListener("touchmove", treatTouchMove, false);
 
+  /**
+   * Handles touch move events for mobile support
+   * @param {TouchEvent} event - The touch event
+   */
   function treatTouchMove(event) {
     event.preventDefault();
     mouseCanvasPosition = getMouseCanvasPosition(event);
@@ -163,6 +221,10 @@ function UserEvents() {
     preventMotion(event);
   }
 
+  /**
+   * Prevents unwanted scrolling and motion on mobile devices
+   * @param {Event} event - The event to prevent
+   */
   function preventMotion(event) {
     window.scrollTo(0, 0);
     event.preventDefault();

@@ -10,37 +10,94 @@ import { UserEvents } from "../UserEvents.js";
 import { resourceStore } from "./ResourceStore.js";
 import { screen } from "./Screen.js";
 
-// changing defaults
+/**
+ * @fileoverview Brainiac Engine Client - Main client-side game engine controller.
+ * Manages game initialization, server connections, rendering, and client-server communication.
+ *
+ * Generated Events to game:
+ * - onAfterDrawScreen(context) -> calls game event after each time the screen is draw.
+ * - onBeforeDrawAgent(agentId,imageName, context, canvasRectangle, orientation) -> calls game event after each image draw.
+ * - onAfterDrawAgent(agentId,imageName, context, canvasRectangle, orientation) -> calls game event after each image draw.
+ * - onConnectToServer(userName) -> game start event with defined user name
+ *
+ * Needed game interfaces:
+ * - getMediaAssets() -> return an array of media assets to load for the game.
+ */
 
-// Generated Events to game:
-// onAfterDrawScreen(context) -> calls game event after each time the screen is draw.
-// onBeforeDrawAgent(agentId,imageName, context, canvasRectangle, orientation) -> calls game event after each image draw.
-// onAfterDrawAgent(agentId,imageName, context, canvasRectangle, orientation) -> calls game event after each image draw.
-// onConnectToServer(userName) -> game start event with defined user name
-
-// Needed game interfaces
-// getMediaAssets() -> return an array of media assets to load for the game.
-
-//brainiac client engine namespace
+/**
+ * @namespace BEClient
+ * @description Brainiac Engine Client - Main client-side game engine namespace.
+ * Provides game initialization, server connection management, and rendering coordination.
+ */
 let BEClient = {};
 
+/**
+ * @memberof BEClient
+ * @type {string}
+ * @description Current user's name/identifier.
+ */
 BEClient.userName = "";
 
+/**
+ * @memberof BEClient
+ * @type {Function|null}
+ * @description Callback function called after drawing each agent.
+ * Signature: (agentId, imageName, context, canvasRectangle, orientation) => void
+ */
 BEClient.onAfterDrawAgent = null;
+
+/**
+ * @memberof BEClient
+ * @type {Function|null}
+ * @description Callback function called before drawing each agent.
+ * Signature: (agentId, imageName, context, canvasRectangle, orientation) => void
+ */
 BEClient.onBeforeDrawAgent = null;
 
+/**
+ * @memberof BEClient
+ * @type {Function|null}
+ * @description Callback function called after drawing the entire screen.
+ * Signature: (context) => void
+ */
 BEClient.onAfterDrawScreen = null;
 
+/**
+ * @memberof BEClient
+ * @type {Object|null}
+ * @description Reference to the game application instance.
+ */
 BEClient.app = null;
 
+/**
+ * @memberof BEClient
+ * @type {UserEvents}
+ * @description User input events handler instance.
+ */
 BEClient.userEvents = new UserEvents();
 
-// let loading_animation = document.createElement('img')
-
+/**
+ * @memberof BEClient
+ * @type {number|null}
+ * @description Interval ID for agent execution loop.
+ */
 BEClient.agentsExecutionIntervalId = null;
 
+/**
+ * @memberof BEClient
+ * @type {Array}
+ * @description Array of currently visible agents in the game world.
+ */
 BEClient.visibleAgents = [];
 
+/**
+ * Sets the camera position to center on the given agent.
+ * @param {Object} agent - The agent to center the camera on.
+ * @param {Object} agent.rectangle - The agent's rectangle with center coordinates.
+ * @param {Object} agent.rectangle.center - The center point of the agent.
+ * @param {number} agent.rectangle.center.x - X coordinate of agent center.
+ * @param {number} agent.rectangle.center.y - Y coordinate of agent center.
+ */
 function setCameraToAgentPosition(agent) {
   let cameraSize = screen.getSize().multiplyByScalar(screen.zoomOutFactor);
   setCamera({
@@ -53,14 +110,31 @@ function setCameraToAgentPosition(agent) {
   });
 }
 
+/**
+ * Gets the array of currently visible agents.
+ * @memberof BEClient
+ * @returns {Array} Array of visible agent objects.
+ */
 BEClient.getVisibleAgents = function () {
   return BEClient.visibleAgents;
 };
 
+/**
+ * Finds a visible agent by a specific property value.
+ * @memberof BEClient
+ * @param {string} property - The property name to search by.
+ * @param {*} value - The value to match against the property.
+ * @returns {Object|undefined} The found agent object, or undefined if not found.
+ */
 BEClient.getVisibleAgentByProperty = function (property, value) {
   return BEClient.visibleAgents.find((ag) => ag[property] === value);
 };
 
+/**
+ * Sets the array of visible agents and optionally adjusts camera position.
+ * @memberof BEClient
+ * @param {Array} visibleAgentsInput - Array of agent objects to set as visible.
+ */
 BEClient.setVisibleAgents = function (visibleAgentsInput) {
   // Assert.assert(camera, 'camera should be defined before showing agents')
   //if(!camera) return
@@ -76,14 +150,33 @@ BEClient.setVisibleAgents = function (visibleAgentsInput) {
   }
 };
 
-// Note: this is needed because camera is passed by reference
-// and users depend on its update
+/**
+ * Camera object passed by reference to maintain state consistency.
+ * @type {Object}
+ * @property {Object} rectangle - Camera rectangle with center and size.
+ */
 let camera = { rectangle: rect(0, 0, 1, 1) }; //1s to avoid conversion errors
 
+/**
+ * Gets the current camera object.
+ * @memberof BEClient
+ * @returns {Object} The camera object with rectangle property.
+ */
 BEClient.getCamera = function () {
   return camera;
 };
 
+/**
+ * Sets the camera position and size by updating the existing camera object.
+ * @param {Object} cameraToSet - Camera object with rectangle property.
+ * @param {Object} cameraToSet.rectangle - Rectangle defining camera view.
+ * @param {Object} cameraToSet.rectangle.center - Center coordinates.
+ * @param {number} cameraToSet.rectangle.center.x - X coordinate.
+ * @param {number} cameraToSet.rectangle.center.y - Y coordinate.
+ * @param {Object} cameraToSet.rectangle.size - Camera view size.
+ * @param {number} cameraToSet.rectangle.size.x - Width.
+ * @param {number} cameraToSet.rectangle.size.y - Height.
+ */
 function setCamera(cameraToSet) {
   camera.rectangle.center.x = cameraToSet.rectangle.center.x;
   camera.rectangle.center.y = cameraToSet.rectangle.center.y;
@@ -91,37 +184,28 @@ function setCamera(cameraToSet) {
   camera.rectangle.size.y = cameraToSet.rectangle.size.y;
 }
 
-// function addLoadingImage() {
-//   loading_animation.id = BEClientDefinitions.LOADING_ANIMATION_ID
-//   loading_animation.src = './common_media/images/waiting_animation.gif'
-//   loading_animation.className = BEClientDefinitions.LOADING_ANIMATION_CLASS_NAME
-//   loading_animation.width = 100
-//   loading_animation.height = 100
-
-//   document.body.appendChild(loading_animation)
-// }
-
-// function removeLoadingImage() {
-//   try {
-//     let loading_image = document.getElementById(BEClientDefinitions.LOADING_ANIMATION_ID)
-//     if (loading_image) {
-//       loading_animation.parentNode.removeChild(loading_image)
-//     }
-//   } catch (e) { console.log('error while remoring loading image')}
-// }
-
+/**
+ * Removes all audio event listeners from loaded audio resources.
+ */
 function removeAllAudioEvents() {
   resourceStore
     .retrieveAllAudioNames()
     .map((audioName) => Sound.clearAllEvents(audioName));
 }
 
+/**
+ * Removes the loading message element from the DOM.
+ */
 function removeLoadingMessage() {
   let loading = document.getElementById("loading");
   loading && loading.parentNode.removeChild(loading);
 }
 
-//send fired event to all agents -- to be called by userEvents --
+/**
+ * Propagates user events to both server and client listeners.
+ * @param {string} event - The event name/type.
+ * @param {*} arg - Event arguments/data to pass along.
+ */
 function propagateUserEvent(event, arg) {
   let eventAndArg = { event: event, arg: arg };
   //propagate to server
@@ -137,6 +221,10 @@ function propagateUserEvent(event, arg) {
   );
 }
 
+/**
+ * Initializes the socket connection and sets up server message handlers.
+ * Handles both local app mode (using fakeSocket) and remote connections.
+ */
 function _startConnection() {
   if (BEClient.config.localApp) {
     BEClient.socket = fakeSocket;
@@ -193,6 +281,14 @@ function _startConnection() {
   });
 }
 
+/**
+ * Starts the Brainiac Engine Client with the provided game application.
+ * Initializes resources, establishes connections, and prepares the game environment.
+ * @memberof BEClient
+ * @param {Object} app - The game application object.
+ * @param {Function} app.getMediaAssets - Function returning array of media assets to load.
+ * @param {Function} [app.getEffectsDescription] - Optional function returning effects descriptor.
+ */
 BEClient.start = function (app) {
   //connect to server
   BEClient.app = app;
@@ -219,6 +315,11 @@ BEClient.start = function (app) {
   resourceStore.callWhenReady(executeAfterLoadCommonResources);
 };
 
+/**
+ * Connects to the game server and initializes the game session.
+ * Sets up rendering, loads game resources, and establishes communication.
+ * @memberof BEClient
+ */
 BEClient.connectToGameServer = function () {
   //EArray.empty(BEClient.visibleAgents)
   BEClient.visibleAgents = [];
@@ -305,10 +406,18 @@ BEClient.connectToGameServer = function () {
   resourceStore.callWhenReady(executeAfterLoadGameResources);
 };
 
+/**
+ * Sets the background image for the game screen.
+ * @memberof BEClient
+ * @param {string} imageName - Name/identifier of the background image resource.
+ */
 BEClient.setBackgroundImageName = function (imageName) {
   screen.setBackgroundImageName(imageName);
 };
 
+/**
+ * Loads common engine resources including effects and base assets.
+ */
 function loadCommonResources() {
   resourceStore.createEffectsFromDescriptor(
     BECommonDefinitions.COMMON_EFFECTS_DESCRIPTION,

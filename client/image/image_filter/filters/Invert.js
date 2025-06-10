@@ -1,4 +1,11 @@
 "use strict";
+
+/**
+ * Inverts the colors of image data by subtracting each RGB value from 255
+ * Creates a negative effect by inverting all color channels
+ * @param {ImageData} imageData - The image data to invert
+ * @returns {ImageData} The inverted image data
+ */
 export function Invert(imageData) {
   let pix = imageData.data;
   for (let i = 0, n = pix.length; i < n; i += 4) {

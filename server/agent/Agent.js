@@ -6,34 +6,63 @@ import { Vector } from "../../common/geometry/Vector.js";
 
 import { environment } from "./singleton/Environment.js";
 
-//agent generated events (needed by move test)
-//onHittingWorldBorder
-//onCollision(otherAgent)
-//onOverlapping(overlappingAgent)
-//onVisible
-//onPartiallyVisible
-//onNotVisible
+/**
+ * @file Core agent system for the Brainiac Engine.
+ * Provides the base Agent class with movement, collision detection, and event handling.
+ * @module Agent
+ */
 
-// external properties:
-//isSolid
-// imageName
-// isVisible
+/**
+ * Agent generated events:
+ * - onHittingWorldBorder: Called when agent hits world boundary
+ * - onCollision(otherAgent): Called when solid agent collides with another solid agent
+ * - onOverlapping(overlappingAgent): Called when non-solid agents overlap
+ * - onVisible: Called when agent becomes visible to camera
+ * - onPartiallyVisible: Called when agent becomes partially visible
+ * - onNotVisible: Called when agent becomes not visible
+ *
+ * External properties that can be set:
+ * - isSolid: Whether agent blocks movement of other agents
+ * - imageName: Name of the image resource for visual representation
+ * - isVisible: Whether agent is rendered on screen
+ */
 
+/**
+ * Initializes an agent with basic properties and adds it to the environment.
+ * @private
+ * @param {string} imageName - Name of the image resource for the agent
+ * @param {Rectangle} [inputRectangle] - Initial rectangle bounds for the agent
+ * @param {boolean} isSolid - Whether the agent blocks movement of other agents
+ * @returns {Object|null} The initialized agent or null if initialization fails
+ */
 function agentInitialize(imageName, inputRectangle, isSolid) {
   this.isAlive = true;
   this.imageName = null;
   this.isVisible = true;
   this.isSolid = isSolid;
+  /** @type {number} Latency in milliseconds for onMouseMoveHit events */
   this.onMouseMoveHitLatencyInMillis = 10;
+  /** @type {Rectangle} Reference to the world boundary rectangle */
   this.worldRectangle = environment.getWorldRectangle();
 
   this.rectangle = inputRectangle || new Rectangle();
   this.imageName = imageName;
 
+  /**
+   * Kills the agent and removes it from the environment.
+   * @memberof Agent
+   */
   this.die = function () {
     this.isAlive = false;
     environment.removeAgent(this);
   };
+
+  /**
+   * Checks if this agent equals another agent by ID.
+   * @memberof Agent
+   * @param {Object} other - The other agent to compare with
+   * @returns {boolean} True if agents have the same ID
+   */
   this.equal = function (other) {
     return this.id === other.id;
   };
@@ -47,19 +76,34 @@ function agentInitialize(imageName, inputRectangle, isSolid) {
     if (overlappingAgent && overlappingAgent.isSolid) return null;
   }
 
+  /** @type {boolean} Flag to control mouse move hit event latency */
   let latencyTimePassed = true;
 
+  /**
+   * Starts the latency timer for mouse move hit events.
+   * @private
+   */
   function startLatencyTime() {
     latencyTimePassed = false;
     setTimeout(() => {
       latencyTimePassed = true;
     }, this.onMouseMoveHitLatencyInMillis);
   }
+
   environment.addAgent(this);
   return this;
 }
 
-//use this to create a new agent (simplified)
+/**
+ * Creates a new agent with simplified parameters.
+ * @param {string} imageName - Name of the image resource for the agent
+ * @param {number} [width=100] - Width of the agent in pixels
+ * @param {number} [height=100] - Height of the agent in pixels
+ * @param {boolean} [isSolid=true] - Whether the agent blocks movement of other agents
+ * @param {number} [xPos=0] - Initial X position
+ * @param {number} [yPos=0] - Initial Y position
+ * @returns {Object|null} The created agent or null if creation fails
+ */
 let createAgent = function (
   imageName,
   width = 100,
@@ -75,7 +119,13 @@ let createAgent = function (
   );
 };
 
-//use this to create a new agent with specific rectangle
+/**
+ * Creates a new agent with a specific rectangle.
+ * @param {string} imageName - Name of the image resource for the agent
+ * @param {Rectangle} inputRectangle - Rectangle defining agent's position and size
+ * @param {boolean} [isSolid=true] - Whether the agent blocks movement of other agents
+ * @returns {Object|null} The created agent or null if creation fails
+ */
 let createAgentWithRectangle = function (
   imageName,
   inputRectangle,
@@ -85,7 +135,16 @@ let createAgentWithRectangle = function (
   return agentInitialize.call(agent, imageName, inputRectangle, isSolid);
 };
 
+/**
+ * Agent prototype containing all agent methods and properties.
+ * @namespace proto
+ */
 let proto = {
+  /**
+   * Checks if this agent is controlled by a user.
+   * @memberof proto
+   * @returns {boolean} True if agent has a valid userId
+   */
   isUserAgent() {
     return Number.isInteger(this.userId);
   },
@@ -94,37 +153,85 @@ let proto = {
   //   return environment.checkAgentExists(this) :)
   // },
 
+  /**
+   * Sets the size of the agent.
+   * @memberof proto
+   * @param {Vector} newSize - New size vector for the agent
+   * @returns {Object} This agent instance for method chaining
+   */
   setSize(newSize) {
     this.rectangle.size = newSize;
     return this;
   },
 
+  /**
+   * Gets the current size of the agent.
+   * @memberof proto
+   * @returns {Vector} The agent's current size vector
+   */
   getSize() {
     return this.rectangle.size;
   },
 
+  /**
+   * Gets the current position of the agent.
+   * @memberof proto
+   * @returns {Vector} The agent's current position vector
+   */
   getPosition() {
     return this.rectangle.getPosition();
   },
 
+  /**
+   * Checks if a position hits this agent.
+   * @memberof proto
+   * @param {Vector} position - Position to test for hit
+   * @returns {boolean} True if position is inside agent's rectangle
+   */
   checkHit(position) {
     return this.rectangle.checkPointInside(position);
   },
 
+  /**
+   * Checks if this agent collides with another agent.
+   * @memberof proto
+   * @param {Object} anotherAgent - The other agent to check collision with
+   * @returns {boolean} True if rectangles intersect
+   */
   checkCollision(anotherAgent) {
     return this.rectangle.checkIntersection(anotherAgent.rectangle);
   },
 
+  /**
+   * Sets agent to a 2D position (alias for setPosition).
+   * @memberof proto
+   * @param {Vector} newPosition - Target position vector
+   * @param {boolean} [force] - Whether to force the movement ignoring collisions
+   * @returns {boolean} True if movement was successful
+   */
   set2DPosition(newPosition, force) {
     let distance = this.getPosition().vectorDistance(newPosition);
     return this.move(distance, force);
   },
 
+  /**
+   * Sets agent to a specific position.
+   * @memberof proto
+   * @param {Vector} newPosition - Target position vector
+   * @param {boolean} [force] - Whether to force the movement ignoring collisions
+   * @returns {boolean} True if movement was successful
+   */
   setPosition(newPosition, force) {
     let distance = this.getPosition().vectorDistance(newPosition);
     return this.move(distance, force);
   },
 
+  /**
+   * Forces movement without collision checking.
+   * @memberof proto
+   * @param {Vector} distance - Distance vector to move
+   * @returns {Object} This agent instance for method chaining
+   */
   forceMove(distance) {
     Assert.assert(
       typeof distance.x === "number" && typeof distance.y === "number",
@@ -137,7 +244,13 @@ let proto = {
   },
 
   // let myCamera = null
-  //return null if cannot move at all or modified moviment vector if can move along world border.
+  /**
+   * Checks if the agent can move by the specified distance.
+   * Tests for world boundaries and collisions with other agents.
+   * @memberof proto
+   * @param {Vector} distance - Distance vector to test
+   * @returns {Vector|null} The allowed movement vector or null if movement is blocked
+   */
   checkMove(distance) {
     // Assert.assert(typeof distance !== 'undefined')
     // Assert.assertIsNumber(distance.x)
@@ -227,6 +340,13 @@ let proto = {
     //return distance;
   },
 
+  /**
+   * Moves the agent by the specified distance with collision checking.
+   * @memberof proto
+   * @param {Vector} distance - Distance vector to move
+   * @param {boolean} [force] - Whether to force movement ignoring collisions
+   * @returns {boolean} True if movement was successful
+   */
   move(distance, force) {
     // Assert.assert(distance instanceof Vector, 'Agent#move: distance is not a Vector')
     // Assert.assertIsNumber(this.rectangle.center.x)
@@ -254,31 +374,72 @@ let proto = {
     return false;
   },
 
+  /**
+   * Moves the agent up by the specified distance.
+   * @memberof proto
+   * @param {number} [distanceY=1] - Distance to move up
+   * @param {boolean} [force] - Whether to force movement ignoring collisions
+   * @returns {boolean} True if movement was successful
+   */
   moveUp(distanceY, force) {
     distanceY = distanceY === undefined ? 1 : distanceY;
     return this.move(new Vector(0, distanceY), force);
   },
 
+  /**
+   * Moves the agent down by the specified distance.
+   * @memberof proto
+   * @param {number} [distanceY=1] - Distance to move down
+   * @param {boolean} [force] - Whether to force movement ignoring collisions
+   * @returns {boolean} True if movement was successful
+   */
   moveDown(distanceY, force) {
     distanceY = distanceY === undefined ? 1 : distanceY;
     return this.move(new Vector(0, -distanceY), force);
   },
 
+  /**
+   * Moves the agent left by the specified distance.
+   * @memberof proto
+   * @param {number} [distanceX=1] - Distance to move left
+   * @param {boolean} [force] - Whether to force movement ignoring collisions
+   * @returns {boolean} True if movement was successful
+   */
   moveLeft(distanceX, force) {
     distanceX = distanceX === undefined ? 1 : distanceX;
     return this.move(new Vector(-distanceX, 0), force);
   },
 
+  /**
+   * Moves the agent right by the specified distance.
+   * @memberof proto
+   * @param {number} [distanceX=1] - Distance to move right
+   * @param {boolean} [force] - Whether to force movement ignoring collisions
+   * @returns {boolean} True if movement was successful
+   */
   moveRight(distanceX, force) {
     distanceX = distanceX === undefined ? 1 : distanceX;
     return this.move(new Vector(distanceX, 0), force);
   },
 
+  /**
+   * Snaps this agent's position to match another agent's position.
+   * @memberof proto
+   * @param {Object} agent - The agent to snap to
+   * @returns {Object} This agent instance for method chaining
+   */
   snapToAgent(agent) {
     this.rectangle = agent.rectangle;
     return this;
   },
 
+  /**
+   * Moves the agent towards a specific position by a scalar distance.
+   * @memberof proto
+   * @param {Vector} positionToGetClose - Target position to move towards
+   * @param {number} scalarDistanceToMove - Distance to move towards target
+   * @returns {Object} This agent instance for method chaining
+   */
   moveTowardsPosition(positionToGetClose, scalarDistanceToMove) {
     let vectorDistanceFromTarget =
       this.getPosition().vectorDistance(positionToGetClose);
@@ -294,17 +455,42 @@ let proto = {
     return this;
   },
 
+  /**
+   * Moves the agent towards another agent by a scalar distance.
+   * @memberof proto
+   * @param {Object} agent - The target agent to move towards
+   * @param {number} scalarDistanceToMove - Distance to move towards target
+   * @returns {Object} This agent instance for method chaining
+   */
   moveTowardsAnotherAgent(agent, scalarDistanceToMove) {
     this.moveTowardsPosition(agent.getPosition(), scalarDistanceToMove);
     return this;
   },
 
+  /**
+   * Moves the agent in a specific orientation by a distance.
+   * @memberof proto
+   * @param {number} distance - Distance to move
+   * @param {number} [orientation] - Orientation angle in radians. Uses agent's orientation if not provided.
+   * @param {boolean} [force] - Whether to force movement ignoring collisions
+   * @returns {boolean} True if movement was successful
+   */
   moveTowardsOrientation(distance, orientation, force) {
     orientation = orientation || this.orientation || 0;
     let displacementVect = Vector.makeFromAngleAndSize(orientation, distance);
     return this.move(displacementVect, force);
   },
 
+  /**
+   * Sets position relative to another agent.
+   * @memberof proto
+   * @param {Object} otherAgent - The reference agent
+   * @param {string} relativePosition - Position relative to other agent
+   * @param {string} [insideOutside="inside"] - Whether to position inside or outside
+   * @param {number} [offset=0] - Additional offset distance
+   * @param {boolean} [force=false] - Whether to force movement ignoring collisions
+   * @returns {boolean} True if positioning was successful
+   */
   setPositionRelativeToAgent(
     otherAgent,
     relativePosition,
@@ -323,6 +509,16 @@ let proto = {
     return this.setPosition(newRectangle.center, force);
   },
 
+  /**
+   * Moves the agent to a position relative to another agent.
+   * @memberof proto
+   * @param {Object} otherAgent - The reference agent
+   * @param {string} positionRelativeToOtherAgent - Relative position string
+   *                 ("above", "below", "left", "right", "aboveRight", "aboveLeft", "belowRight", "belowLeft")
+   * @param {number} [padding=1] - Padding distance to avoid collision
+   * @param {boolean} [force] - Whether to force movement ignoring collisions
+   * @returns {Object} This agent instance for method chaining
+   */
   moveRelativeToAgent(
     otherAgent,
     positionRelativeToOtherAgent,

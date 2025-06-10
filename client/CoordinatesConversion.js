@@ -12,7 +12,20 @@ import { Vector } from "../common/geometry/Vector.js";
 
 // *** TODO *** REMOVE THIS DEPENDENCY AND ADD SCREENSIZE AS A "setScreenSize(screenSize)"
 
+/**
+ * Utility for converting coordinates between canvas and world coordinate systems
+ * Handles the transformation between different coordinate spaces in the game engine
+ * @namespace
+ */
 let CoordinatesConversion = {};
+
+/**
+ * Converts canvas coordinates to world coordinates
+ * @param {Vector} canvasPosition - Position in canvas coordinates
+ * @param {Rectangle} cameraRectangle - The camera's rectangle in world space
+ * @param {Vector} screenSize - The screen/canvas size
+ * @returns {Vector} Position in world coordinates
+ */
 CoordinatesConversion.canvasToWorld = function (
   canvasPosition,
   cameraRectangle,
@@ -36,10 +49,12 @@ CoordinatesConversion.canvasToWorld = function (
   return worldPosition;
 };
 
-/*
- * Converts a rectangle from canvas to world coordinates.
- * @param {Rectangle} rectangle - The rectangle to be converted.
- * @returns {Rectangle} The rectangle in world coordinates.
+/**
+ * Converts a rectangle from canvas to world coordinates
+ * @param {Rectangle} rectangle - The rectangle to be converted
+ * @param {Rectangle} cameraRectangle - The camera's rectangle in world space
+ * @param {Vector} screenSize - The screen/canvas size
+ * @returns {Rectangle} The rectangle in world coordinates
  */
 CoordinatesConversion.rectangleCanvasToWorld = function (
   rectangle,
@@ -65,7 +80,14 @@ CoordinatesConversion.rectangleCanvasToWorld = function (
 //     return canvasSize.convert(worldSize, camera.rectangle.size);
 //   };
 
-//destructive!
+/**
+ * Converts world coordinates to canvas coordinates (destructive operation)
+ * @param {Vector} worldPosition - Position in world coordinates
+ * @param {Rectangle} cameraRectangle - The camera's rectangle in world space
+ * @param {Vector} screenSize - The screen/canvas size
+ * @param {boolean} [noCamera=false] - Whether to skip camera transformation
+ * @returns {Vector} Position in canvas coordinates
+ */
 CoordinatesConversion.worldToCanvas = function (
   worldPosition,
   cameraRectangle,
@@ -93,6 +115,14 @@ CoordinatesConversion.worldToCanvas = function (
   return canvasPosition;
 };
 
+/**
+ * Converts a rectangle from world to canvas coordinates
+ * @param {Rectangle} rectangle - The rectangle to convert
+ * @param {Rectangle} cameraRectangle - The camera's rectangle in world space
+ * @param {Vector} screenSize - The screen/canvas size
+ * @param {boolean} [noCamera=false] - Whether to skip camera transformation
+ * @returns {Rectangle} The rectangle in canvas coordinates
+ */
 CoordinatesConversion.rectangleWorldToCanvas = function (
   rectangle,
   cameraRectangle,

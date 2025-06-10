@@ -3,6 +3,14 @@
 import { ImageFilter } from "../ImageFilter.js";
 import { GrayScale } from "./GrayScale.js";
 
+/**
+ * Applies a Sobel edge detection filter to image data
+ * Detects edges by computing gradients in horizontal and vertical directions
+ * Note: ImageData values are clamped between 0 and 255, so Float32Array is used
+ * for gradient values because they range between -255 and 255
+ * @param {ImageData} imageData - The image data to apply edge detection to
+ * @returns {ImageData} The edge-detected image data with colored gradients
+ */
 export function Sobel(imageData) {
   var grayscale = GrayScale(imageData);
   // Note that ImageData values are clamped between 0 and 255, so we need

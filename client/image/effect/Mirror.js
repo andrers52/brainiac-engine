@@ -2,6 +2,13 @@
 
 import { Assert } from "arslib";
 
+/**
+ * Flips an image horizontally and/or vertically on the canvas
+ * @param {CanvasRenderingContext2D} ctx - The canvas 2D rendering context
+ * @param {HTMLCanvasElement|HTMLImageElement} image - The image to flip
+ * @param {boolean} flipH - Whether to flip horizontally
+ * @param {boolean} flipV - Whether to flip vertically
+ */
 function flipImage(ctx, image, flipH, flipV) {
   var scaleH = flipH ? -1 : 1, // Set horizontal scale to -1 if flip horizontal
     scaleV = flipV ? -1 : 1, // Set verical scale to -1 if flip vertical
@@ -24,8 +31,13 @@ function flipImage(ctx, image, flipH, flipV) {
   ctx.drawImage(tmpCanvas, 0, 0);
 }
 
-//flip an image horizontally and/or vertically
-//parameters is: {horizontal: [true|false], vertical: [true|false]}
+/**
+ * Applies mirror effect to flip an image horizontally and/or vertically
+ * @param {CanvasRenderingContext2D} context - The canvas 2D rendering context
+ * @param {Object} parameters - Mirror configuration object
+ * @param {boolean} [parameters.horizontal] - Whether to flip horizontally
+ * @param {boolean} [parameters.vertical] - Whether to flip vertically
+ */
 export function Mirror(context, parameters) {
   Assert.assert(
     parameters &&

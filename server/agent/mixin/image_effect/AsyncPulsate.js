@@ -2,8 +2,16 @@
 
 import { Rectangle } from "../../../../common/geometry/Rectangle.js";
 
-//TODO: CHECK POSSIBILITY OF MERGING WITH PULSATE EFFECT
-//NOTE: if maxTimeinMilliseconds is not set, the effect will be executed until agent dies
+/**
+ * @fileoverview Asynchronous pulsating effect that alternates between growing width and height.
+ * Creates a dynamic visual effect where the agent's width and height pulsate in opposite directions.
+ */
+
+/**
+ * Adds asynchronous pulsating behavior to an agent.
+ * The effect alternates between growing width/shrinking height and vice versa.
+ * @param {number} [maxTimeinMilliseconds] - Maximum duration of the effect. If not set, runs until agent dies.
+ */
 export function AsyncPulsate(maxTimeinMilliseconds) {
   let DEFAULT_MAX_TIME = 2000;
   maxTimeinMilliseconds = maxTimeinMilliseconds || DEFAULT_MAX_TIME;
@@ -21,6 +29,10 @@ export function AsyncPulsate(maxTimeinMilliseconds) {
 
   let originalRectangleSize = new Rectangle();
 
+  /**
+   * Performs one step of the asynchronous pulsate animation.
+   * Grows one dimension while shrinking the other.
+   */
   function asyncPulsate() {
     if (widthGrow) {
       self.rectangle.size.x += self.rectangle.size.x * factor;
@@ -31,6 +43,10 @@ export function AsyncPulsate(maxTimeinMilliseconds) {
     }
   }
 
+  /**
+   * Stops the pulsating effect and restores original size.
+   * @memberof AsyncPulsate
+   */
   this.stopPulsate = function () {
     if (!started) return;
     clearInterval(cycleIntervalId);
@@ -40,11 +56,18 @@ export function AsyncPulsate(maxTimeinMilliseconds) {
     started = false;
   };
 
+  /**
+   * Toggles the growth direction and resets size if needed.
+   */
   function loop() {
     if (!widthGrow) self.rectangle.size = originalRectangleSize.clone();
     widthGrow = !widthGrow;
   }
 
+  /**
+   * Starts the pulsating effect.
+   * @memberof AsyncPulsate
+   */
   this.startPulsate = function () {
     if (started) return;
     originalRectangleSize = this.rectangle.size.clone();

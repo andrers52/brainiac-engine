@@ -1,15 +1,29 @@
 {
     "name": "brainiac-engine",
-    "version": "0.1.1",
-    "description": "Brainiac Engine",
+    "version": "0.2.0",
+    "description": "Brainiac Engine - A robust JavaScript framework for building interactive applications and games",
+    "keywords": ["game-engine", "javascript", "2d-graphics", "interactive", "canvas", "websockets"],
     "repository": "https://github.com/andrers52/brainiac-engine.git",
+    "homepage": "https://github.com/andrers52/brainiac-engine#readme",
+    "bugs": {
+        "url": "https://github.com/andrers52/brainiac-engine/issues"
+    },
     "main": "index.js",
     "type": "module",
+    "engines": {
+        "node": ">=14.0.0",
+        "npm": ">=6.0.0"
+    },
     "scripts": {
-        "test": "mocha --require esm --require ./test/setup.js 'test/**/*.test.js'"
+        "test": "mocha --require esm --require ./test/setup.js 'test/**/*.test.js'",
+        "postinstall": "echo '✅ Brainiac Engine dependencies installed successfully!'",
+        "setup": "npm install && echo '🚀 Brainiac Engine setup complete!'",
+        "dev": "npm run setup",
+        "start": "node index.js",
+        "prepare": "npm install --production=false"
     },
     "dependencies": {
-        "arslib": "0.2.0",
+        "arslib": "0.3.1",
         "compression": "1.7.2",
         "cors": "2.8.4",
         "express": "4.16.3",

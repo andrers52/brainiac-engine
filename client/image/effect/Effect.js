@@ -9,51 +9,22 @@ import { Ship } from "./drawingeffect/shapes/Ship.js";
 import { Star } from "./drawingeffect/shapes/Star.js";
 import { Triangle } from "./drawingeffect/shapes/Triangle.js";
 
-//receives size and array of effects to use in order to create new image,
-//store and return new name.
-
-// All called effects will make a change to the created image.
-
-//Args:
-//imageName:  optional -> base image onto wich the effects will be applied.
-//            If defined it will define the size of the resulting image.
-//imageSize: optional -> size of new image.
-//newImageName: optional -> name of newly created image. If null a new name will be provided.
-
-//drawingEffectName is the effect name, like "Mirror"
-//argsObj are the arguments expected by the effect, packaged as an object.
-//combineOption is the composition method
-//    [ "source-over" |
-//      "source-in" |
-//      "source-out" |
-//      "source-atop" |
-//      "destination-over" |
-//      "destination-in" |
-//      "destination-out" |
-//      "destination-atop" |
-//      "lighter" |
-//      "copy" |
-//      "xor" |
-//      "multiply" |
-//      "screen" |
-//      "overlay" |
-//      "darken" |
-//      "lighten" |
-//      "color-dodge" |
-//      "color-burn"  |
-//      "hard-light"  |
-//      "soft-light"  |
-//      "difference"  |
-//      "exclusion" |
-//      "hue" |
-//      "saturation"  |
-//      "color" |
-//      "luminosity"
-//      ]
-// }
-// combineOption is optional. If not provided the gradient will just be draw
-// over the image (source-over)
-
+/**
+ * Applies visual effects to images or creates new images with effects
+ * Receives size and array of effects to use in order to create new image, store and return new name.
+ * All called effects will make a change to the created image.
+ *
+ * @param {string} [imageName] - Optional base image name onto which the effects will be applied. If defined it will define the size of the resulting image.
+ * @param {Object} [imageSize] - Optional size of new image with x and y properties
+ * @param {number} [opacity] - Opacity value between 0.0 (fully transparent) and 1.0 (no transparency)
+ * @param {string} [fillColor] - Fill color for the effect
+ * @param {string} [strokeColor] - Stroke color for the effect
+ * @param {string} [newImageName] - Optional name of newly created image. If null a new name will be provided
+ * @param {string} drawingEffectName - The effect name (e.g., "Mirror", "RadialGradient", "Circle", etc.)
+ * @param {Object} [argsObj] - Arguments expected by the effect, packaged as an object
+ * @param {string} [combineOption="source-over"] - The composition method for combining effects
+ * @returns {string} The name of the created or modified image
+ */
 function Effect(
   imageName,
   imageSize,

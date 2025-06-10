@@ -1,8 +1,12 @@
 "use strict";
 
-//Apply shadowBlur to current image
-//parameters is: {thickness: <value>, color: <value>}
-
+/**
+ * Applies a shadow blur effect to the current image
+ * @param {CanvasRenderingContext2D} context - The canvas 2D rendering context
+ * @param {Object} parameters - Shadow configuration object
+ * @param {number} parameters.thickness - The blur radius for the shadow
+ * @param {string} parameters.color - The color of the shadow
+ */
 export function ShadowBlur(context, parameters) {
   //save image with shadow to tmpCanvas
   let tmpCanvas = document.createElement("canvas");

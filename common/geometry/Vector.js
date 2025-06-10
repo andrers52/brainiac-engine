@@ -1,13 +1,27 @@
 "use strict";
 
-//Note: the operations are destructive! Use clone() for protection. 😏
+/**
+ * @fileoverview 2D Vector implementation with mathematical operations.
+ * Note: Most operations are destructive! Use clone() method for protection.
+ * @author Brainiac Engine
+ */
 
 /**
- * Represents a 2D vector.
+ * Represents a 2D vector with x and y components.
+ * Provides mathematical operations for vector manipulation.
  *
- * @class
- * @property {number} x - The x component of the vector.
- * @property {number} y - The y component of the vector.
+ * @class Vector
+ * @param {number} [x=0] - The x component of the vector
+ * @param {number} [y=0] - The y component of the vector
+ *
+ * @example
+ * // Create a new vector
+ * const v1 = new Vector(3, 4);
+ * const v2 = new Vector(); // (0, 0)
+ *
+ * // Vector operations
+ * v1.add(v2).normalize();
+ * console.log(v1.size()); // Vector magnitude
  */
 function Vector(x = 0, y = 0) {
   this.data = new Float64Array(2);
@@ -550,4 +564,4 @@ Vector.Origin = function () {
 //alias to simplify vector creation
 const vect = (x, y) => new Vector(x, y);
 
-export { Vector, vect };
+export { vect, Vector };
