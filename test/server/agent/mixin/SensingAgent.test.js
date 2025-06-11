@@ -6,13 +6,16 @@ import { SensingAgent } from "../../../../server/agent/mixin/SensingAgent.js";
 import { environment } from "../../../../server/agent/singleton/Environment.js";
 
 describe("SensingAgent", function () {
-  let agent, nearbyAgentsStub;
+  let agent, nearbyAgentsStub, clock;
 
   beforeEach(function () {
+    clock = sinon.useFakeTimers();
+
     agent = {
       id: 1,
       isAlive: true,
       orientation: 0,
+      rectangle: rect(0, 0, 10, 10),
       getPosition: sinon.stub().returns(new Vector(0, 0)),
       onSensingAgents: sinon.spy(),
       onSensingUserAgent: sinon.spy(),
@@ -24,6 +27,7 @@ describe("SensingAgent", function () {
   });
 
   afterEach(function () {
+    clock.restore();
     nearbyAgentsStub.restore();
   });
 
@@ -40,14 +44,14 @@ describe("SensingAgent", function () {
       isSolid: true,
       rectangle: rect(1, 1, 1, 1),
       getPosition: sinon.stub().returns(new Vector(10, 0)),
+      isUserAgent: sinon.stub().returns(false),
     };
 
     nearbyAgentsStub.returns([detectedAgent]);
 
     SensingAgent.call(agent, () => true);
 
-    sinon.clock.tick(300);
-
+    // Check immediately - sensing happens on first call
     assert(agent.onSensingAgents.calledOnce);
     assert.strictEqual(
       agent.onSensingAgents.firstCall.args[0][0].agent,
@@ -60,16 +64,16 @@ describe("SensingAgent", function () {
       id: 2,
       isCamera: false,
       isSolid: true,
-      rectangle: rect(1, 1, 1, 1),
+      rectangle: rect(200, 0, 1, 1), // Agent at (200, 0) - outside sensing range
       getPosition: sinon.stub().returns(new Vector(200, 0)),
+      isUserAgent: sinon.stub().returns(false),
     };
 
     nearbyAgentsStub.returns([detectedAgent]);
 
     SensingAgent.call(agent, () => true);
 
-    sinon.clock.tick(300);
-
+    // Sensing happens immediately, not after timeout
     assert(agent.onSensingAgents.notCalled);
   });
 
@@ -87,8 +91,7 @@ describe("SensingAgent", function () {
 
     SensingAgent.call(agent, () => true);
 
-    sinon.clock.tick(300);
-
+    // Sensing happens immediately
     assert(agent.onSensingUserAgent.calledOnce);
     assert.strictEqual(
       agent.onSensingUserAgent.firstCall.args[0].agent,
@@ -103,14 +106,14 @@ describe("SensingAgent", function () {
       isSolid: true,
       rectangle: rect(1, 1, 1, 1),
       getPosition: sinon.stub().returns(new Vector(10, 0)),
+      isUserAgent: sinon.stub().returns(false),
     };
 
     nearbyAgentsStub.returns([detectedAgent]);
 
     SensingAgent.call(agent, () => true);
 
-    sinon.clock.tick(300);
-
+    // Sensing happens immediately
     assert(agent.onSensingForwardAgents.calledOnce);
     assert.strictEqual(
       agent.onSensingForwardAgents.firstCall.args[0][0].agent,
@@ -123,24 +126,25 @@ describe("SensingAgent", function () {
       id: 2,
       isCamera: false,
       isSolid: true,
-      rectangle: rect(1, 1, 1, 1),
+      rectangle: rect(10, 0, 1, 1), // Agent at (10, 0)
       getPosition: sinon.stub().returns(new Vector(10, 0)),
+      isUserAgent: sinon.stub().returns(false),
     };
 
     const detectedAgent2 = {
       id: 3,
       isCamera: false,
       isSolid: true,
-      rectangle: rect(1, 1, 1, 1),
+      rectangle: rect(5, 0, 1, 1), // Agent at (5, 0) - closer, should be "most forward"
       getPosition: sinon.stub().returns(new Vector(5, 0)),
+      isUserAgent: sinon.stub().returns(false),
     };
 
     nearbyAgentsStub.returns([detectedAgent1, detectedAgent2]);
 
     SensingAgent.call(agent, () => true);
 
-    sinon.clock.tick(300);
-
+    // Sensing happens immediately
     assert(agent.onSensingMostForwardAgent.calledOnce);
     assert.strictEqual(
       agent.onSensingMostForwardAgent.firstCall.args[0].agent,

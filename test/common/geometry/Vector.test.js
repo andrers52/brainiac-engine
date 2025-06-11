@@ -54,7 +54,7 @@ describe("Vector", function () {
     let point2 = new Vector(4, 0);
     let point1Clone = point1.clone();
     let point2Clone = point2.clone();
-    let subtraction = point1.subtract(point2);
+    let subtraction = Vector.subtract(point1, point2); // Use static method for non-destructive operation
     assert.strictEqual(subtraction.x, -4);
     assert.strictEqual(subtraction.y, 3);
     assert.strictEqual(point1.toString(), point1Clone.toString());
@@ -91,15 +91,15 @@ describe("Vector", function () {
 
   it("should convert vector to string", function () {
     let point = new Vector();
-    assert.strictEqual(point.toString(), "(0,0,0,1)");
-    let newPoint = point.add(new Vector(1, 1, 0, 1));
-    assert.strictEqual(newPoint.toString(), "(1,1,0,1)");
+    assert.strictEqual(point.toString(), "(0,0)");
+    let newPoint = point.add(new Vector(1, 1));
+    assert.strictEqual(newPoint.toString(), "(1,1)");
   });
 
   it("should rotate vector", function () {
-    let originalPosition = new Vector(1, 0, 0, 1);
+    let originalPosition = new Vector(1, 0);
     let Angle90DegreesInRadians = Math.PI / 2;
-    let expectedEndPosition = new Vector(0, 1, 0, 1);
+    let expectedEndPosition = new Vector(0, 1);
     assert.strictEqual(
       originalPosition.zRotate(Angle90DegreesInRadians).round().toString(),
       expectedEndPosition.toString(),
@@ -121,22 +121,21 @@ describe("Vector", function () {
   it("should make a unit vector", function () {
     assert.strictEqual(Vector.makeUnit().x, 1);
     assert.strictEqual(Vector.makeUnit().y, 1);
-    assert.strictEqual(Vector.makeUnit().z, 1);
   });
 
   it("should make the mean vector", function () {
     let origin = new Vector();
-    let twoByTwoByTwo = new Vector(2, 2, 2);
-    let opposite = twoByTwoByTwo.clone().multiplyByScalar(-1);
+    let twoByTwo = new Vector(2, 2);
+    let opposite = twoByTwo.clone().multiplyByScalar(-1);
     assert.strictEqual(
-      Vector.makeMean(twoByTwoByTwo, opposite).toString(),
+      Vector.makeMean(twoByTwo, opposite).toString(),
       origin.toString(),
     );
   });
 
   it("should find the angle between two vectors using dot product", function () {
-    let x = new Vector(1, 0, 0);
-    let y = new Vector(0, 1, 0);
+    let x = new Vector(1, 0);
+    let y = new Vector(0, 1);
     assert.strictEqual(x.angle(y), Math.PI / 2);
   });
 
@@ -154,37 +153,45 @@ describe("Vector", function () {
   });
 
   it("should calculate the cross product", function () {
-    let x = new Vector(1, 0, 0);
-    let y = new Vector(0, 1, 0);
-    let z = new Vector(0, 0, 1);
-    assert.strictEqual(x.crossProduct(y).size(), 1);
-    assert.strictEqual(x.crossProduct(y).toString(), z.toString());
+    let x = new Vector(1, 0);
+    let y = new Vector(0, 1);
+    // 2D cross product returns a scalar (z-component of 3D cross product)
+    assert.strictEqual(x.crossProduct(y), 1);
+    assert.strictEqual(y.crossProduct(x), -1);
   });
 
   it("should calculate the parallelogram area", function () {
     let oneZero = new Vector(1, 0, 0);
-    let oneOne = new Vector(1, 1, 0);
-    let expectedArea = 1;
-    assert.strictEqual(Vector.parallelogramArea(oneZero, oneOne), expectedArea);
-  });
+    it("should calculate the parallelogram area", function () {
+      let oneZero = new Vector(1, 0);
+      let oneOne = new Vector(1, 1);
+      let expectedArea = 1;
+      assert.strictEqual(
+        Vector.parallelogramArea(oneZero, oneOne),
+        expectedArea,
+      );
+    });
 
-  it("should determine if face is up", function () {
-    let oneZero = new Vector(1, 0, 0);
-    let oneOne = new Vector(1, 1, 0);
-    assert.ok(Vector.isFaceUp(oneZero, oneOne));
-  });
+    it("should determine if face is up", function () {
+      let upVector = new Vector(0, 1); // Pointing up (positive y)
+      let downVector = new Vector(0, -1); // Pointing down (negative y)
+      assert.ok(Vector.isFaceUp(upVector));
+      assert.ok(!Vector.isFaceUp(downVector));
+    });
 
-  it("should determine if face is down", function () {
-    let oneZero = new Vector(1, 0, 0);
-    let oneOne = new Vector(1, 1, 0);
-    assert.ok(!Vector.isFaceUp(oneOne, oneZero));
+    it("should determine if face is down", function () {
+      let upVector = new Vector(0, 1); // Pointing up (positive y)
+      let downVector = new Vector(0, -1); // Pointing down (negative y)
+      assert.ok(!Vector.isFaceUp(downVector));
+      assert.ok(Vector.isFaceUp(upVector));
+    });
   });
 
   it("should convert vector size", function () {
-    let fromBaseSize = new Vector(10, 10, 0);
-    let toBaseSize = new Vector(5, 5, 0);
-    let vectorToConvert = new Vector(1, 1, 0);
-    let expectedConvertedVector = new Vector(0.5, 0.5, 0);
+    let fromBaseSize = new Vector(10, 10);
+    let toBaseSize = new Vector(5, 5);
+    let vectorToConvert = new Vector(1, 1);
+    let expectedConvertedVector = new Vector(0.5, 0.5);
     assert.strictEqual(
       vectorToConvert.convert(fromBaseSize, toBaseSize).toString(),
       expectedConvertedVector.toString(),

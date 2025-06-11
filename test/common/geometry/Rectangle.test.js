@@ -1,5 +1,5 @@
 import { strict as assert } from "assert";
-import { Rectangle } from "../../../common/geometry/Rectangle.js";
+import { Rectangle, rect } from "../../../common/geometry/Rectangle.js";
 import { Vector } from "../../../common/geometry/Vector.js";
 
 describe("Rectangle", function () {
@@ -101,8 +101,8 @@ describe("Rectangle", function () {
     rectangle2.move(moveDistance);
     let center2 = center1.clone().add(moveDistance);
 
-    assert.ok(rectangle1.center.equals(center1));
-    assert.ok(rectangle2.center.equals(center2));
+    assert.ok(rectangle1.center.equal(center1));
+    assert.ok(rectangle2.center.equal(center2));
   });
 
   it("should detect intersection with another rectangle", function () {
@@ -111,8 +111,9 @@ describe("Rectangle", function () {
     let rectangleOutside = new Rectangle(center, size);
     let rectangleInside = new Rectangle(center, size.clone().divideByScalar(2));
 
-    //inside, not intersecting
-    assert.ok(!rectangleOutside.checkIntersection(rectangleInside));
+    //inside rectangle should be considered as intersection (containment is a form of intersection)
+    assert.ok(rectangleOutside.checkInside(rectangleInside)); // rectangleInside is inside rectangleOutside
+    assert.ok(rectangleInside.checkIntersection(rectangleOutside)); // and they intersect (containment counts as intersection)
 
     let center2 = new Vector(10, 10);
     let intersectingRectangle = new Rectangle(center2, size);
@@ -135,8 +136,8 @@ describe("Rectangle", function () {
     let rectangle1 = new Rectangle(center, size);
     let rectangle2 = rectangle1.clone();
 
-    assert.ok(rectangle1.center.equals(rectangle2.center));
-    assert.ok(rectangle1.size.equals(rectangle2.size));
+    assert.ok(rectangle1.center.equal(rectangle2.center));
+    assert.ok(rectangle1.size.equal(rectangle2.size));
   });
 
   it("should pick greater and smaller X and Y", function () {

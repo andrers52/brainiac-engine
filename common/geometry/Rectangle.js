@@ -1,5 +1,8 @@
 "use strict";
 
+import { Assert } from "arslib";
+import { Vector } from "./Vector.js";
+
 /**
  * Creates a Rectangle with a center point and size.
  * Note: the operations are destructive! Use clone() for protection.
@@ -8,8 +11,8 @@
  * @constructor
  */
 export function Rectangle(centerPoint = new Vector(), size = new Vector()) {
-  this.center = centerPoint;
-  this.size = size.abs();
+  this.center = centerPoint || new Vector();
+  this.size = (size || new Vector()).abs();
 }
 
 /**
@@ -124,7 +127,10 @@ Rectangle.prototype.setCenter = function (vector) {
  * @param {Vector} position - The new position
  * @returns {Rectangle} This rectangle for chaining
  */
-Rectangle.prototype.setPosition = function (position) {
+Rectangle.prototype.setPosition = function (position, pointOfInterest) {
+  if (pointOfInterest) {
+    return this.setPointOfInterestAtPosition(pointOfInterest, position);
+  }
   this.center = position;
   return this;
 };
@@ -170,28 +176,28 @@ Rectangle.prototype.setPointOfInterestAtPosition = function (
   let halfSize = this.halfSize();
   switch (pointOfInterest) {
     case "topLeft":
-      vectToAdd = vect(halfSize.x, -halfSize.y);
+      vectToAdd = new Vector(halfSize.x, -halfSize.y);
       break;
     case "topRight":
-      vectToAdd = vect(-halfSize.x, -halfSize.y);
+      vectToAdd = new Vector(-halfSize.x, -halfSize.y);
       break;
     case "bottomLeft":
-      vectToAdd = vect(halfSize.x, halfSize.y);
+      vectToAdd = new Vector(halfSize.x, halfSize.y);
       break;
     case "bottomRight":
-      vectToAdd = vect(-halfSize.x, halfSize.y);
+      vectToAdd = new Vector(-halfSize.x, halfSize.y);
       break;
     case "bottomCenter":
-      vectToAdd = vect(0, halfSize.y);
+      vectToAdd = new Vector(0, halfSize.y);
       break;
     case "topCenter":
-      vectToAdd = vect(0, -halfSize.y);
+      vectToAdd = new Vector(0, -halfSize.y);
       break;
     case "leftCenter":
-      vectToAdd = vect(halfSize.x, 0);
+      vectToAdd = new Vector(halfSize.x, 0);
       break;
     case "rightCenter":
-      vectToAdd = vect(-halfSize.x, 0);
+      vectToAdd = new Vector(-halfSize.x, 0);
       break;
   }
   this.setCenter(position.add(vectToAdd));
@@ -708,6 +714,8 @@ function intersectionWithoutCornerInside(rectangle1, rectangle2) {
 
 Rectangle.prototype.checkIntersection = function (rectangle) {
   return (
+    this.checkInside(rectangle) ||
+    rectangle.checkInside(this) ||
     intersectionWithCornerInside(this, rectangle) ||
     intersectionWithoutCornerInside(this, rectangle)
   );

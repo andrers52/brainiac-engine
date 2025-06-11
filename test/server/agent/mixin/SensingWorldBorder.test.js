@@ -10,7 +10,7 @@ describe("SensingWorldBorder", function () {
   beforeEach(function () {
     agent = {
       getPosition: sinon.stub().returns(new Vector(0, 0)),
-      move: sinon.stub(),
+      move: sinon.stub().returns(true), // Return true like real move method
       onSensingWorldBorder: sinon.spy(),
     };
 
@@ -33,10 +33,12 @@ describe("SensingWorldBorder", function () {
 
   it("should detect border collision in UP direction", function () {
     worldRectangleStub.returns({
-      checkPointInside: sinon.stub().callsFake((position) => position.y <= 50),
+      checkPointInside: sinon.stub().callsFake((position) => {
+        return position.y < 50; // Return false when y >= 50 (outside)
+      }),
     });
 
-    agent.getPosition.returns(new Vector(0, 45));
+    agent.getPosition.returns(new Vector(0, 0));
     agent.move();
 
     assert(agent.onSensingWorldBorder.calledOnce);

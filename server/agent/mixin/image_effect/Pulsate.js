@@ -12,7 +12,7 @@
 export function Pulsate(maxTimeinMilliseconds) {
   let DEFAULT_MAX_TIME = 2000;
   maxTimeinMilliseconds = maxTimeinMilliseconds || DEFAULT_MAX_TIME;
-  let cycleTime = maxTimeinMilliseconds / 2; //time to grow and shrink
+  let cycleTime = maxTimeinMilliseconds / 4; // Quarter of total time for each grow/shrink phase
   let NUM_VARIATIONS_PER_CYCLE = 10; //num times it will grow or shrink in a cycle
   let pulsateTime = cycleTime / NUM_VARIATIONS_PER_CYCLE;
 
@@ -25,7 +25,14 @@ export function Pulsate(maxTimeinMilliseconds) {
 
   let originalRectangleSize = null;
 
-  let started = false;
+  // Make started property available on the agent instance
+  this.started = false;
+
+  // Keep a reference to update the agent's started property
+  const updateStartedProperty = (value) => {
+    this.started = value;
+    self.started = value;
+  };
 
   /**
    * Performs one step of the pulsate animation.
@@ -41,11 +48,14 @@ export function Pulsate(maxTimeinMilliseconds) {
    * @memberof Pulsate
    */
   this.stopPulsate = function () {
-    if (!started) return;
+    if (!self.started) return;
     clearInterval(cycleIntervalId);
     clearInterval(pulsateIntervalId);
-    self.rectangle.size = originalRectangleSize.clone();
-    started = false;
+    if (originalRectangleSize) {
+      self.rectangle.size.x = originalRectangleSize.x;
+      self.rectangle.size.y = originalRectangleSize.y;
+    }
+    updateStartedProperty(false);
   };
 
   /**
@@ -53,13 +63,18 @@ export function Pulsate(maxTimeinMilliseconds) {
    * @memberof Pulsate
    */
   this.startPulsate = function () {
-    if (started) return;
-    originalRectangleSize = this.rectangle.size.clone();
+    if (self.started) return;
+    originalRectangleSize = {
+      x: self.rectangle.size.x,
+      y: self.rectangle.size.y,
+    };
     cycleIntervalId = setInterval(function () {
       grow = !grow;
     }, cycleTime);
     pulsateIntervalId = setInterval(pulsate, pulsateTime);
-    setTimeout(this.stopPulsate, maxTimeinMilliseconds);
-    started = true;
+    setTimeout(function () {
+      self.stopPulsate();
+    }, maxTimeinMilliseconds);
+    updateStartedProperty(true);
   };
 }

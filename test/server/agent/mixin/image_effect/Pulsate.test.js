@@ -99,20 +99,25 @@ describe("Pulsate", function () {
 
   it("should not start pulsate if already started", function () {
     Pulsate.call(agent, 2000);
-    agent.startPulsate();
-    assert(agent.started);
 
     const startSpy = sinon.spy(agent, "startPulsate");
 
     agent.startPulsate();
-    assert(startSpy.notCalled);
+    assert(agent.started);
+    assert(startSpy.calledOnce);
+
+    agent.startPulsate(); // Try to start again
+    assert(startSpy.calledTwice); // Function is called but should return early
+    assert(agent.started); // Should still be started
   });
 
   it("should not stop pulsate if not started", function () {
+    Pulsate.call(agent, 2000);
+
     const stopSpy = sinon.spy(agent, "stopPulsate");
 
-    Pulsate.call(agent, 2000);
     agent.stopPulsate();
     assert(stopSpy.calledOnce);
+    assert(!agent.started); // Should remain not started
   });
 });

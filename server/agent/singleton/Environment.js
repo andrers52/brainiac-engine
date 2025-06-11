@@ -127,7 +127,7 @@ function Environment() {
   this.killAllAgents = function () {
     // *** TODO *** CHECK: IS THIS NECESSARY? ***
     for (let id in agents) {
-      if (!agentIsSingleton(agents[id])) agents[0].die();
+      if (!agentIsSingleton(agents[id])) agents[id].die();
     }
     spaceSegments.clear();
   };

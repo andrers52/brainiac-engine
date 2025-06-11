@@ -124,11 +124,22 @@ export function SensingAgent(
     let mostForwardVectorAndAgentAngle = Math.abs(
       mostForwardVectorAndAgent.vector.getAngle(),
     );
+    let mostForwardVectorAndAgentDistance =
+      mostForwardVectorAndAgent.vector.size();
+
     forwardVectorsAndAgents.forEach((vectorAndAgent) => {
       let vectorAngle = Math.abs(vectorAndAgent.vector.getAngle());
-      if (vectorAngle < mostForwardVectorAndAgentAngle) {
+      let vectorDistance = vectorAndAgent.vector.size();
+
+      // Select if angle is smaller, or if angles are equal but distance is smaller
+      if (
+        vectorAngle < mostForwardVectorAndAgentAngle ||
+        (vectorAngle === mostForwardVectorAndAgentAngle &&
+          vectorDistance < mostForwardVectorAndAgentDistance)
+      ) {
         mostForwardVectorAndAgent = vectorAndAgent;
         mostForwardVectorAndAgentAngle = vectorAngle;
+        mostForwardVectorAndAgentDistance = vectorDistance;
       }
     });
     return mostForwardVectorAndAgent;

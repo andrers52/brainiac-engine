@@ -1,45 +1,51 @@
 {
     "name": "brainiac-engine",
-    "version": "0.2.0",
-    "description": "Brainiac Engine - A robust JavaScript framework for building interactive applications and games",
-    "keywords": ["game-engine", "javascript", "2d-graphics", "interactive", "canvas", "websockets"],
-    "repository": "https://github.com/andrers52/brainiac-engine.git",
-    "homepage": "https://github.com/andrers52/brainiac-engine#readme",
+    "version": "0.2.1",
+    "description": "A comprehensive 2D game engine with agent-based architecture, real-time multiplayer support, and advanced visual effects. Features include particle systems, spatial indexing, UI components, and extensive animation capabilities.",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "setup": "npm install && echo '✅ Setup complete! Run npm test to verify everything works.'",
+        "dev": "npm run setup",
+        "test": "mocha",
+        "test:watch": "npm test -- --watch",
+        "prepublishOnly": "npm test",
+        "start": "echo 'This is a library. Import it in your project or run npm test to verify installation.'"
+    },
+    "keywords": [
+        "game-engine",
+        "2d",
+        "canvas",
+        "multiplayer",
+        "agents",
+        "animation",
+        "particles",
+        "ui",
+        "javascript",
+        "es6"
+    ],
+    "author": "Andre Silva",
+    "license": "MIT",
+    "engines": {
+        "node": ">=14.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/andrers52/brainiac-engine.git"
+    },
     "bugs": {
         "url": "https://github.com/andrers52/brainiac-engine/issues"
     },
-    "main": "index.js",
-    "type": "module",
-    "engines": {
-        "node": ">=14.0.0",
-        "npm": ">=6.0.0"
-    },
-    "scripts": {
-        "test": "echo 'Tests temporarily disabled for publishing - will be fixed in next version'",
-        "test:full": "mocha",
-        "setup": "npm install && echo '🚀 Brainiac Engine setup complete!'",
-        "dev": "npm run setup",
-        "start": "node index.js",
-        "prepublishOnly": "echo 'Skipping tests for now - comprehensive JSDoc documentation added'"
-    },
+    "homepage": "https://github.com/andrers52/brainiac-engine#readme",
     "dependencies": {
-        "arslib": "0.3.1",
-        "compression": "1.7.2",
-        "cors": "2.8.4",
-        "express": "4.16.3",
-        "socket.io": "2.1.1"
-    },
-    "optionalDependencies": {
-        "bufferutil": "4.0.0"
+        "arslib": "^0.1.7",
+        "esm": "^3.2.25",
+        "socket.io": "^4.7.5",
+        "socket.io-client": "^4.7.5"
     },
     "devDependencies": {
-        "chai": "^5.1.1",
-        "esm": "^3.2.25",
-        "global-jsdom": "^24.0.0",
         "jsdom": "^24.0.0",
-        "mocha": "^10.4.0",
-        "sinon": "^18.0.0"
-    },
-    "author": "Andre Rodrigues da Silva",
-    "license": "MIT"
+        "mocha": "^10.3.0",
+        "sinon": "^17.0.1"
+    }
 }

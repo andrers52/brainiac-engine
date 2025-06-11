@@ -36,8 +36,8 @@ export function SensingWorldBorder(sensingDistanceInput) {
     let resultVector = new Vector();
 
     let upPosition = self.getPosition().clone().add(upVector);
-    let downPosition = self.getPosition().clone().subtract(downVector);
-    let leftPosition = self.getPosition().clone().subtract(leftVector);
+    let downPosition = self.getPosition().clone().add(downVector);
+    let leftPosition = self.getPosition().clone().add(leftVector);
     let rightPosition = self.getPosition().clone().add(rightVector);
 
     if (!environment.getWorldRectangle().checkPointInside(upPosition))

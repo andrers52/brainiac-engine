@@ -115,7 +115,10 @@ export function ChangesImageWithState(configurationObj) {
    * @throws {Error} If newState is not valid.
    */
   this.changeState = function (newState) {
-    Assert.assert(isValidState(newState));
+    Assert.assert(
+      isValidState(newState),
+      `Invalid state: ${newState}. Valid states are: ${states.join(", ")}`,
+    );
 
     //test if needs to perform action at end of animation
     if (actionsToExecuteAtStateChange[self.currentState]) {

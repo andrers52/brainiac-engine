@@ -53,7 +53,7 @@ describe("Turnable", function () {
 
   it("should calculate angle to turn to face position", function () {
     turnable.rectangle = {
-      center: [0, 0],
+      center: { x: 0, y: 0 },
     };
     let position = { x: 1, y: 1 };
     let angleToTurn = turnable.calculateAngleToTurnToFacePosition(position);
@@ -61,7 +61,7 @@ describe("Turnable", function () {
 
     position = { x: -1, y: 1 };
     angleToTurn = turnable.calculateAngleToTurnToFacePosition(position);
-    assert.strictEqual(angleToTurn, Math.atan2(1, -1) + 2 * Math.PI);
+    assert.strictEqual(angleToTurn, Math.atan2(1, -1));
 
     position = { x: -1, y: -1 };
     angleToTurn = turnable.calculateAngleToTurnToFacePosition(position);
@@ -69,6 +69,6 @@ describe("Turnable", function () {
 
     position = { x: 1, y: -1 };
     angleToTurn = turnable.calculateAngleToTurnToFacePosition(position);
-    assert.strictEqual(angleToTurn, Math.atan2(-1, 1));
+    assert.strictEqual(angleToTurn, Math.atan2(-1, 1) + 2 * Math.PI);
   });
 });

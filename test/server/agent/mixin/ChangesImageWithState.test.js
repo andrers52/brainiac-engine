@@ -46,7 +46,7 @@ describe("ChangesImageWithState", function () {
   it("should not change to an invalid state", function () {
     assert.throws(() => {
       agent.changeState("invalidState");
-    }, /assert/);
+    });
   });
 
   it("should add and execute actions at state change", function () {

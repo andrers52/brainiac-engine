@@ -86,10 +86,10 @@ Vector.prototype.copy = function (otherVector) {
  * @returns {Vector} This vector after rotation.
  */
 Vector.prototype.zRotate = function (angle) {
-  this.data[0] =
-    Math.cos(angle) * this.data[0] - Math.sin(angle) * this.data[1];
-  this.data[1] =
-    Math.sin(angle) * this.data[0] + Math.cos(angle) * this.data[1];
+  const x = this.data[0];
+  const y = this.data[1];
+  this.data[0] = Math.cos(angle) * x - Math.sin(angle) * y;
+  this.data[1] = Math.sin(angle) * x + Math.cos(angle) * y;
   return this;
 };
 
@@ -534,14 +534,6 @@ Vector.prototype.flipY = function () {
   return this;
 };
 
-/**
- * Returns a string representation of the vector.
- * @returns {string} The string representation of the vector.
- */
-Vector.prototype.toString = function () {
-  return `(${this.data[0]}, ${this.data[1]})`;
-};
-
 // Allows us to get a new vector from angle and magnitude
 /**
  * Creates a vector from an angle and magnitude.
@@ -557,8 +549,42 @@ Vector.fromAngle = function (angle, magnitude) {
  * Returns the origin vector (0, 0).
  * @returns {Vector} A vector representing the origin.
  */
+/**
+ * Returns the origin vector (0, 0).
+ * @returns {Vector} A vector representing the origin.
+ */
 Vector.Origin = function () {
   return new Vector();
+};
+
+/**
+ * Calculates the cross product with another vector (2D cross product returns a scalar).
+ * @param {Vector} otherVector - The other vector.
+ * @returns {number} The cross product (z-component of the 3D cross product).
+ */
+Vector.prototype.crossProduct = function (otherVector) {
+  return (
+    this.data[0] * otherVector.data[1] - this.data[1] * otherVector.data[0]
+  );
+};
+
+/**
+ * Calculates the area of a parallelogram formed by two vectors.
+ * @param {Vector} vector1 - The first vector.
+ * @param {Vector} vector2 - The second vector.
+ * @returns {number} The area of the parallelogram.
+ */
+Vector.parallelogramArea = function (vector1, vector2) {
+  return Math.abs(vector1.crossProduct(vector2));
+};
+
+/**
+ * Determines if a face is pointing up (positive y direction).
+ * @param {Vector} normal - The normal vector of the face.
+ * @returns {boolean} True if the face is pointing up.
+ */
+Vector.isFaceUp = function (normal) {
+  return normal.data[1] > 0;
 };
 
 //alias to simplify vector creation

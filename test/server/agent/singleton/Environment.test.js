@@ -13,12 +13,14 @@ describe("Environment", function () {
       isCamera: false,
       isSingleton: false,
       isUserAgent: sinon.stub().returns(false),
+      isVisible: true, // Required for mouse event propagation
       rectangle: {
         center: new Vector(0, 0),
         meanSize: sinon.stub().returns(10),
       },
       behavior: sinon.spy(),
       die: sinon.spy(),
+      checkHit: sinon.stub().returns(true), // Required for mouse event hit detection
     };
     nearbyAgent = {
       id: 2,
@@ -42,6 +44,7 @@ describe("Environment", function () {
       .stub(spaceSegments, "getNearbyAgentsByPosition")
       .returns([nearbyAgent]);
     sinon.stub(spaceSegments, "clear");
+    sinon.stub(spaceSegments, "start"); // Add spy for start method
     clock = sinon.useFakeTimers();
   });
 
@@ -53,6 +56,7 @@ describe("Environment", function () {
     spaceSegments.updateAgent.restore();
     spaceSegments.getNearbyAgentsByPosition.restore();
     spaceSegments.clear.restore();
+    spaceSegments.start.restore(); // Restore the start spy
     clock.restore();
   });
 
@@ -78,7 +82,7 @@ describe("Environment", function () {
 
   it("should get nearby user agents", function () {
     environment.addAgent(agent);
-    agent.isUserAgent.returns(true);
+    nearbyAgent.isUserAgent = sinon.stub().returns(true); // Make nearbyAgent a user agent
     const nearbyUserAgents = environment.getNearbyUserAgents(agent);
     assert.strictEqual(nearbyUserAgents.length, 1);
     assert(spaceSegments.getNearbyAgents.calledOnce);
@@ -116,6 +120,7 @@ describe("Environment", function () {
   it("should propagate user event", function () {
     const event = "onMouseDown";
     const arg = new Vector(0, 0);
+    agent[event + "Hit"] = sinon.spy(); // Add the expected event handler spy
     environment.addAgent(agent);
     environment.propagateUserEvent(event, arg, agent);
     assert(agent[event + "Hit"].calledOnce);
