@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.1] - 2025-06-11
+## [0.3.2] - 2025-06-11
 
 ### Fixed
 
@@ -21,16 +21,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Converted `expect().to.be.an.instanceof()` → `assert.ok(obj instanceof Class)`
   - Improved test maintainability and reduced dependency footprint
 
-### Deprecated
-
-- **Version 0.3.0**: This version is deprecated due to breaking singleton structure that caused compatibility issues with existing games like Z32
-
 ### Technical Details
 
 - Removed `chai` import from `CoordinatesConversion.test.js`
 - Updated all coordinate conversion test assertions to use `assert` syntax
 - Maintained full test coverage (115 passing tests)
 - Preserved original functionality while fixing dependency issues
+
+## [0.3.1] - 2025-06-11
+
+### Deprecated
+
+- **Version 0.3.0**: This version is deprecated due to breaking singleton structure that caused compatibility issues with existing games like Z32
+
+### Technical Details
+
+- Fixed all dependency versions and upgraded arslib to latest one.
 
 ## [0.2.1] - 2025-06-11
 
