@@ -3,7 +3,6 @@
 import { Assert } from "arslib";
 import { Rectangle, rect } from "../common/geometry/Rectangle.js";
 import { Vector } from "../common/geometry/Vector.js";
-import { resourceStore } from "./singleton/ResourceStore.js";
 
 /** @type {Object} Cache for storing created text images to avoid recreation */
 var textImageCache = {};
@@ -53,6 +52,7 @@ TextToImage.fontToFontFace = function (font = "14px GoodDog") {
 
 /**
  * Draws text onto an existing canvas/image
+ * @param {ResourceStore} resourceStore - The resource store instance
  * @param {string} imageName - The name of the image resource to draw on
  * @param {string} text - The text to draw
  * @param {string} font - The font string to use
@@ -60,6 +60,7 @@ TextToImage.fontToFontFace = function (font = "14px GoodDog") {
  * @param {string} textColor - The text color
  */
 TextToImage.drawText = function (
+  resourceStore,
   imageName,
   text,
   font,
@@ -116,6 +117,7 @@ TextToImage.createRectangleFromTextAndFont = function (font, text) {
 
 /**
  * Creates an image containing the specified text
+ * @param {ResourceStore} resourceStore - The resource store instance
  * @param {Rectangle} [rectangle=rect(0,0,100,100)] - The target rectangle for the text
  * @param {string} [text=""] - The text to render
  * @param {string} [fontface="GoodDog"] - The font family to use
@@ -127,6 +129,7 @@ TextToImage.createRectangleFromTextAndFont = function (font, text) {
  * @throws {Error} If text parameter is not a string literal
  */
 TextToImage.createImageFromText = function (
+  resourceStore,
   rectangle = rect(0, 0, 100, 100),
   text = "",
   fontface = "GoodDog",
@@ -161,7 +164,14 @@ TextToImage.createImageFromText = function (
   );
   let font = getFontToFitTextOnRectangle(text, fontface, grownRectangle);
 
-  TextToImage.drawText(imageName, text, font, backgroundColor, textColor);
+  TextToImage.drawText(
+    resourceStore,
+    imageName,
+    text,
+    font,
+    backgroundColor,
+    textColor,
+  );
 
   let objToReturn = { imageName: imageName, font: font };
   //store image and font in cached

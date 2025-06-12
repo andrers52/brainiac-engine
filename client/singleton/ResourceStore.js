@@ -103,7 +103,7 @@ function ResourceStore() {
    * @param {Array} descriptorObj.images - Array of image effect definitions.
    */
   this.createEffectsFromDescriptor = function (descriptorObj) {
-    descriptorObj.images.forEach(function (newImage) {
+    descriptorObj.images.forEach((newImage) => {
       let newImageName = newImage.newImageName;
       let imageName = newImage.imageName;
       let size = newImage.size;
@@ -117,6 +117,7 @@ function ResourceStore() {
         let parameters = newEffect.parameters;
         let combineOption = newEffect.combineOption;
         Effect(
+          this,
           imageName,
           size,
           opacity,
@@ -152,7 +153,7 @@ function ResourceStore() {
 
     // Not ready yet... Try again in a while
     setTimeout(() => {
-      resourceStore.callWhenReady(functionToCall);
+      this.callWhenReady(functionToCall);
     }, 100);
   };
 
@@ -273,9 +274,10 @@ function ResourceStore() {
    * @param {Blob} imageDataBlob - Image data blob.
    */
   function storeImageData(identifier, imageDataBlob) {
+    const self = this;
     let imageElement = new Image();
     imageElement.onload = function () {
-      resourceStore.resources[identifier] = imageElement;
+      self.resources[identifier] = imageElement;
       decrease_resources_counter();
 
       window.URL.revokeObjectURL(imageElement.src); // Clean up after yourself.
@@ -294,8 +296,9 @@ function ResourceStore() {
     );
     try {
       let request = new XMLHttpRequest();
+      const self = this;
       request.onloadend = function () {
-        storeImageData(identifier, request.response);
+        storeImageData.call(self, identifier, request.response);
       };
       request.open("GET", identifier, true);
       request.responseType = "blob";
@@ -319,7 +322,7 @@ function ResourceStore() {
       identifier,
       "resourceStore#loadAudio error: image not defined",
     );
-    storeAudioData(identifier, identifier);
+    storeAudioData.call(this, identifier, identifier);
   }
 
   /**
@@ -328,13 +331,14 @@ function ResourceStore() {
    */
   function loadJSON(identifier) {
     //Assert.assert(identifier, "resourceStore#loadJSON error: json file not defined");
+    const self = this;
     try {
       let request = new XMLHttpRequest();
-      request.onloadend = () => {
+      request.onloadend = function () {
         let jsonDescriptor = request.responseText;
         if (EArray.last(identifier.split("/")) === "effects_descriptor.json")
-          this.createEffectsFromDescriptor(JSON.parse(jsonDescriptor));
-        else resourceStore.resources[identifier] = JSON.parse(jsonDescriptor);
+          self.createEffectsFromDescriptor(JSON.parse(jsonDescriptor));
+        else self.resources[identifier] = JSON.parse(jsonDescriptor);
 
         decrease_resources_counter();
       };
@@ -371,8 +375,10 @@ function ResourceStore() {
       ? loadImage
       : isAudio(identifier)
       ? loadAudio
-      : loadJSON;
-    loadFunc(identifier);
+      : function (id) {
+          return loadJSON.call(this, id);
+        };
+    loadFunc.call(this, identifier);
 
     return this;
   };
@@ -547,14 +553,14 @@ function ResourceStore() {
    * @param {string} suffix - File suffix to filter by.
    * @returns {string[]} Array of matching resource names.
    */
-  function retrieveAllResourceNamesBySuffix(suffix) {
+  const retrieveAllResourceNamesBySuffix = (suffix) => {
     let mimeType = getMimeType(suffix);
     let result = [];
-    Object.keys(resourceStore.resources).forEach((identifier) => {
+    Object.keys(this.resources).forEach((identifier) => {
       if (getMimeType(identifier) === mimeType) result.push(identifier);
     });
     return result;
-  }
+  };
 
   /**
    * Gets all loaded audio resource names.
@@ -570,10 +576,4 @@ function ResourceStore() {
   };
 }
 
-/**
- * @type {ResourceStore}
- * @description Global resource store instance for managing all game assets.
- */
-let resourceStore = new ResourceStore();
-
-export { resourceStore };
+export { ResourceStore };

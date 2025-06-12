@@ -1,7 +1,5 @@
 "use strict";
 
-import { resourceStore } from "../../singleton/ResourceStore.js";
-
 import { RadialGradient } from "./RadialGradient.js";
 import { Circle } from "./drawingeffect/shapes/Circle.js";
 import { DottedRectangle } from "./drawingeffect/shapes/DottedRectangle.js";
@@ -14,6 +12,7 @@ import { Triangle } from "./drawingeffect/shapes/Triangle.js";
  * Receives size and array of effects to use in order to create new image, store and return new name.
  * All called effects will make a change to the created image.
  *
+ * @param {ResourceStore} resourceStore - The resource store instance
  * @param {string} [imageName] - Optional base image name onto which the effects will be applied. If defined it will define the size of the resulting image.
  * @param {Object} [imageSize] - Optional size of new image with x and y properties
  * @param {number} [opacity] - Opacity value between 0.0 (fully transparent) and 1.0 (no transparency)
@@ -26,6 +25,7 @@ import { Triangle } from "./drawingeffect/shapes/Triangle.js";
  * @returns {string} The name of the created or modified image
  */
 function Effect(
+  resourceStore,
   imageName,
   imageSize,
   opacity, //0.0 (fully transparent) and 1.0 (no transparency).

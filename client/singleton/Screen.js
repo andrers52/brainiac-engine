@@ -7,7 +7,6 @@ import { BEClientDefinitions } from "../BEClientDefinitions.js";
 import { CoordinatesConversion } from "../CoordinatesConversion.js";
 import { TextToImage } from "../TextToImage.js";
 import { particlesContainer } from "./ParticlesContainer.js";
-import { resourceStore } from "./ResourceStore.js";
 
 /**
  * @fileoverview Screen management system for canvas rendering and game presentation.
@@ -28,6 +27,7 @@ function Screen() {
   let canvasId;
   let camera;
   let minScreenDimension;
+  let resourceStore;
 
   /**
    * @memberof Screen
@@ -123,6 +123,7 @@ function Screen() {
    * @param {string} config.canvasIdInput - ID for the canvas element.
    * @param {number} config.worldWidth - Width of the game world.
    * @param {number} config.worldHeight - Height of the game world.
+   * @param {ResourceStore} config.resourceStoreInput - Resource store instance.
    */
   this.start = function ({
     onBeforeDrawAgentInput,
@@ -134,6 +135,7 @@ function Screen() {
     canvasIdInput,
     worldWidth,
     worldHeight,
+    resourceStoreInput,
   }) {
     getVisibleAgents = getVisibleAgentsInput;
     onBeforeDrawAgent = onBeforeDrawAgentInput;
@@ -142,6 +144,7 @@ function Screen() {
     minScreenDimension = minScreenDimensionInput;
     camera = cameraInput;
     canvasId = canvasIdInput;
+    resourceStore = resourceStoreInput;
     worldRectangle = rect(0, 0, worldWidth, worldHeight);
 
     addCanvas();
@@ -154,7 +157,7 @@ function Screen() {
     context = canvas.getContext("2d");
 
     camera.rectangle.size = this.setCameraSizeToCanvas();
-    particlesContainer.start(camera);
+    particlesContainer.start(camera, resourceStore);
   };
 
   /**
@@ -338,6 +341,7 @@ function Screen() {
       agent.rectangle.size = vect(localizedText.length * 5, 15);
 
     let result = TextToImage.createImageFromText(
+      resourceStore,
       agent.rectangle,
       localizedText,
       agent.fontFace,

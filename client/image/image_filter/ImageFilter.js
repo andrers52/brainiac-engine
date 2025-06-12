@@ -1,7 +1,5 @@
 "use strict";
 
-import { resourceStore } from "../../singleton/ResourceStore.js";
-
 //http://www.html5rocks.com/en/tutorials/canvas/imagefilters/
 
 /**
@@ -12,12 +10,14 @@ import { resourceStore } from "../../singleton/ResourceStore.js";
  * If you need to pass more than one arg to effect, send an object.
  * Each effect receives the image data and the declared argument (if any).
  *
+ * @param {ResourceStore} resourceStore - The resource store instance
  * @param {string} imageName - The name of the image in the resource store
  * @param {boolean} applyOverOriginalImage - Whether to modify the original image or create a new one
  * @param {...*} ImageFiltersArray - Variable arguments containing filter functions and their parameters
  * @returns {string} The name of the processed image
  */
 export function ImageFilter(
+  resourceStore,
   imageName,
   applyOverOriginalImage,
   ...ImageFiltersArray

@@ -1,13 +1,15 @@
 import { strict as assert } from "assert";
 import { rect } from "../../common/geometry/Rectangle.js";
-import { resourceStore } from "./ResourceStore.js";
+import { ResourceStore } from "./ResourceStore.js";
 import { Screen } from "./Screen.js";
 
 describe("Screen Module", function () {
   let screen;
+  let resourceStore;
 
   beforeEach(function () {
     screen = new Screen();
+    resourceStore = new ResourceStore();
   });
 
   describe("Initialization", function () {
@@ -25,7 +27,6 @@ describe("Screen Module", function () {
       ) {
         this.skip();
       }
-
       document.body.innerHTML = "";
       screen.start({
         onBeforeDrawAgentInput: null,
@@ -37,6 +38,7 @@ describe("Screen Module", function () {
         canvasIdInput: "testCanvas",
         worldWidth: 100,
         worldHeight: 100,
+        resourceStoreInput: resourceStore,
       });
     });
 
@@ -77,7 +79,6 @@ describe("Screen Module", function () {
         this.skip();
       }
     });
-
     it("should clear the canvas", function () {
       screen.start({
         onBeforeDrawAgentInput: null,
@@ -89,6 +90,7 @@ describe("Screen Module", function () {
         canvasIdInput: "testCanvas",
         worldWidth: 100,
         worldHeight: 100,
+        resourceStoreInput: resourceStore,
       });
 
       const context = screen.getContext();
@@ -155,7 +157,6 @@ describe("Screen Module", function () {
         }
         return originalSetTimeout(callback, interval);
       };
-
       screen.start({
         onBeforeDrawAgentInput: null,
         onAfterDrawAgentInput: null,
@@ -166,6 +167,7 @@ describe("Screen Module", function () {
         canvasIdInput: "testCanvas",
         worldWidth: 100,
         worldHeight: 100,
+        resourceStoreInput: resourceStore,
       });
 
       screen.gamePresentationLoop();

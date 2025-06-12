@@ -7,7 +7,6 @@ import { Random, Time, Util } from "arslib";
 import { vect } from "../../common/geometry/Vector.js";
 
 import { CoordinatesConversion } from "../CoordinatesConversion.js";
-import { resourceStore } from "./ResourceStore.js";
 import { screen } from "./Screen.js";
 
 /**
@@ -22,6 +21,7 @@ import { screen } from "./Screen.js";
  */
 function ParticlesContainer() {
   let camera;
+  let resourceStore;
 
   /**
    * @memberof ParticlesContainer
@@ -68,9 +68,11 @@ function ParticlesContainer() {
    * Initializes the particle container with camera reference and resources.
    * @memberof ParticlesContainer
    * @param {Object} cameraInput - Camera object for coordinate conversions.
+   * @param {ResourceStore} resourceStoreInput - Resource store instance.
    */
-  this.start = function (cameraInput) {
+  this.start = function (cameraInput, resourceStoreInput) {
     camera = cameraInput;
+    resourceStore = resourceStoreInput;
     particles = {};
     emitters = [];
     particleImage = resourceStore.retrieveResourceObject("whiteParticle.jpg");

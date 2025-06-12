@@ -1,3 +1,25 @@
+# [0.3.5] - 2025-06-12
+
+### Fixed
+
+- **ResourceStore Refactor**: Fully removed singleton pattern, now always instance-based
+  - All usages of `resourceStore` singleton import removed; all consumers now use instance from `BEClient.getResourceStore()`
+  - Fixed all context (`this`) issues in async callbacks and resource loading
+  - Fixed all remaining references to `resourceStore` in callbacks, event handlers, and resource loading functions
+  - Fixed all browser and test errors related to undefined or incorrect resource store context
+  - Z32 and other games now work with the new instance-based resource store
+
+### Changed
+
+- **API**: `ResourceStore` is now always constructed and passed as a dependency; no global singleton exists
+  - All documentation and code comments updated to reflect new usage
+  - All tests updated to use instance-based pattern
+
+### Technical Details
+
+- All async resource loading callbacks now use correct context (`this` or `self`)
+- All resource loading and retrieval is now instance-safe and supports multiple clients
+
 # Changelog
 
 All notable changes to this project will be documented in this file.

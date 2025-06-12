@@ -7,7 +7,7 @@ import { rect } from "../../common/geometry/Rectangle.js";
 import { fakeSocket } from "../../common/singleton/fakeSocket.js";
 import { BEClientDefinitions } from "../BEClientDefinitions.js";
 import { UserEvents } from "../UserEvents.js";
-import { resourceStore } from "./ResourceStore.js";
+import { ResourceStore } from "./ResourceStore.js";
 import { screen } from "./Screen.js";
 
 /**
@@ -158,12 +158,27 @@ BEClient.setVisibleAgents = function (visibleAgentsInput) {
 let camera = { rectangle: rect(0, 0, 1, 1) }; //1s to avoid conversion errors
 
 /**
+ * ResourceStore instance for managing all game assets.
+ * @type {ResourceStore}
+ */
+let resourceStore = new ResourceStore();
+
+/**
  * Gets the current camera object.
  * @memberof BEClient
  * @returns {Object} The camera object with rectangle property.
  */
 BEClient.getCamera = function () {
   return camera;
+};
+
+/**
+ * Gets the current resource store instance.
+ * @memberof BEClient
+ * @returns {ResourceStore} The resource store instance.
+ */
+BEClient.getResourceStore = function () {
+  return resourceStore;
 };
 
 /**
@@ -354,6 +369,7 @@ BEClient.connectToGameServer = function () {
       canvasIdInput: BEClientDefinitions.CANVAS_ID,
       worldWidth: BECommonDefinitions.WORLD_WIDTH,
       worldHeight: BECommonDefinitions.WORLD_HEIGHT,
+      resourceStoreInput: resourceStore,
     });
 
     //camera.rectangle.size = screen.setCameraSizeToCanvas()
