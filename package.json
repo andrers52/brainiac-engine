@@ -1,6 +1,6 @@
 {
     "name": "brainiac-engine",
-    "version": "0.2.1",
+    "version": "0.3.1",
     "description": "A comprehensive 2D game engine with agent-based architecture, real-time multiplayer support, and advanced visual effects. Features include particle systems, spatial indexing, UI components, and extensive animation capabilities.",
     "main": "index.js",
     "type": "module",
@@ -38,14 +38,14 @@
     },
     "homepage": "https://github.com/andrers52/brainiac-engine#readme",
     "dependencies": {
-        "arslib": "^0.1.7",
-        "esm": "^3.2.25",
-        "socket.io": "^4.7.5",
-        "socket.io-client": "^4.7.5"
+        "arslib": "0.4.0",
+        "esm": "3.2.25",
+        "socket.io": "4.8.1",
+        "socket.io-client": "4.8.1"
     },
     "devDependencies": {
-        "jsdom": "^24.0.0",
-        "mocha": "^10.3.0",
-        "sinon": "^17.0.1"
+        "jsdom": "24.0.0",
+        "mocha": "10.4.0",
+        "sinon": "17.0.1"
     }
 }

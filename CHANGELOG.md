@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2025-06-11
+
+### Fixed
+
+- **Dependency Issue**: Resolved missing `chai` dependency error in test suite
+  - Converted `CoordinatesConversion.test.js` from `chai` to Node.js built-in `assert`
+  - Standardized all tests to use consistent assertion library
+  - Eliminated unnecessary external test dependencies
+
+### Changed
+
+- **Test Consistency**: All test files now use Node.js built-in `assert` module
+  - Converted `expect().to.be.equal()` → `assert.strictEqual()`
+  - Converted `expect().to.be.an.instanceof()` → `assert.ok(obj instanceof Class)`
+  - Improved test maintainability and reduced dependency footprint
+
+### Deprecated
+
+- **Version 0.3.0**: This version is deprecated due to breaking singleton structure that caused compatibility issues with existing games like Z32
+
+### Technical Details
+
+- Removed `chai` import from `CoordinatesConversion.test.js`
+- Updated all coordinate conversion test assertions to use `assert` syntax
+- Maintained full test coverage (115 passing tests)
+- Preserved original functionality while fixing dependency issues
+
 ## [0.2.1] - 2025-06-11
 
 ### Fixed

@@ -1,7 +1,6 @@
+import { strict as assert } from "assert";
 import { CoordinatesConversion } from "../../client/CoordinatesConversion.js";
 import { Vector } from "../../common/geometry/Vector.js";
-
-import { expect } from "chai";
 import { Rectangle } from "../../common/geometry/Rectangle.js";
 
 describe("CoordinatesConversion", () => {
@@ -20,10 +19,10 @@ describe("CoordinatesConversion", () => {
         cameraRectangle,
         screenSize,
       );
-      expect(worldPosition).to.be.an.instanceof(Vector);
+      assert.ok(worldPosition instanceof Vector);
       // Add assertions based on expected values
-      expect(worldPosition.x).to.be.equal(-200);
-      expect(worldPosition.y).to.be.equal(300);
+      assert.strictEqual(worldPosition.x, -200);
+      assert.strictEqual(worldPosition.y, 300);
     });
   });
 
@@ -38,10 +37,10 @@ describe("CoordinatesConversion", () => {
         cameraRectangle,
         screenSize,
       );
-      expect(worldRectangle).to.be.an.instanceof(Rectangle);
+      assert.ok(worldRectangle instanceof Rectangle);
       // Add assertions based on expected values
-      expect(worldRectangle.center.x).to.be.equal(-200);
-      expect(worldRectangle.center.y).to.be.equal(300);
+      assert.strictEqual(worldRectangle.center.x, -200);
+      assert.strictEqual(worldRectangle.center.y, 300);
     });
   });
 
@@ -53,10 +52,10 @@ describe("CoordinatesConversion", () => {
         cameraRectangle,
         screenSize,
       );
-      expect(canvasPosition).to.be.an.instanceof(Vector);
+      assert.ok(canvasPosition instanceof Vector);
       // Add assertions based on expected values
-      expect(canvasPosition.x).to.be.equal(450);
-      expect(canvasPosition.y).to.be.equal(250);
+      assert.strictEqual(canvasPosition.x, 450);
+      assert.strictEqual(canvasPosition.y, 250);
     });
   });
 
@@ -71,10 +70,10 @@ describe("CoordinatesConversion", () => {
         cameraRectangle,
         screenSize,
       );
-      expect(canvasRectangle).to.be.an.instanceof(Rectangle);
+      assert.ok(canvasRectangle instanceof Rectangle);
       // Add assertions based on expected values
-      expect(canvasRectangle.center.x).to.be.equal(400);
-      expect(canvasRectangle.center.y).to.be.equal(300);
+      assert.strictEqual(canvasRectangle.center.x, 400);
+      assert.strictEqual(canvasRectangle.center.y, 300);
     });
   });
 });
