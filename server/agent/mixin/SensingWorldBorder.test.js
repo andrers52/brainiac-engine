@@ -1,8 +1,8 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
-import { Vector } from "../../../../common/geometry/Vector.js";
-import { SensingWorldBorder } from "../../../../server/agent/mixin/SensingWorldBorder.js";
-import { environment } from "../../../../server/agent/singleton/Environment.js";
+import { Vector } from "../../../common/geometry/Vector.js";
+import { environment } from "../singleton/Environment.js";
+import { SensingWorldBorder } from "./SensingWorldBorder.js";
 
 describe("SensingWorldBorder", function () {
   let agent, worldRectangleStub;

@@ -1,6 +1,6 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
-import { TimeToLive } from "../../../../server/agent/mixin/TimeToLive.js";
+import { TimeToLive } from "./TimeToLive.js";
 
 describe("TimeToLive", function () {
   let clock;

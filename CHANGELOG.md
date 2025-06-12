@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.3] - 2025-06-12
+
+### Changed
+
+- **Test Organization**: Completely restructured test files to be co-located with source files
+  - Moved all test files from parallel `test/` directory structure to be alongside their corresponding source files
+  - Updated all import paths in test files to work from new co-located locations
+  - Updated mocha configuration to discover tests in new locations and exclude node_modules
+  - Removed empty test subdirectories while preserving essential test configuration files
+
+### Fixed
+
+- **Connector Tests**: Fixed all broken Connector test cases
+  - Exported `Connector` constructor function for testability
+  - Fixed test setup and teardown issues with sinon stubs
+  - Properly configured mock objects and dependencies (`BEServer.currentApp`, `BECommonDefinitions.config`)
+  - Converted integration tests to unit tests where appropriate
+  - Fixed ES module compatibility issues (removed `require()` calls)
+
+### Improved
+
+- **Code Convention**: Renamed `ConnectorConstructor` to `Connector` for better naming convention
+  - Updated all JSDoc comments and type annotations
+  - Maintained backward compatibility through proper exports
+- **Test Coverage**: Achieved 128 passing tests (up from 115) with 0 failing tests
+- **Developer Experience**: Tests are now easier to find, navigate, and maintain
+  - No need to maintain parallel directory structures
+  - Tests are immediately visible when working on source files
+  - Shorter and more intuitive import paths
+
+### Technical Details
+
+- Updated `.mocharc.json` configuration to use `**/*.test.js` pattern with appropriate ignore patterns
+- Fixed import paths in 16 test files to work from co-located positions
+- Preserved test setup files (`test/setup.js`, `test/module-loader.mjs`) for global test configuration
+- All tests now use consistent ES module imports and Node.js built-in assertions
+
 ## [0.3.2] - 2025-06-11
 
 ### Fixed

@@ -1,7 +1,7 @@
 import { strict as assert } from "assert";
-import { resourceStore } from "../../../client/singleton/ResourceStore.js";
-import { Screen } from "../../../client/singleton/Screen.js";
-import { rect } from "../../../common/geometry/Rectangle.js";
+import { rect } from "../../common/geometry/Rectangle.js";
+import { resourceStore } from "./ResourceStore.js";
+import { Screen } from "./Screen.js";
 
 describe("Screen Module", function () {
   let screen;

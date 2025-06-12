@@ -1,7 +1,7 @@
 import { strict as assert } from "assert";
-import { CoordinatesConversion } from "../../client/CoordinatesConversion.js";
-import { Rectangle } from "../../common/geometry/Rectangle.js";
-import { Vector } from "../../common/geometry/Vector.js";
+import { Rectangle } from "../common/geometry/Rectangle.js";
+import { Vector } from "../common/geometry/Vector.js";
+import { CoordinatesConversion } from "./CoordinatesConversion.js";
 
 describe("CoordinatesConversion", () => {
   let canvasPosition, cameraRectangle, screenSize;

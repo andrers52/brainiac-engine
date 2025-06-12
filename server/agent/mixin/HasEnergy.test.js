@@ -1,6 +1,6 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
-import { HasEnergy } from "../../../../server/agent/mixin/HasEnergy.js";
+import { HasEnergy } from "./HasEnergy.js";
 
 describe("HasEnergy", function () {
   let agent;

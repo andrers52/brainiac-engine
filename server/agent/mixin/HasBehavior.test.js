@@ -1,6 +1,6 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
-import { HasBehavior } from "../../../../server/agent/mixin/HasBehavior.js";
+import { HasBehavior } from "./HasBehavior.js";
 
 describe("HasBehavior", function () {
   it("should throw an error if no behavior is provided", function () {

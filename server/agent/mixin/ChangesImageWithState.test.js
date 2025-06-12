@@ -1,9 +1,9 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
-import { Rectangle } from "../../../../common/geometry/Rectangle.js";
-import { Vector } from "../../../../common/geometry/Vector.js";
-import { ChangesImageWithState } from "../../../../server/agent/mixin/ChangesImageWithState.js";
-import { connector } from "../../../../server/singleton/Connector.js";
+import { Rectangle } from "../../../common/geometry/Rectangle.js";
+import { Vector } from "../../../common/geometry/Vector.js";
+import { connector } from "../../singleton/Connector.js";
+import { ChangesImageWithState } from "./ChangesImageWithState.js";
 
 describe("ChangesImageWithState", function () {
   const SAMPLE_CONFIGURATION = {

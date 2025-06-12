@@ -1,6 +1,6 @@
 import { strict as assert } from "assert";
-import { Rectangle, rect } from "../../../common/geometry/Rectangle.js";
-import { Vector } from "../../../common/geometry/Vector.js";
+import { Rectangle, rect } from "./Rectangle.js";
+import { Vector } from "./Vector.js";
 
 describe("Rectangle", function () {
   it("should be created as type Rectangle", function () {

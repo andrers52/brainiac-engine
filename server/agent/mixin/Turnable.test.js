@@ -1,5 +1,5 @@
 import { strict as assert } from "assert";
-import { Turnable } from "../../../../server/agent/mixin/Turnable.js";
+import { Turnable } from "./Turnable.js";
 
 describe("Turnable", function () {
   let turnable;

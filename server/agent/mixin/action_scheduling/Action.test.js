@@ -1,6 +1,6 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
-import { Action } from "../../../../../server/agent/mixin/action_scheduling/Action.js";
+import { Action } from "./Action.js";
 
 describe("Action", function () {
   let whatToDo, conditionToMeet, action;

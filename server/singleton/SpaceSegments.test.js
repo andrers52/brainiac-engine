@@ -1,5 +1,5 @@
 import { strict as assert } from "assert";
-import { spaceSegments } from "../../../server/singleton/SpaceSegments.js";
+import { spaceSegments } from "./SpaceSegments.js";
 
 describe("SpaceSegments", () => {
   const WORLD_WIDTH = 100;

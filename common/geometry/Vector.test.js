@@ -1,5 +1,5 @@
 import { strict as assert } from "assert";
-import { Vector } from "../../../common/geometry/Vector.js";
+import { Vector } from "./Vector.js";
 
 describe("Vector", function () {
   it("should create a Vector instance", function () {

@@ -1,8 +1,8 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
-import { Vector } from "../../../../common/geometry/Vector.js";
-import { environment } from "../../../../server/agent/singleton/Environment.js";
-import { spaceSegments } from "../../../../server/singleton/SpaceSegments.js";
+import { Vector } from "../../../common/geometry/Vector.js";
+import { spaceSegments } from "../../singleton/SpaceSegments.js";
+import { environment } from "./Environment.js";
 
 describe("Environment", function () {
   let agent, nearbyAgent, clock;

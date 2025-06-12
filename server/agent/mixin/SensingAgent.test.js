@@ -1,9 +1,9 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
-import { rect } from "../../../../common/geometry/Rectangle.js";
-import { Vector } from "../../../../common/geometry/Vector.js";
-import { SensingAgent } from "../../../../server/agent/mixin/SensingAgent.js";
-import { environment } from "../../../../server/agent/singleton/Environment.js";
+import { rect } from "../../../common/geometry/Rectangle.js";
+import { Vector } from "../../../common/geometry/Vector.js";
+import { environment } from "../singleton/Environment.js";
+import { SensingAgent } from "./SensingAgent.js";
 
 describe("SensingAgent", function () {
   let agent, nearbyAgentsStub, clock;

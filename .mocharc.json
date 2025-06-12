@@ -1,6 +1,7 @@
 {
   "require": ["./test/setup.js"],
-  "spec": "test/**/*.test.js",
+  "spec": "**/*.test.js",
+  "ignore": ["node_modules/**/*.test.js", "examples/*/node_modules/**/*.test.js"],
   "timeout": 5000,
   "recursive": true
 }
