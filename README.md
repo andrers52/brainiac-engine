@@ -71,7 +71,7 @@ position.add(velocity);
 ```
 brainiac-engine/
 ├── client/          # Client-side modules
-│   ├── singleton/   # Screen, ResourceStore, etc.
+│   ├── singleton/   # Screen, etc.
 │   ├── image/       # Image processing and effects
 │   └── ...
 ├── server/          # Server-side modules

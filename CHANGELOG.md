@@ -1,3 +1,25 @@
+# [0.3.6] - 2025-06-12
+
+### Added
+
+- **ResourceStore Testing**: Comprehensive test suite with co-located tests
+  - Added `ResourceStore.test.js` co-located with source code
+  - Tests cover all major functionality: resource management, image handling, canvas operations
+  - Uses Node.js built-in `assert` module for consistency with existing tests
+
+### Fixed
+
+- **ResourceStore Code Quality**: Improved arrow function usage and fixed bugs
+  - Converted internal helper functions (`storeAudioData`, `storeImageData`, `loadImage`, `loadAudio`, `loadJSON`) to arrow functions
+  - Eliminated all `.call(this, ...)` patterns by using lexical `this` binding
+  - Fixed undefined `permanent` variable in `cloneImage` method
+  - Enhanced test setup with proper canvas mock methods (`getImageData`, `putImageData`)
+
+### Changed
+
+- **ResourceStore Location**: Moved out of singleton directory to reflect non-singleton nature
+- **Code Style**: Cleaner context handling throughout ResourceStore implementation
+
 # [0.3.5] - 2025-06-12
 
 ### Fixed

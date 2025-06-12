@@ -40,6 +40,16 @@ dom.window.document.createElement = function (tagName) {
           measureText: function () {
             return { width: 0 };
           },
+          getImageData: function (x, y, width, height) {
+            return {
+              data: new Uint8ClampedArray(width * height * 4),
+              width: width,
+              height: height,
+            };
+          },
+          putImageData: function (imageData, x, y) {
+            // Mock implementation - just return
+          },
           beginPath: function () {},
           closePath: function () {},
           moveTo: function () {},

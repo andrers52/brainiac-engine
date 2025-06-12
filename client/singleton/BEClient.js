@@ -6,8 +6,8 @@ import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
 import { rect } from "../../common/geometry/Rectangle.js";
 import { fakeSocket } from "../../common/singleton/fakeSocket.js";
 import { BEClientDefinitions } from "../BEClientDefinitions.js";
+import { ResourceStore } from "../ResourceStore.js";
 import { UserEvents } from "../UserEvents.js";
-import { ResourceStore } from "./ResourceStore.js";
 import { screen } from "./Screen.js";
 
 /**

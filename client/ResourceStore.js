@@ -13,7 +13,7 @@ import { Assert, EArray, Random } from "arslib";
 
 import { ImageUtil } from "arslib";
 
-import { Effect } from "../image/effect/Effect.js";
+import { Effect } from "./image/effect/Effect.js";
 
 /**
  * ResourceStore constructor - Manages loading, storing, and retrieving game resources.
@@ -244,20 +244,20 @@ function ResourceStore() {
    * @param {string} identifier - Audio resource identifier.
    * @param {string|Blob} audioDataSrc - Audio source (path or blob).
    */
-  function storeAudioData(identifier, audioDataSrc) {
+  const storeAudioData = (identifier, audioDataSrc) => {
     let audio = new Audio();
 
-    function loadCallbackOk(evt) {
+    const loadCallbackOk = (evt) => {
       audio.removeEventListener("canplaythrough", loadCallbackOk, false);
       audio.removeEventListener("load", loadCallbackOk, false);
-      resourceStore.resources[identifier] = audio;
+      this.resources[identifier] = audio;
       decrease_resources_counter();
-    }
+    };
 
-    function loadCallbackError(evt) {
+    const loadCallbackError = (evt) => {
       audio.removeEventListener("error", loadCallbackError, false);
       throw "Audio loading Error: " + identifier;
-    }
+    };
     audio.src =
       typeof audioDataSrc === "string"
         ? audioDataSrc //file path
@@ -266,39 +266,36 @@ function ResourceStore() {
     audio.addEventListener("load", loadCallbackOk, false);
     audio.addEventListener("error", loadCallbackError, false);
     audio.load();
-  }
+  };
 
   /**
    * Stores image data from a blob and sets up loading callback.
    * @param {string} identifier - Image resource identifier.
    * @param {Blob} imageDataBlob - Image data blob.
    */
-  function storeImageData(identifier, imageDataBlob) {
-    const self = this;
+  const storeImageData = (identifier, imageDataBlob) => {
     let imageElement = new Image();
-    imageElement.onload = function () {
-      self.resources[identifier] = imageElement;
+    imageElement.onload = () => {
+      this.resources[identifier] = imageElement;
       decrease_resources_counter();
-
       window.URL.revokeObjectURL(imageElement.src); // Clean up after yourself.
     };
     imageElement.src = window.URL.createObjectURL(imageDataBlob);
-  }
+  };
 
   /**
    * Loads an image resource via XMLHttpRequest.
    * @param {string} identifier - Image resource identifier.
    */
-  function loadImage(identifier) {
+  const loadImage = (identifier) => {
     Assert.assert(
       identifier,
       "resourceStore#loadImage error: image not defined",
     );
     try {
       let request = new XMLHttpRequest();
-      const self = this;
-      request.onloadend = function () {
-        storeImageData.call(self, identifier, request.response);
+      request.onloadend = () => {
+        storeImageData(identifier, request.response);
       };
       request.open("GET", identifier, true);
       request.responseType = "blob";
@@ -311,34 +308,33 @@ function ResourceStore() {
         err
       );
     }
-  }
+  };
 
   /**
    * Loads an audio resource.
    * @param {string} identifier - Audio resource identifier.
    */
-  function loadAudio(identifier) {
+  const loadAudio = (identifier) => {
     Assert.assert(
       identifier,
       "resourceStore#loadAudio error: image not defined",
     );
-    storeAudioData.call(this, identifier, identifier);
-  }
+    storeAudioData(identifier, identifier);
+  };
 
   /**
    * Loads a JSON file as an object.
    * @param {string} identifier - JSON resource identifier.
    */
-  function loadJSON(identifier) {
+  const loadJSON = (identifier) => {
     //Assert.assert(identifier, "resourceStore#loadJSON error: json file not defined");
-    const self = this;
     try {
       let request = new XMLHttpRequest();
-      request.onloadend = function () {
+      request.onloadend = () => {
         let jsonDescriptor = request.responseText;
         if (EArray.last(identifier.split("/")) === "effects_descriptor.json")
-          self.createEffectsFromDescriptor(JSON.parse(jsonDescriptor));
-        else self.resources[identifier] = JSON.parse(jsonDescriptor);
+          this.createEffectsFromDescriptor(JSON.parse(jsonDescriptor));
+        else this.resources[identifier] = JSON.parse(jsonDescriptor);
 
         decrease_resources_counter();
       };
@@ -353,7 +349,7 @@ function ResourceStore() {
         err
       );
     }
-  }
+  };
 
   /**
    * Adds a resource to the loading queue.
@@ -375,10 +371,8 @@ function ResourceStore() {
       ? loadImage
       : isAudio(identifier)
       ? loadAudio
-      : function (id) {
-          return loadJSON.call(this, id);
-        };
-    loadFunc.call(this, identifier);
+      : loadJSON;
+    loadFunc(identifier);
 
     return this;
   };
@@ -460,7 +454,7 @@ function ResourceStore() {
       originalImage.height,
     );
     newCanvas.getContext("2d").drawImage(originalImage, 0, 0);
-    let newImageName = this.createNewImageName(permanent);
+    let newImageName = this.createNewImageName(false); // cloned images are temporary by default
     this.addLocalResource(newImageName, newCanvas);
     return newImageName;
   };
