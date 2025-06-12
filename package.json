@@ -1,13 +1,14 @@
 {
     "name": "brainiac-engine",
-    "version": "0.3.3",
-    "description": "A comprehensive 2D game engine with agent-based architecture, real-time multiplayer support, and advanced visual effects. Features include particle systems, spatial indexing, UI components, and extensive animation capabilities.",
+    "version": "0.3.4",
+    "description": "A comprehensive 2D game engine with agent-based architecture, real-time multiplayer support, and advanced visual effects.",
     "main": "index.js",
     "type": "module",
     "scripts": {
         "setup": "npm install && echo '✅ Setup complete! Run npm test to verify everything works.'",
         "dev": "npm run setup",
         "test": "mocha",
+        "posttest": "rm -f log.txt",
         "test:watch": "npm test -- --watch",
         "prepublishOnly": "npm test",
         "start": "echo 'This is a library. Import it in your project or run npm test to verify installation.'"
@@ -38,7 +39,7 @@
     },
     "homepage": "https://github.com/andrers52/brainiac-engine#readme",
     "dependencies": {
-        "arslib": "0.5.0",
+        "arslib": "0.5.2",
         "esm": "3.2.25",
         "socket.io": "4.8.1",
         "socket.io-client": "4.8.1"

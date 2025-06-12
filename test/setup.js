@@ -8,7 +8,7 @@ const dom = new JSDOM("<!DOCTYPE html><html><body></body></html>", {
   resources: "usable",
 });
 
-// Set up globals properly
+// Set up globals properly with the real JSDOM window
 global.window = dom.window;
 global.document = dom.window.document;
 

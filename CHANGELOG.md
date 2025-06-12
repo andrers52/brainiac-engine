@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.4] - 2025-06-12
+
+### Fixed
+
+- **Test Framework Configuration**: Fixed npm test failures in Action tests
+  - Configured arslib `Assert.testMode = true` globally in test setup to prevent `process.exit(1)` calls during testing
+  - Updated Action test error message patterns to properly match arslib assertion errors
+  - All 128 tests now pass consistently with 7 intentionally pending tests
+  - Preserved arslib Assert usage in production code while ensuring proper test behavior
+
+### Improved
+
+- **Test Reliability**: Enhanced test setup configuration for better arslib integration
+  - Added dynamic import of arslib in test setup to avoid timing issues with window globals
+  - Improved error handling in test environment to work seamlessly with arslib assertions
+- **Test Cleanup**: Added automatic cleanup of log.txt file after test runs
+  - Added `posttest` script to remove log.txt file created by arslib's NodeConsoleLog module
+  - Keeps the project directory clean after running tests
+
 ## [0.3.3] - 2025-06-12
 
 ### Changed

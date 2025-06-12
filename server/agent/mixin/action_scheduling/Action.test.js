@@ -14,13 +14,13 @@ describe("Action", function () {
   it("should throw an error if whatToDo is not a function", function () {
     assert.throws(() => {
       new Action(null, conditionToMeet);
-    }, /Action expecting a function to execute/);
+    }, /Test failed: Action expecting a function to execute/);
   });
 
   it("should throw an error if conditionToMeet is not a function", function () {
     assert.throws(() => {
       new Action(whatToDo, null);
-    }, /Action expecting a test function/);
+    }, /Test failed: Action expecting a test function/);
   });
 
   it("should execute the whatToDo function", function () {
