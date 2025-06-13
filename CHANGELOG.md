@@ -1,3 +1,30 @@
+# [0.3.10] - 2025-06-13
+
+### Enhanced
+
+- **README.md Optimization for npm**: Redesigned README.md for optimal npm package display
+  - Created concise README.md with essential information only (installation, basic usage, links)
+  - Moved detailed technical documentation to new `MANUAL.md` file
+  - Reduced README size from 291 lines to 67 lines to ensure proper npm display
+  - Improved npm package page visibility and user experience
+  - Added clear navigation links to detailed documentation
+
+### Added
+
+- **MANUAL.md**: Comprehensive technical documentation
+  - Complete project structure documentation
+  - Detailed core concepts (Agent System, Mixins, Event System)
+  - Full configuration guide with examples
+  - Development setup and contribution guidelines
+  - Complete API documentation and examples
+  - Proper cross-linking between README.md and MANUAL.md
+
+### Fixed
+
+- **npm Package Display**: Resolved README.md not showing on npm website
+  - Large README files can cause npm display issues
+  - Optimized for better package discovery and first-time user experience
+
 # [0.3.9] - 2025-06-13
 
 ### Fixed
