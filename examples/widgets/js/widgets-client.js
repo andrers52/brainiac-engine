@@ -1,6 +1,6 @@
 "use strict";
 
-// import { BEClient } from '../node_modules/brainiac-engine/client/singleton/BEClient.js'
+// import { BEClient } from '../node_modules/brainiac-engine/client/BEClient.js'
 import { Definitions } from "./definitions.js";
 
 function WidgetsClient() {

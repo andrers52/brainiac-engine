@@ -1,4 +1,5 @@
 // client
+export * from "./client/BEClient.js";
 export * from "./client/BEClientDefinitions.js";
 export * from "./client/CoordinatesConversion.js";
 export * from "./client/image/Color.js";
@@ -29,7 +30,6 @@ export * from "./client/image/image_filter/ImageFilter.js";
 export * from "./client/ParticlesContainer.js";
 export * from "./client/ResourceStore.js";
 export * from "./client/Screen.js";
-export * from "./client/singleton/BEClient.js";
 export * from "./client/TextToImage.js";
 export * from "./client/UserEvents.js";
 

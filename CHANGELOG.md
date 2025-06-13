@@ -1,3 +1,43 @@
+# [0.3.15] - 2025-06-13
+
+### Refactored
+
+- **BEClient Architecture**: Converted from singleton namespace to constructor function pattern
+  - **Constructor Function**: BEClient is now a constructor function using `this.property = value` pattern
+  - **Instance Isolation**: Each `new BEClient()` call creates an independent instance with its own state
+  - **Natural JavaScript Pattern**: Uses standard constructor function approach with `this` context
+  - **Private Encapsulation**: Internal variables are properly encapsulated within the function scope
+
+### Breaking Changes
+
+- **Instance Creation**: BEClient must now be instantiated as a constructor with `new` keyword
+- **Migration Required**: All consumers must update from `BEClient.method()` to `const client = new BEClient(); client.method()`
+
+### Migration Guide
+
+For BEClient usage:
+
+```javascript
+// Before (singleton approach)
+import { BEClient } from "brainiac-engine";
+BEClient.start(gameApp);
+
+// After (constructor function)
+import { BEClient } from "brainiac-engine";
+const client = new BEClient();
+client.start(gameApp);
+```
+
+All BEClient methods remain the same after instantiation:
+
+- `client.start(app)`
+- `client.connectToGameServer()`
+- `client.getScreen()`
+- `client.getResourceStore()`
+- `client.getParticlesContainer()`
+- `client.getCamera()`
+- etc.
+
 # [0.3.14] - 2025-06-13
 
 ### Refactored
@@ -40,7 +80,7 @@ import { screen } from "./client/Screen.js";
 screen.someMethod();
 
 // After
-import BEClient from "./client/singleton/BEClient.js";
+import BEClient from "./client/BEClient.js";
 const beClient = new BEClient();
 beClient.getScreen().someMethod();
 ```
