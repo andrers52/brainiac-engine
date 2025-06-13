@@ -6,6 +6,7 @@ import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
 import { rect } from "../../common/geometry/Rectangle.js";
 import { fakeSocket } from "../../common/singleton/fakeSocket.js";
 import { BEClientDefinitions } from "../BEClientDefinitions.js";
+import { ParticlesContainer } from "../ParticlesContainer.js";
 import { ResourceStore } from "../ResourceStore.js";
 import { UserEvents } from "../UserEvents.js";
 import { screen } from "./Screen.js";
@@ -164,6 +165,12 @@ let camera = { rectangle: rect(0, 0, 1, 1) }; //1s to avoid conversion errors
 let resourceStore = new ResourceStore();
 
 /**
+ * ParticlesContainer instance for managing all particle effects.
+ * @type {ParticlesContainer}
+ */
+let particlesContainer = new ParticlesContainer();
+
+/**
  * Gets the current camera object.
  * @memberof BEClient
  * @returns {Object} The camera object with rectangle property.
@@ -179,6 +186,15 @@ BEClient.getCamera = function () {
  */
 BEClient.getResourceStore = function () {
   return resourceStore;
+};
+
+/**
+ * Gets the current particles container instance.
+ * @memberof BEClient
+ * @returns {ParticlesContainer} The particles container instance.
+ */
+BEClient.getParticlesContainer = function () {
+  return particlesContainer;
 };
 
 /**
@@ -370,6 +386,7 @@ BEClient.connectToGameServer = function () {
       worldWidth: BECommonDefinitions.WORLD_WIDTH,
       worldHeight: BECommonDefinitions.WORLD_HEIGHT,
       resourceStoreInput: resourceStore,
+      particlesContainerInput: particlesContainer,
     });
 
     //camera.rectangle.size = screen.setCameraSizeToCanvas()

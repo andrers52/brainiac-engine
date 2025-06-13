@@ -4,10 +4,10 @@ import { Assert, EFunction } from "arslib";
 
 import { Random, Time, Util } from "arslib";
 
-import { vect } from "../../common/geometry/Vector.js";
+import { vect } from "../common/geometry/Vector.js";
 
-import { CoordinatesConversion } from "../CoordinatesConversion.js";
-import { screen } from "./Screen.js";
+import { CoordinatesConversion } from "./CoordinatesConversion.js";
+import { screen } from "./singleton/Screen.js";
 
 /**
  * @fileoverview Particle system for creating and managing visual effects.
@@ -362,7 +362,7 @@ function ParticlesContainer() {
 
     let angle = Random.randomFromInterval(0, 2 * Math.PI);
     let runWithoutRateLimit = () => {
-      particlesContainer.createParticle({
+      this.createParticle({
         positionX: positionX + Math.cos(angle) * radius,
         positionY: positionY + Math.sin(angle) * radius,
         speedX: 0,
@@ -431,7 +431,7 @@ function ParticlesContainer() {
     };
 
     let runWithoutRateLimit = () => {
-      particlesContainer.createParticleInSpray(
+      this.createParticleInSpray(
         positionX,
         positionY,
         speedX,
@@ -483,10 +483,4 @@ function ParticlesContainer() {
   };
 }
 
-/**
- * @type {ParticlesContainer}
- * @description Global particle container instance for managing all particle effects.
- */
-let particlesContainer = new ParticlesContainer();
-
-export { particlesContainer };
+export { ParticlesContainer };

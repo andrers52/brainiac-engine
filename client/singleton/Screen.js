@@ -6,7 +6,6 @@ import { Vector, vect } from "../../common/geometry/Vector.js";
 import { BEClientDefinitions } from "../BEClientDefinitions.js";
 import { CoordinatesConversion } from "../CoordinatesConversion.js";
 import { TextToImage } from "../TextToImage.js";
-import { particlesContainer } from "./ParticlesContainer.js";
 
 /**
  * @fileoverview Screen management system for canvas rendering and game presentation.
@@ -28,6 +27,7 @@ function Screen() {
   let camera;
   let minScreenDimension;
   let resourceStore;
+  let particlesContainer;
 
   /**
    * @memberof Screen
@@ -124,6 +124,7 @@ function Screen() {
    * @param {number} config.worldWidth - Width of the game world.
    * @param {number} config.worldHeight - Height of the game world.
    * @param {ResourceStore} config.resourceStoreInput - Resource store instance.
+   * @param {ParticlesContainer} config.particlesContainerInput - Particles container instance.
    */
   this.start = function ({
     onBeforeDrawAgentInput,
@@ -136,6 +137,7 @@ function Screen() {
     worldWidth,
     worldHeight,
     resourceStoreInput,
+    particlesContainerInput,
   }) {
     getVisibleAgents = getVisibleAgentsInput;
     onBeforeDrawAgent = onBeforeDrawAgentInput;
@@ -145,6 +147,7 @@ function Screen() {
     camera = cameraInput;
     canvasId = canvasIdInput;
     resourceStore = resourceStoreInput;
+    particlesContainer = particlesContainerInput;
     worldRectangle = rect(0, 0, worldWidth, worldHeight);
 
     addCanvas();

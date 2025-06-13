@@ -1,3 +1,49 @@
+# [0.3.13] - 2025-06-13
+
+### Refactored
+
+- **ParticlesContainer Architecture**: Converted from singleton to instance-based pattern
+  - **Moved out of singleton directory**: ParticlesContainer no longer lives in `/singleton/` folder
+  - **Instance-based management**: ParticlesContainer now created and managed within BEClient, similar to camera and resourceStore
+  - **Dependency Injection**: Screen.js now receives ParticlesContainer instance via constructor parameter
+  - **API Access**: Added `BEClient.getParticlesContainer()` method for external access to particle system
+  - **Consistency**: All core engine components (camera, resourceStore, particlesContainer) now follow the same architectural pattern
+
+### Fixed
+
+- **Self-reference Issues**: Fixed internal method calls in ParticlesContainer to use `this` instead of singleton reference
+  - Fixed `createCircularEmitter` to use `this.createParticle()` instead of `particlesContainer.createParticle()`
+  - Fixed `createSprayEmitter` to use `this.createParticleInSpray()` instead of `particlesContainer.createParticleInSpray()`
+- **Z32 Game Compatibility**: Updated Z32 game to use new ParticlesContainer API via `BEClient.getParticlesContainer()`
+
+### Enhanced
+
+- **Testability**: Particle system is now easier to test and mock due to dependency injection pattern
+- **Flexibility**: Multiple BEClient instances can now have independent particle systems
+- **Code Organization**: Cleaner separation of concerns and better dependency management
+
+### Breaking Changes
+
+- **Import Changes**: Games using ParticlesContainer must now access it via `BEClient.getParticlesContainer()` instead of importing as singleton
+- **Directory Structure**: ParticlesContainer moved from `client/singleton/` to `client/` directory
+
+### Migration Guide
+
+Old pattern:
+
+```javascript
+import { particlesContainer } from "brainiac-engine";
+particlesContainer.createParticle({...});
+```
+
+New pattern:
+
+```javascript
+import { BEClient } from "brainiac-engine";
+const particlesContainer = BEClient.getParticlesContainer();
+particlesContainer.createParticle({...});
+```
+
 # [0.3.12] - 2025-06-13
 
 ### Enhanced
