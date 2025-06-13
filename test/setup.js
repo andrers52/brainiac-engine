@@ -12,6 +12,109 @@ const dom = new JSDOM("<!DOCTYPE html><html><body></body></html>", {
 global.window = dom.window;
 global.document = dom.window.document;
 
+// Track active timers and intervals for cleanup
+const activeTimers = new Set();
+const activeIntervals = new Set();
+
+// Override setTimeout to track timers
+const originalSetTimeout = global.window.setTimeout;
+global.window.setTimeout = function (callback, delay, ...args) {
+  const id = originalSetTimeout.call(
+    this,
+    (...callbackArgs) => {
+      activeTimers.delete(id);
+      return callback(...callbackArgs);
+    },
+    delay,
+    ...args,
+  );
+  activeTimers.add(id);
+  return id;
+};
+
+// Override setInterval to track intervals
+const originalSetInterval = global.window.setInterval;
+global.window.setInterval = function (callback, delay, ...args) {
+  const id = originalSetInterval.call(this, callback, delay, ...args);
+  activeIntervals.add(id);
+  return id;
+};
+
+// Override clearTimeout
+const originalClearTimeout = global.window.clearTimeout;
+global.window.clearTimeout = function (id) {
+  activeTimers.delete(id);
+  return originalClearTimeout.call(this, id);
+};
+
+// Override clearInterval
+const originalClearInterval = global.window.clearInterval;
+global.window.clearInterval = function (id) {
+  activeIntervals.delete(id);
+  return originalClearInterval.call(this, id);
+};
+
+// Global cleanup function
+global.cleanupAllTimers = function () {
+  // Clear all active timers
+  activeTimers.forEach((id) => {
+    try {
+      originalClearTimeout.call(global.window, id);
+    } catch (e) {
+      // Ignore errors for already cleared timers
+    }
+  });
+  activeTimers.clear();
+
+  // Clear all active intervals
+  activeIntervals.forEach((id) => {
+    try {
+      originalClearInterval.call(global.window, id);
+    } catch (e) {
+      // Ignore errors for already cleared intervals
+    }
+  });
+  activeIntervals.clear();
+};
+
+// Set up process exit handler to ensure cleanup
+process.on("exit", () => {
+  global.cleanupAllTimers();
+  // Close JSDOM if possible
+  if (dom && typeof dom.window.close === "function") {
+    try {
+      dom.window.close();
+    } catch (e) {
+      // Ignore errors
+    }
+  }
+});
+
+// Also handle other termination signals
+process.on("SIGINT", () => {
+  global.cleanupAllTimers();
+  if (dom && typeof dom.window.close === "function") {
+    try {
+      dom.window.close();
+    } catch (e) {
+      // Ignore errors
+    }
+  }
+  process.exit(0);
+});
+
+process.on("SIGTERM", () => {
+  global.cleanupAllTimers();
+  if (dom && typeof dom.window.close === "function") {
+    try {
+      dom.window.close();
+    } catch (e) {
+      // Ignore errors
+    }
+  }
+  process.exit(0);
+});
+
 // Mock canvas functionality for testing
 const originalCreateElement = dom.window.document.createElement.bind(
   dom.window.document,

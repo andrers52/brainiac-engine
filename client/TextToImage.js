@@ -174,7 +174,7 @@ TextToImage.createImageFromText = function (
   );
 
   let objToReturn = { imageName: imageName, font: font };
-  //store image and font in cached
+  //store image and font in cache
   textImageCache[text] = objToReturn;
   return objToReturn;
 };

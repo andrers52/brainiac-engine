@@ -46,8 +46,10 @@ Vector3D.prototype.copy = function (otherVector) {
  * @returns {Vector3D} This vector for chaining
  */
 Vector3D.prototype.zRotate = function (angle) {
-  this.x = Math.cos(angle) * this.x - Math.sin(angle) * this.y;
-  this.y = Math.sin(angle) * this.x + Math.cos(angle) * this.y;
+  const originalX = this.x;
+  const originalY = this.y;
+  this.x = Math.cos(angle) * originalX - Math.sin(angle) * originalY;
+  this.y = Math.sin(angle) * originalX + Math.cos(angle) * originalY;
   return this;
 };
 
@@ -367,7 +369,7 @@ Vector3D.prototype.dotProduct = function (otherVector) {
  */
 Vector3D.prototype.angle = function (otherVector) {
   return Math.acos(
-    (this.clone().dotProduct(otherVector) / this.size()) * otherVector.size(),
+    this.clone().dotProduct(otherVector) / (this.size() * otherVector.size()),
   );
 };
 
@@ -547,7 +549,7 @@ Vector3D.prototype.normalize = function () {
  * @returns {Vector3D} A new vector with the target size
  */
 Vector3D.prototype.adjustToSize = function (targetSize) {
-  return this.normalize().clone().multiplyByScalar(targetSize);
+  return this.clone().normalize().multiplyByScalar(targetSize);
 };
 
 /**
@@ -719,4 +721,4 @@ Vector3D.Origin = function () {
  * @param {number} [z=0] - The z component
  * @returns {Vector3D} A new Vector3D instance
  */
-const vect = (x, y, z) => new Vector3D(x, y, z);
+export const vect3D = (x, y, z) => new Vector3D(x, y, z);
