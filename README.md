@@ -15,6 +15,10 @@ A powerful JavaScript framework for building interactive applications and games 
 - 🏗️ **Agent System** - Flexible entity management with mixins and behaviors
 - 📐 **Geometry Utilities** - Vector math and collision detection
 
+## 🎮 Games Built with Brainiac Engine
+
+- **[Z32](https://andrers52.github.io/z32/)** - A space combat game showcasing the engine's capabilities
+
 ## 🚀 Quick Start
 
 ### Installation

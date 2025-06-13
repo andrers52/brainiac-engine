@@ -1,3 +1,19 @@
+# [0.3.12] - 2025-06-13
+
+### Enhanced
+
+- **Documentation**: Added showcase game reference to README.md
+  - **Z32 Game**: Added reference to Z32 multiplayer space combat game built with Brainiac Engine
+  - **Live Demo**: Showcases the engine's capabilities in a real-world application
+  - **Game URL**: https://andrers52.github.io/z32/
+  - **Marketing**: Improves discoverability by showing practical usage of the engine
+
+### Technical Details
+
+- Enhanced README.md with "Games Built with Brainiac Engine" section
+- Provides concrete example of the engine in action for potential users
+- Demonstrates the engine's suitability for multiplayer games and complex interactive applications
+
 # [0.3.11] - 2025-06-13
 
 ### Removed
