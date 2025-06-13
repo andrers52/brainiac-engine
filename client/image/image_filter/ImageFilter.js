@@ -135,7 +135,9 @@ ImageFilter.convoluteFloat32 = function (pixels, weights, opaque) {
   var output = {
     width: w,
     height: h,
-    data: new Float32Array(w * h * 4),
+    data: new (globalThis.Float32Array || window.Float32Array || Float32Array)(
+      w * h * 4,
+    ),
   };
   var dst = output.data;
 

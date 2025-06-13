@@ -50,6 +50,13 @@ dom.window.document.createElement = function (tagName) {
           putImageData: function (imageData, x, y) {
             // Mock implementation - just return
           },
+          createImageData: function (width, height) {
+            return {
+              data: new Uint8ClampedArray(width * height * 4),
+              width: width,
+              height: height,
+            };
+          },
           beginPath: function () {},
           closePath: function () {},
           moveTo: function () {},
@@ -97,7 +104,12 @@ if (!global.navigator) {
 global.HTMLElement = dom.window.HTMLElement;
 global.XMLHttpRequest = dom.window.XMLHttpRequest;
 
-// Mock canvas functionality for testing
+// Add typed array support
+global.Float32Array = Float32Array;
+global.Uint8ClampedArray = Uint8ClampedArray;
+global.Uint8Array = Uint8Array;
+
+console.log("✅ Test environment setup complete");
 global.HTMLCanvasElement = dom.window.HTMLCanvasElement;
 
 // Make JSDOM constructor available globally for tests

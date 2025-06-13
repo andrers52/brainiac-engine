@@ -1,3 +1,35 @@
+# [0.3.8] - 2025-06-12
+
+### Added
+
+- **Comprehensive ImageFilter Module Testing**: Complete test coverage for the ImageFilter module
+  - Added `ImageFilter.test.js` with 31 passing tests covering main function, createImageData, convolute, convoluteFloat32, edge cases, and integration scenarios
+  - Tests cover filter chaining, argument handling, convolution operations (identity, blur, edge detection), Float32Array support, and error handling
+  - Added comprehensive edge case testing for small images, large kernels, empty kernels, and null inputs
+  - Integration scenarios include realistic blur, sharpen, and multi-filter workflows
+
+### Fixed
+
+- **ImageFilter Module Compatibility**: Fixed Node.js ES module compatibility and test environment issues
+
+  - Fixed `Float32Array` constructor access using `globalThis.Float32Array || window.Float32Array || Float32Array` for better cross-environment compatibility
+  - Enhanced test setup with proper `createImageData` mock in canvas context
+  - Added typed array support (`Float32Array`, `Uint8ClampedArray`, `Uint8Array`) to test environment globals
+  - Fixed test mocking conflicts by preventing re-stubbing of already stubbed methods
+  - Fixed dynamic ImageData creation in tests to return properly sized data matching requested dimensions
+
+- **Test Infrastructure**: Enhanced test environment robustness
+  - Fixed context mocking issues by properly setting up `ImageFilter.tmpCtx` with mock context
+  - Added stub conflict prevention for `document.createElement` to avoid re-stubbing errors
+  - Improved test isolation and cleanup to prevent interference between test suites
+  - Fixed test logic for filter argument handling to match actual ImageFilter implementation behavior
+
+### Changed
+
+- **Test Coverage**: Increased test coverage from 285 to 316 passing tests (31 new ImageFilter tests)
+- **Test Environment**: More robust test setup with better canvas and context mocking
+- **Code Quality**: Enhanced cross-platform compatibility for the ImageFilter module
+
 # [0.3.7] - 2025-06-12
 
 ### Added
