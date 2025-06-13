@@ -1,11 +1,11 @@
 "use strict";
 
 import { Assert } from "arslib";
-import { rect } from "../../common/geometry/Rectangle.js";
-import { Vector, vect } from "../../common/geometry/Vector.js";
-import { BEClientDefinitions } from "../BEClientDefinitions.js";
-import { CoordinatesConversion } from "../CoordinatesConversion.js";
-import { TextToImage } from "../TextToImage.js";
+import { rect } from "../common/geometry/Rectangle.js";
+import { Vector, vect } from "../common/geometry/Vector.js";
+import { BEClientDefinitions } from "./BEClientDefinitions.js";
+import { CoordinatesConversion } from "./CoordinatesConversion.js";
+import { TextToImage } from "./TextToImage.js";
 
 /**
  * @fileoverview Screen management system for canvas rendering and game presentation.
@@ -18,6 +18,7 @@ import { TextToImage } from "../TextToImage.js";
  * @constructor
  */
 function Screen() {
+  let self = this;
   let canvas;
   let context;
   let backgroundImage;
@@ -94,7 +95,7 @@ function Screen() {
    */
   function defineZoomOutFactor() {
     let resultFactor;
-    let screenSize = screen.getSize();
+    let screenSize = self.getSize();
 
     Assert.assert(screenSize.x, "screen not ready!");
 
@@ -160,7 +161,7 @@ function Screen() {
     context = canvas.getContext("2d");
 
     camera.rectangle.size = this.setCameraSizeToCanvas();
-    particlesContainer.start(camera, resourceStore);
+    particlesContainer.start(camera, resourceStore, self);
   };
 
   /**
@@ -197,7 +198,7 @@ function Screen() {
   this.adjustCanvasToWindowSize = function () {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    screen.zoomOutFactor = defineZoomOutFactor();
+    self.zoomOutFactor = defineZoomOutFactor();
   };
 
   /**
@@ -256,7 +257,7 @@ function Screen() {
     let imageOrientation = 2 * Math.PI - agent.orientation;
 
     context.rotate(imageOrientation);
-    canvasRectangle.size.divideByScalar(screen.zoomOutFactor);
+    canvasRectangle.size.divideByScalar(self.zoomOutFactor);
     context.translate(-canvasRectangle.size.x / 2, -canvasRectangle.size.y / 2);
 
     //give game client a chance to decorate the image with game specific effects
@@ -350,6 +351,7 @@ function Screen() {
       agent.fontFace,
       agent.backgroundColor,
       agent.textColor,
+      context,
     );
     agent.font = result.font;
     agent.imageName = result.imageName;
@@ -368,7 +370,7 @@ function Screen() {
     let canvasRectangle = CoordinatesConversion.rectangleWorldToCanvas(
       agent.rectangle,
       camera.rectangle,
-      screen.getSize(),
+      self.getSize(),
     );
 
     if (agent.imageName) drawAgentImage(agent, canvasRectangle);
@@ -382,7 +384,7 @@ function Screen() {
     let agentsToDraw = Object.values(agentsToDrawInput);
     if (!camera) return; //not ready yet
     for (let index = 0; index < agentsToDraw.length; index++)
-      screen.drawAgent(agentsToDraw[index], camera);
+      self.drawAgent(agentsToDraw[index], camera);
   }
 
   /**
@@ -394,11 +396,11 @@ function Screen() {
     let worldCanvasRectangle = CoordinatesConversion.rectangleWorldToCanvas(
       worldRectangle,
       camera.rectangle,
-      screen.getSize(),
+      self.getSize(),
     );
     let worldCanvasRectangleScreenToCameraFactor = worldCanvasRectangle;
     worldCanvasRectangleScreenToCameraFactor.size.divideByScalar(
-      screen.zoomOutFactor,
+      self.zoomOutFactor,
     );
 
     context.save();
@@ -439,9 +441,9 @@ function Screen() {
 
     particlesContainer.animationStep();
 
-    //presentationLoopId = window.requestAnimationFrame(screen.gamePresentationLoop)
+    //presentationLoopId = window.requestAnimationFrame(self.gamePresentationLoop)
     presentationLoopId = window.setTimeout(
-      screen.gamePresentationLoop,
+      self.gamePresentationLoop,
       BEClientDefinitions.ANIMATION_INTERVAL,
     );
   };
@@ -457,15 +459,4 @@ function Screen() {
   };
 }
 
-/**
- * @type {Screen}
- * @description Global screen instance for managing canvas rendering and game presentation.
- */
-let screen = new Screen();
-
-// Event listener for window resize to adjust canvas
-window.addEventListener("onResizeCanvas", (event) => {
-  screen.adjustCanvasToWindowSize();
-});
-
-export { Screen, screen };
+export { Screen };

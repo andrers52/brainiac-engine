@@ -1,4 +1,3 @@
-/* globals SoundEffect */
 "use strict";
 
 import { Assert, Sound } from "arslib";
@@ -8,8 +7,8 @@ import { fakeSocket } from "../../common/singleton/fakeSocket.js";
 import { BEClientDefinitions } from "../BEClientDefinitions.js";
 import { ParticlesContainer } from "../ParticlesContainer.js";
 import { ResourceStore } from "../ResourceStore.js";
+import { Screen } from "../Screen.js";
 import { UserEvents } from "../UserEvents.js";
-import { screen } from "./Screen.js";
 
 /**
  * @fileoverview Brainiac Engine Client - Main client-side game engine controller.
@@ -171,6 +170,12 @@ let resourceStore = new ResourceStore();
 let particlesContainer = new ParticlesContainer();
 
 /**
+ * Screen instance for managing canvas rendering and game presentation.
+ * @type {Screen}
+ */
+let screen = new Screen();
+
+/**
  * Gets the current camera object.
  * @memberof BEClient
  * @returns {Object} The camera object with rectangle property.
@@ -195,6 +200,15 @@ BEClient.getResourceStore = function () {
  */
 BEClient.getParticlesContainer = function () {
   return particlesContainer;
+};
+
+/**
+ * Gets the current screen instance.
+ * @memberof BEClient
+ * @returns {Screen} The screen instance.
+ */
+BEClient.getScreen = function () {
+  return screen;
 };
 
 /**
@@ -420,6 +434,7 @@ BEClient.connectToGameServer = function () {
           BEClientDefinitions.MOUSE_MOVE_PROPAGATION_LATENCY,
           propagateUserEvent,
           camera,
+          screen,
         );
 
         screen.gamePresentationLoop();

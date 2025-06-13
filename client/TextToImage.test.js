@@ -5,7 +5,6 @@ import { TextToImage } from "./TextToImage.js";
 describe("TextToImage", function () {
   let sandbox;
   let mockResourceStore;
-  let mockScreen;
   let mockContext;
   let mockCanvas;
 
@@ -35,15 +34,6 @@ describe("TextToImage", function () {
 
     mockCanvas.getContext.returns(mockContext);
 
-    // Mock screen global
-    mockScreen = {
-      getContext: sinon.stub().returns(mockContext),
-      getSize: sinon.stub().returns({ x: 800, y: 600 }),
-    };
-
-    // Mock global screen
-    global.screen = mockScreen;
-
     // Mock ResourceStore
     mockResourceStore = {
       retrieveResourceObject: sinon.stub().returns(mockCanvas),
@@ -53,7 +43,6 @@ describe("TextToImage", function () {
 
   afterEach(function () {
     sandbox.restore();
-    delete global.screen;
   });
 
   describe("fontToFontFace", function () {
@@ -152,6 +141,7 @@ describe("TextToImage", function () {
       const result = TextToImage.createRectangleFromTextAndFont(
         "24px Arial",
         "Hello World",
+        mockContext,
       );
 
       assert.strictEqual(mockContext.font, "24px Arial");
@@ -166,6 +156,7 @@ describe("TextToImage", function () {
       const result = TextToImage.createRectangleFromTextAndFont(
         "16px Arial",
         "",
+        mockContext,
       );
 
       assert.strictEqual(result.size.x, 1);
@@ -178,10 +169,12 @@ describe("TextToImage", function () {
       const result1 = TextToImage.createRectangleFromTextAndFont(
         "12px Arial",
         "test",
+        mockContext,
       );
       const result2 = TextToImage.createRectangleFromTextAndFont(
         "bold 18px Helvetica",
         "test",
+        mockContext,
       );
 
       assert.strictEqual(result1.size.y, 12);
@@ -190,14 +183,16 @@ describe("TextToImage", function () {
 
     it("should throw error when font parameter is missing", function () {
       assert.throws(
-        () => TextToImage.createRectangleFromTextAndFont(null, "text"),
+        () =>
+          TextToImage.createRectangleFromTextAndFont(null, "text", mockContext),
         /expecting font parameter/,
       );
     });
 
     it("should throw error when font parameter is not a string", function () {
       assert.throws(
-        () => TextToImage.createRectangleFromTextAndFont(123, "text"),
+        () =>
+          TextToImage.createRectangleFromTextAndFont(123, "text", mockContext),
         /font is not a string literal/,
       );
     });
@@ -228,6 +223,10 @@ describe("TextToImage", function () {
         mockResourceStore,
         undefined,
         "",
+        undefined,
+        undefined,
+        undefined,
+        mockContext,
       );
 
       assert.deepStrictEqual(result, { imageName: null, font: null });
@@ -236,7 +235,15 @@ describe("TextToImage", function () {
     it("should throw error for non-string text parameter", function () {
       assert.throws(
         () =>
-          TextToImage.createImageFromText(mockResourceStore, undefined, 123),
+          TextToImage.createImageFromText(
+            mockResourceStore,
+            undefined,
+            123,
+            undefined,
+            undefined,
+            undefined,
+            mockContext,
+          ),
         /text is not a string literal/,
       );
     });
@@ -246,6 +253,10 @@ describe("TextToImage", function () {
         mockResourceStore,
         undefined,
         "Hello",
+        undefined,
+        undefined,
+        undefined,
+        mockContext,
       );
 
       assert.strictEqual(result.imageName, "test-image-123");
@@ -263,6 +274,7 @@ describe("TextToImage", function () {
         "Helvetica",
         "yellow",
         "purple",
+        mockContext,
       );
 
       // Should create image with doubled size (400x200)
@@ -275,6 +287,10 @@ describe("TextToImage", function () {
         mockResourceStore,
         undefined, // Use undefined to trigger default parameter
         "Cached Text",
+        undefined,
+        undefined,
+        undefined,
+        mockContext,
       );
 
       // Reset the mock to verify it's not called again for cached result
@@ -284,6 +300,10 @@ describe("TextToImage", function () {
         mockResourceStore,
         undefined, // Use undefined to trigger default parameter
         "Cached Text",
+        undefined,
+        undefined,
+        undefined,
+        mockContext,
       );
 
       // Both results should be identical (same reference)
@@ -300,6 +320,9 @@ describe("TextToImage", function () {
         undefined,
         "Custom Font",
         "Times New Roman",
+        undefined,
+        undefined,
+        mockContext,
       );
 
       assert(mockResourceStore.createNewImage.called);
@@ -316,6 +339,7 @@ describe("TextToImage", function () {
         "Arial",
         "rgba(255, 0, 0, 0.5)",
         "#00FF00",
+        mockContext,
       );
 
       assert(
@@ -350,6 +374,10 @@ describe("TextToImage", function () {
         mockResourceStore,
         { center: { x: 50, y: 25 }, size: { x: 100, y: 50 } }, // Will be doubled to 200x100
         "Long Text That Needs Fitting",
+        undefined,
+        undefined,
+        undefined,
+        mockContext,
       );
 
       // Should have called measureText multiple times to find fitting font
@@ -361,14 +389,30 @@ describe("TextToImage", function () {
     it("should double rectangle size for smooth scaling", function () {
       const rect = { center: { x: 50, y: 25 }, size: { x: 100, y: 50 } };
 
-      TextToImage.createImageFromText(mockResourceStore, rect, "Test Text");
+      TextToImage.createImageFromText(
+        mockResourceStore,
+        rect,
+        "Test Text",
+        undefined,
+        undefined,
+        undefined,
+        mockContext,
+      );
 
       // Should create image with doubled dimensions
       assert(mockResourceStore.createNewImage.calledWith(200, 100, true));
     });
 
     it("should handle default rectangle size", function () {
-      TextToImage.createImageFromText(mockResourceStore, undefined, "Test");
+      TextToImage.createImageFromText(
+        mockResourceStore,
+        undefined,
+        "Test",
+        undefined,
+        undefined,
+        undefined,
+        mockContext,
+      );
 
       // Should use default rectangle (100x100) doubled to (200x200)
       assert(mockResourceStore.createNewImage.calledWith(200, 200, true));
@@ -382,6 +426,7 @@ describe("TextToImage", function () {
       const result = TextToImage.createRectangleFromTextAndFont(
         "16px Arial",
         "",
+        mockContext,
       );
 
       assert.strictEqual(result.size.x, 1); // Should use minimum width of 1
@@ -390,7 +435,15 @@ describe("TextToImage", function () {
     it("should handle small rectangles", function () {
       const smallRect = { center: { x: 50, y: 50 }, size: { x: 50, y: 50 } }; // Reasonable small size
 
-      TextToImage.createImageFromText(mockResourceStore, smallRect, "X");
+      TextToImage.createImageFromText(
+        mockResourceStore,
+        smallRect,
+        "X",
+        undefined,
+        undefined,
+        undefined,
+        mockContext,
+      );
 
       // Should still create image with doubled size
       assert(mockResourceStore.createNewImage.calledWith(100, 100, true));
@@ -403,6 +456,10 @@ describe("TextToImage", function () {
         mockResourceStore,
         undefined,
         specialText,
+        undefined,
+        undefined,
+        undefined,
+        mockContext,
       );
 
       assert(mockResourceStore.createNewImage.called);

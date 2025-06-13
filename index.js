@@ -28,8 +28,8 @@ export * from "./client/image/image_filter/filters/Threshold.js";
 export * from "./client/image/image_filter/ImageFilter.js";
 export * from "./client/ParticlesContainer.js";
 export * from "./client/ResourceStore.js";
+export * from "./client/Screen.js";
 export * from "./client/singleton/BEClient.js";
-export * from "./client/singleton/Screen.js";
 export * from "./client/TextToImage.js";
 export * from "./client/UserEvents.js";
 

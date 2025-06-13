@@ -1,7 +1,7 @@
 import { strict as assert } from "assert";
-import { rect } from "../../common/geometry/Rectangle.js";
-import { ResourceStore } from "../ResourceStore.js";
-import { Screen } from "../Screen.js";
+import { rect } from "../common/geometry/Rectangle.js";
+import { ResourceStore } from "./ResourceStore.js";
+import { Screen } from "./Screen.js";
 
 describe("Screen Module", function () {
   let screen;

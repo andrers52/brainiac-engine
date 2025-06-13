@@ -19,11 +19,10 @@ let TextToImage = {};
  * @param {string} text - The text to measure
  * @param {string} fontface - The font family to use
  * @param {Rectangle} rectangle - The target rectangle for the text
+ * @param {CanvasRenderingContext2D} context - The canvas context to use for measurement
  * @returns {string} The calculated font string (e.g., "24px Arial")
  */
-function getFontToFitTextOnRectangle(text, fontface, rectangle) {
-  let context = screen.getContext("2d");
-
+function getFontToFitTextOnRectangle(text, fontface, rectangle, context) {
   // start with a large font size
   let fontsize = 300;
   let resultFont;
@@ -93,10 +92,11 @@ TextToImage.drawText = function (
  * Creates a rectangle that would contain the given text with the specified font
  * @param {string} font - The font string to use for measurement
  * @param {string} text - The text to measure
+ * @param {CanvasRenderingContext2D} context - The canvas context to use for measurement
  * @returns {Rectangle} A rectangle representing the text dimensions
  * @throws {Error} If font parameter is not provided or not a string
  */
-TextToImage.createRectangleFromTextAndFont = function (font, text) {
+TextToImage.createRectangleFromTextAndFont = function (font, text, context) {
   //text size area measuring (returns rectangle)
   Assert.assert(
     font,
@@ -106,7 +106,6 @@ TextToImage.createRectangleFromTextAndFont = function (font, text) {
     font,
     "TextToImage#createRectangleFromTextAndFont Error: font is not a string literal",
   );
-  let context = screen.getContext("2d");
   context.font = font;
   //look for number inside font string. since the world and canvas have the same resolution we should be fine.
   let height = parseInt(font.match(/\d+/)[0]);
@@ -123,6 +122,7 @@ TextToImage.createRectangleFromTextAndFont = function (font, text) {
  * @param {string} [fontface="GoodDog"] - The font family to use
  * @param {string} [backgroundColor="rgba(125, 125, 125, 0)"] - The background color
  * @param {string} [textColor="black"] - The text color
+ * @param {CanvasRenderingContext2D} context - The canvas context to use for measurement
  * @returns {Object} Object containing imageName and font properties
  * @returns {string|null} returns.imageName - The name of the created image resource
  * @returns {string|null} returns.font - The calculated font string used
@@ -135,6 +135,7 @@ TextToImage.createImageFromText = function (
   fontface = "GoodDog",
   backgroundColor = "rgba(125, 125, 125, 0)",
   textColor = "black",
+  context,
 ) {
   Assert.assertIsLiteralString(
     text,
@@ -162,7 +163,12 @@ TextToImage.createImageFromText = function (
     grownRectangle.size.y,
     true,
   );
-  let font = getFontToFitTextOnRectangle(text, fontface, grownRectangle);
+  let font = getFontToFitTextOnRectangle(
+    text,
+    fontface,
+    grownRectangle,
+    context,
+  );
 
   TextToImage.drawText(
     resourceStore,

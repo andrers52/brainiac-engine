@@ -40,11 +40,11 @@ export function Camera(owner) {
   camera.owner = owner;
 
   /**
-   * Handles canvas resize events by delegating to the screen.
+   * Handles canvas resize events.
    * @memberof Camera
    */
   camera.onResizeCanvas = function () {
-    screen.onResizeCanvas(); //let the screen change its size
+    // Camera resize handling - this is handled on the client side
   };
 
   /**

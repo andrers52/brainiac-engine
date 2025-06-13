@@ -44,7 +44,7 @@ BEClient.start(myGameClient);
 ### Simple Example
 
 ```javascript
-import { Screen } from "brainiac-engine/client/singleton/Screen";
+import { Screen } from "brainiac-engine/client/Screen";
 import { Vector } from "brainiac-engine/common/geometry/Vector";
 
 // Initialize the screen

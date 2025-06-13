@@ -3,7 +3,6 @@
 import { Assert } from "arslib";
 import { Vector, vect } from "../common/geometry/Vector.js";
 import { CoordinatesConversion } from "./CoordinatesConversion.js";
-import { screen } from "./singleton/Screen.js";
 
 //generated events to be called on agents:
 //onMouseDown(mouseWorldPosition)
@@ -27,6 +26,7 @@ function UserEvents() {
   let self = this;
   let propagate = () => {}; // to be defined at start
   let camera = null; // to be defined at start
+  let screen = null; // to be defined at start
 
   let mouseCanvasPosition = null;
   let mousePositionChanged = false;
@@ -187,13 +187,16 @@ function UserEvents() {
    * @param {number} mouseMovePropagationLatency - Interval for mouse move event propagation
    * @param {Function} propagateInput - Callback function to receive generated events
    * @param {Object} cameraInput - The camera object for coordinate conversion
+   * @param {Screen} screenInput - The screen instance for canvas access
    */
   this.start = function (
     mouseMovePropagationLatency,
     propagateInput,
     cameraInput,
+    screenInput,
   ) {
     camera = cameraInput;
+    screen = screenInput;
     propagate = propagateInput;
     Object.keys(eventsMapping).forEach((handler) => this.enableEvent(handler));
     setInterval(propagateMouseMoveOnInterval, mouseMovePropagationLatency);

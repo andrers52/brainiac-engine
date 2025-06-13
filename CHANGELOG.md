@@ -1,3 +1,63 @@
+# [0.3.14] - 2025-06-13
+
+### Refactored
+
+- **Screen Architecture**: Converted from singleton to instance-based pattern
+  - **Instance-based management**: Screen now created and managed within BEClient, similar to camera and particlesContainer
+  - **Dependency Injection**: ParticlesContainer and UserEvents now receive Screen instance via constructor parameter
+  - **API Access**: Added `BEClient.getScreen()` method for external access to screen functionality
+  - **TextToImage Refactor**: Updated TextToImage to accept canvas context parameter instead of relying on global screen
+  - **Consistency**: All core engine components (camera, resourceStore, particlesContainer, screen) now follow the same architectural pattern
+
+### Fixed
+
+- **Global Dependencies**: Removed all singleton exports and global references to screen object
+- **Server-side Code**: Removed inappropriate client-side screen reference from server/agent/Camera.js
+- **Test Coverage**: Updated all tests to use new instance-based approach, including TextToImage.test.js
+- **Self-reference Issues**: Fixed internal method calls to use proper instance references
+
+### Enhanced
+
+- **Testability**: Screen system is now easier to test and mock due to dependency injection pattern
+- **Flexibility**: Multiple BEClient instances can now have independent screen systems
+- **Code Organization**: Cleaner separation of concerns and better dependency management
+- **ES Module Compatibility**: Improved module structure and exports
+
+### Breaking Changes
+
+- **Import Changes**: Screen is no longer available as a singleton import - access via `BEClient.getScreen()`
+- **TextToImage API**: Now requires canvas context parameter in all method calls
+- **ParticlesContainer Constructor**: Now requires Screen instance parameter
+- **UserEvents Constructor**: Now requires Screen instance parameter
+
+### Migration Guide
+
+For Screen access:
+
+```javascript
+// Before
+import { screen } from "./client/Screen.js";
+screen.someMethod();
+
+// After
+import BEClient from "./client/singleton/BEClient.js";
+const beClient = new BEClient();
+beClient.getScreen().someMethod();
+```
+
+For TextToImage usage:
+
+```javascript
+// Before
+import { textToImage } from "./client/TextToImage.js";
+textToImage.drawText("Hello", 100, 100);
+
+// After
+import { textToImage } from "./client/TextToImage.js";
+const ctx = canvas.getContext("2d");
+textToImage.drawText(ctx, "Hello", 100, 100);
+```
+
 # [0.3.13] - 2025-06-13
 
 ### Refactored

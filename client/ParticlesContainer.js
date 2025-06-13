@@ -7,7 +7,6 @@ import { Random, Time, Util } from "arslib";
 import { vect } from "../common/geometry/Vector.js";
 
 import { CoordinatesConversion } from "./CoordinatesConversion.js";
-import { screen } from "./singleton/Screen.js";
 
 /**
  * @fileoverview Particle system for creating and managing visual effects.
@@ -22,6 +21,7 @@ import { screen } from "./singleton/Screen.js";
 function ParticlesContainer() {
   let camera;
   let resourceStore;
+  let screen;
 
   /**
    * @memberof ParticlesContainer
@@ -69,10 +69,12 @@ function ParticlesContainer() {
    * @memberof ParticlesContainer
    * @param {Object} cameraInput - Camera object for coordinate conversions.
    * @param {ResourceStore} resourceStoreInput - Resource store instance.
+   * @param {Screen} screenInput - Screen instance for canvas context access.
    */
-  this.start = function (cameraInput, resourceStoreInput) {
+  this.start = function (cameraInput, resourceStoreInput, screenInput) {
     camera = cameraInput;
     resourceStore = resourceStoreInput;
+    screen = screenInput;
     particles = {};
     emitters = [];
     particleImage = resourceStore.retrieveResourceObject("whiteParticle.jpg");
