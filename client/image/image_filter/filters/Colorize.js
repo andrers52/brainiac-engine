@@ -1,5 +1,7 @@
 "use strict";
 
+import { Assert } from "arslib";
+
 /**
  * Applies a color tint to image data by adding color values to each pixel
  * @param {ImageData} imageData - The image data to colorize
@@ -17,7 +19,7 @@ export function Colorize(imageData, color) {
   for (let i = 0, n = pix.length; i < n; i += 4) {
     pix[i] = pix[i] + color.red;
     pix[i + 1] = pix[i + 1] + color.green;
-    pix[i + 2] = pix[i + 3] + color.blue;
+    pix[i + 2] = pix[i + 2] + color.blue;
     // alpha
   }
 

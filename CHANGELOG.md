@@ -1,3 +1,48 @@
+# [0.3.9] - 2025-06-13
+
+### Fixed
+
+- **README.md Corruption**: Completely fixed README.md display and rendering issues
+
+  - Identified and resolved markdown formatting corruption that was causing improper display
+  - Created clean, properly encoded UTF-8 version of README.md with correct markdown syntax
+  - Fixed all code block structures, headers, tables, and formatting to follow markdown standards
+  - Ensured proper rendering across GitHub, VS Code, npm package pages, and other markdown viewers
+  - Backed up original file as `README_BACKUP.md` for reference
+
+- **Final Test Suite Completion**: Successfully completed all remaining failing tests
+  - Fixed 4 remaining Noise filter test failures related to variable scoping and test isolation
+  - Resolved `testImageData is not defined` errors by adding proper variable declarations in test scopes
+  - Fixed test assertion logic for edge cases where multiple pixels result in the same clamped values
+  - Enhanced test isolation by ensuring all tests use `createFreshImageData()` helper function
+  - Achieved **512 passing tests, 7 pending, 0 failing** - complete test coverage success
+
+### Enhanced
+
+- **Test Quality**: Finalized comprehensive test suite with perfect reliability
+
+  - All Noise filter tests now properly isolated with fresh data for each test case
+  - Fixed variable scope issues that were causing test pollution between test runs
+  - Improved test assertions to correctly handle Uint8ClampedArray clamping behavior
+  - Enhanced test documentation and comments for better maintainability
+
+- **Documentation**: Improved README.md structure and readability
+  - Clean markdown formatting ensures proper badge display, code highlighting, and table rendering
+  - Consistent code block syntax across all language examples (bash, javascript, json)
+  - Proper table formatting for configuration parameters
+  - Enhanced link formatting and emoji rendering
+
+### Technical Details
+
+- **Test Infrastructure**: Completed final fixes for test isolation and data freshness
+  - All image filter tests now use isolated test data to prevent cross-test contamination
+  - Fixed scoping issues in Noise.test.js that were causing ReferenceError exceptions
+  - Maintained comprehensive test coverage across all 11 image filter modules
+- **Markdown Standards**: README.md now fully compliant with GitHub Flavored Markdown
+  - Proper UTF-8 encoding without BOM or hidden characters
+  - Consistent indentation and formatting throughout
+  - All code blocks properly paired and language-tagged
+
 # [0.3.8] - 2025-06-12
 
 ### Added

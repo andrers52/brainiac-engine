@@ -1,5 +1,7 @@
 "use strict";
 
+import { Assert } from "arslib";
+
 /**
  * Brightens image data by adding a specified value to RGB channels
  * @param {ImageData} imageData - The image data to brighten
@@ -9,7 +11,7 @@
  */
 export function Brighten(imageData, BrightenAdjustment) {
   Assert.assert(
-    BrightenAdjustment,
+    BrightenAdjustment !== null && BrightenAdjustment !== undefined,
     "The Brighten effect needs a BrightenAdjustment property (0-255) argument. Not found",
   );
 

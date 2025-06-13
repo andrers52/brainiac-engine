@@ -7,7 +7,7 @@
  * @returns {ImageData} The image data with added noise
  */
 export function Noise(imageData, factor) {
-  factor = factor || 55; //default value
+  factor = factor !== undefined ? factor : 55; //default value
   let pix = imageData.data;
   for (let i = 0, n = pix.length; i < n; i += 4) {
     let rand = (0.5 - Math.random()) * factor;
