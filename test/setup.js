@@ -54,8 +54,15 @@ dom.window.document.createElement = function (tagName) {
           closePath: function () {},
           moveTo: function () {},
           lineTo: function () {},
+          arc: function () {},
+          rect: function () {},
           fill: function () {},
           stroke: function () {},
+          createRadialGradient: function () {
+            return {
+              addColorStop: function () {},
+            };
+          },
           globalAlpha: 1,
           fillStyle: "#000000",
           strokeStyle: "#000000",
@@ -63,6 +70,9 @@ dom.window.document.createElement = function (tagName) {
           font: "10px sans-serif",
           textAlign: "start",
           textBaseline: "alphabetic",
+          shadowBlur: 0,
+          shadowColor: "",
+          globalCompositeOperation: "source-over",
         };
       }
       return null;

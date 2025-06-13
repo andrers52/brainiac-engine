@@ -10,6 +10,10 @@
  * @param {string} [parameters.combineOption] - The global composite operation to use
  */
 export function RadialGradient(context, parameters) {
+  if (!parameters) {
+    return;
+  }
+
   var radgrad = context.createRadialGradient(
     context.canvas.width / 2,
     context.canvas.height / 2,

@@ -23,9 +23,50 @@ global.Effect = global.Effect || (() => {});
 
 describe("ResourceStore", function () {
   let store;
+  let originalCreateElement;
 
   beforeEach(function () {
     store = new ResourceStore();
+
+    // Ensure we have a proper canvas mock for ResourceStore tests
+    originalCreateElement = global.document.createElement;
+    global.document.createElement = function (tagName) {
+      if (tagName.toLowerCase() === "canvas") {
+        const canvas = {
+          width: 0,
+          height: 0,
+          getContext: function (contextType) {
+            if (contextType === "2d") {
+              return {
+                canvas: this,
+                getImageData: function (x, y, width, height) {
+                  return {
+                    data: new Uint8ClampedArray(width * height * 4),
+                    width: width,
+                    height: height,
+                  };
+                },
+                putImageData: function (imageData, x, y) {
+                  // Mock implementation
+                },
+                fillRect: function () {},
+                clearRect: function () {},
+                drawImage: function () {},
+                // ... other context methods
+              };
+            }
+            return null;
+          },
+        };
+        return canvas;
+      }
+      return originalCreateElement.call(this, tagName);
+    };
+  });
+
+  afterEach(function () {
+    // Restore original createElement
+    global.document.createElement = originalCreateElement;
   });
 
   it("should initialize with empty resources", function () {

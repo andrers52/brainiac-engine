@@ -1,3 +1,35 @@
+# [0.3.7] - 2025-06-12
+
+### Added
+
+- **Comprehensive Effect Module Testing**: Complete test coverage for all visual effect modules
+  - Added `RadialGradient.test.js` with 158 lines covering gradient creation, color stops, composite operations, fill modes, edge cases, and various canvas dimensions
+  - Added `ShadowBlur.test.js` with 200+ lines covering canvas setup, shadow configuration, image scaling (0.9 factor), positioning, and edge cases
+  - Added `Label.test.js` with 390+ lines covering text rendering, font handling, positioning (including zero values), text measurement, context state, and special characters
+  - All tests use Node.js `assert` and `sinon` for consistency with existing test patterns
+  - Comprehensive edge case coverage including null parameters, extreme values, and different canvas sizes
+
+### Fixed
+
+- **Label.js Implementation**: Completed and enhanced the Label effect module
+
+  - Fixed incomplete implementation that had undefined `rect()` function call
+  - Added proper parameter handling with correct default value logic for x/y positions
+  - Fixed issue where falsy values (like 0) were incorrectly overridden by default values
+  - Added comprehensive text rendering with background rectangle and proper font handling
+
+- **Test Infrastructure**: Enhanced testing environment and fixed test isolation issues
+  - Improved canvas mocking in test setup with additional context methods (`arc`, `rect`, `createRadialGradient`, `shadowBlur`, `shadowColor`)
+  - Fixed ResourceStore test interference by adding proper canvas mock isolation
+  - Fixed Effect test context mocking to ensure proper `canvas` property references
+  - Enhanced parameter validation in RadialGradient and ShadowBlur with null checks
+
+### Changed
+
+- **Test Coverage**: Significantly increased test coverage from ~260 to 285 passing tests
+- **Code Quality**: Improved robustness and error handling across all effect modules
+- **Documentation**: Enhanced JSDoc comments in Label.js with complete parameter descriptions
+
 # [0.3.6] - 2025-06-12
 
 ### Added

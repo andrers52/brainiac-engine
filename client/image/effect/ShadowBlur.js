@@ -8,6 +8,10 @@
  * @param {string} parameters.color - The color of the shadow
  */
 export function ShadowBlur(context, parameters) {
+  if (!parameters) {
+    return;
+  }
+
   //save image with shadow to tmpCanvas
   let tmpCanvas = document.createElement("canvas");
   tmpCanvas.width = context.canvas.width;

@@ -1,9 +1,21 @@
 {
     "name": "brainiac-engine",
-    "version": "0.3.6",
+    "version": "0.3.7",
     "description": "A comprehensive 2D game engine with agent-based architecture, real-time multiplayer support, and advanced visual effects.",
     "main": "index.js",
     "type": "module",
+    "readme": "README.md",
+    "files": [
+        "*.js",
+        "*.md",
+        "client/**",
+        "server/**",
+        "common/**",
+        "examples/**",
+        "docs/**",
+        "CHANGELOG.md",
+        "LICENSE"
+    ],
     "scripts": {
         "setup": "npm install && echo '✅ Setup complete! Run npm test to verify everything works.'",
         "dev": "npm run setup",
@@ -40,7 +52,6 @@
     "homepage": "https://github.com/andrers52/brainiac-engine#readme",
     "dependencies": {
         "arslib": "0.5.2",
-        "esm": "3.2.25",
         "socket.io": "4.8.1",
         "socket.io-client": "4.8.1"
     },
