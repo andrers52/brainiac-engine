@@ -14,7 +14,6 @@
 
 import { EObject } from "arslib";
 import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
-import { getSharedLocalSocket } from "../../common/fakeSocket.js";
 import { Vector, vect } from "../../common/geometry/Vector.js";
 import { BEServer } from "./BEServer.js";
 
@@ -230,8 +229,9 @@ function Connector() {
    * Starts the connector system, setting up either real WebSocket server or fake socket for local apps.
    * @memberof Connector
    * @param {boolean} localApp - Whether this is a local application (uses fake socket) or networked (uses real WebSocket)
+   * @param {Object} [fakeSocket] - The fake socket instance to use for local apps (provided by BEServer)
    */
-  this.start = function (localApp) {
+  this.start = function (localApp, fakeSocket) {
     if (!localApp) {
       // var compression = require('compression')
       const cors = require("cors");
@@ -257,7 +257,7 @@ function Connector() {
 
       app.use(express.static("."));
     } else {
-      io = getSharedLocalSocket();
+      io = fakeSocket;
     }
 
     /**
@@ -357,11 +357,4 @@ function Connector() {
   };
 }
 
-/**
- * Singleton instance of the connection manager.
- * @type {Connector}
- * @instance
- */
-var connector = new Connector();
-
-export { Connector, connector };
+export { Connector };

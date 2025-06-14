@@ -3,7 +3,7 @@
 import { Assert } from "arslib";
 import { Rectangle } from "../../../common/geometry/Rectangle.js";
 import { Vector } from "../../../common/geometry/Vector.js";
-import { connector } from "../../singleton/Connector.js";
+import { BEServer } from "../../singleton/BEServer.js";
 
 /**
  * @fileoverview State-based image and audio management for agents.
@@ -95,7 +95,7 @@ export function ChangesImageWithState(configurationObj) {
       );
     }
     self.audioName = audioPerState[state];
-    connector.playSoundInClient(self.audioName);
+    BEServer.getConnector().playSoundInClient(self.audioName);
   }
 
   /**

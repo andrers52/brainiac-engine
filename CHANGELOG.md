@@ -1,3 +1,32 @@
+# [0.3.18] - 2025-06-14
+
+### Changed
+
+- **BREAKING**: Refactored Connector from singleton to instance-based pattern
+  - `Connector.js` now exports only the `Connector` class, no singleton instance
+  - BEServer now owns and manages Connector instance via `this.connector`
+  - Added `BEServer.getConnector()` method to access the connector instance
+  - Connector.start() now accepts `fakeSocket` parameter for local app mode
+  - All imports and usage updated from singleton `connector` to `BEServer.getConnector()`
+  - Updated components: ChangesImageWithState mixin and all server-side code
+  - Updated all test files to work with new instance-based pattern
+
+### Enhanced
+
+- **FakeSocket Management**: Improved fakeSocket ownership and lifecycle
+  - BEServer now creates and owns fakeSocket for local app mode
+  - FakeSocket passed to Connector during start() for proper isolation
+  - Better separation of concerns between client and server socket management
+  - Enhanced test coverage with proper fakeSocket instance handling
+
+### Technical Details
+
+- Connector class functionality remains identical - only instantiation pattern changed
+- All 619 tests continue to pass with full backward compatibility
+- Maintains ES module compatibility
+- Clean separation of concerns with BEServer as connector owner
+- Completed the singleton-to-instance refactor started in previous versions
+
 # [0.3.17] - 2025-06-14
 
 ### Changed

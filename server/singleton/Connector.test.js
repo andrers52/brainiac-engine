@@ -1,6 +1,7 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
 import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
+import { getSharedLocalSocket } from "../../common/fakeSocket.js";
 import { BEServer } from "./BEServer.js";
 import { Connector } from "./Connector.js";
 
@@ -151,10 +152,13 @@ describe("Connector", function () {
   });
 
   it("should start the connector with a local app", function () {
+    // Create a fake socket for local app testing
+    const fakeSocket = getSharedLocalSocket();
+
     // Since we now use a class-based approach, we can't easily stub the instance
     // Instead, test that start() doesn't throw and that the connector can be used
     assert.doesNotThrow(() => {
-      connector.start(true);
+      connector.start(true, fakeSocket);
     });
 
     // Test that the connector is properly initialized for local app

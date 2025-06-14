@@ -42,6 +42,7 @@ function BEClient() {
   this.visibleAgents = [];
   this.socket = null;
   this.config = null;
+  this.fakeSocket = null; // For local apps
 
   // Private instance variables
   const camera = { rectangle: rect(0, 0, 1, 1) }; // 1s to avoid conversion errors

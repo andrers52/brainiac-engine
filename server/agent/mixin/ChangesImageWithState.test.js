@@ -2,7 +2,7 @@ import { strict as assert } from "assert";
 import sinon from "sinon";
 import { Rectangle } from "../../../common/geometry/Rectangle.js";
 import { Vector } from "../../../common/geometry/Vector.js";
-import { connector } from "../../singleton/Connector.js";
+import { BEServer } from "../../singleton/BEServer.js";
 import { ChangesImageWithState } from "./ChangesImageWithState.js";
 
 describe("ChangesImageWithState", function () {
@@ -24,12 +24,12 @@ describe("ChangesImageWithState", function () {
       imageName: null,
       audioName: null,
     };
-    sinon.stub(connector, "playSoundInClient");
+    sinon.stub(BEServer.getConnector(), "playSoundInClient");
     ChangesImageWithState.call(agent, SAMPLE_CONFIGURATION);
   });
 
   afterEach(function () {
-    connector.playSoundInClient.restore();
+    BEServer.getConnector().playSoundInClient.restore();
   });
 
   it("should initialize with the default state", function () {
@@ -40,7 +40,7 @@ describe("ChangesImageWithState", function () {
     agent.changeState("running");
     assert.strictEqual(agent.imageName, "running.png");
     assert.strictEqual(agent.audioName, "running.mp3");
-    assert(connector.playSoundInClient.calledWith("running.mp3"));
+    assert(BEServer.getConnector().playSoundInClient.calledWith("running.mp3"));
   });
 
   it("should not change to an invalid state", function () {
@@ -59,7 +59,7 @@ describe("ChangesImageWithState", function () {
   it("should update image and audio during initialization", function () {
     assert.strictEqual(agent.imageName, "idle.png");
     assert.strictEqual(agent.audioName, "idle.mp3");
-    assert(connector.playSoundInClient.calledWith("idle.mp3"));
+    assert(BEServer.getConnector().playSoundInClient.calledWith("idle.mp3"));
   });
 
   it("should create a rectangle if size is zero during initialization", function () {

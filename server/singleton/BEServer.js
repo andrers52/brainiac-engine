@@ -2,9 +2,10 @@
 
 import { Assert, Platform } from "arslib";
 import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
+import { getSharedLocalSocket } from "../../common/fakeSocket.js";
 import { AgentDefinitions } from "../agent/AgentDefinitions.js";
 import { Environment } from "../agent/singleton/Environment.js";
-import { connector } from "./Connector.js";
+import { Connector } from "./Connector.js";
 
 /**
  * @file Main server singleton for the Brainiac Engine.
@@ -38,6 +39,10 @@ async function fetchAsync(file) {
 function BEServerConstructor() {
   /** @type {Environment} The game environment instance */
   this.environment = new Environment();
+  /** @type {Connector} The connector instance for client-server communication */
+  this.connector = new Connector();
+  /** @type {Object|null} The fake socket instance for local apps */
+  this.fakeSocket = null;
   /**
    * Reads configuration from JSON file, supporting both browser and Node.js environments.
    * @async
@@ -67,7 +72,7 @@ function BEServerConstructor() {
    * @private
    */
   function _sendClientVisibleAgents() {
-    connector.setVisibleAgents();
+    BEServer.connector.setVisibleAgents();
     setTimeout(
       _sendClientVisibleAgents,
       AgentDefinitions.AGENTS_CLIENT_REFRESH_INTERVAL,
@@ -116,7 +121,13 @@ function BEServerConstructor() {
       BECommonDefinitions.start(this.config); //adjust to config
       if (BECommonDefinitions.config.buildType === "deploy")
         Assert.disableAllVerifications = true;
-      connector.start(!!this.config.localApp);
+
+      // Create fake socket for local apps
+      if (this.config.localApp) {
+        this.fakeSocket = getSharedLocalSocket();
+      }
+
+      this.connector.start(!!this.config.localApp, this.fakeSocket);
     });
   };
 
@@ -153,6 +164,15 @@ function BEServerConstructor() {
    */
   this.getEnvironment = function () {
     return this.environment;
+  };
+
+  /**
+   * Gets the connector instance.
+   * @memberof BEServerConstructor
+   * @returns {Connector} The connector instance
+   */
+  this.getConnector = function () {
+    return this.connector;
   };
 }
 
