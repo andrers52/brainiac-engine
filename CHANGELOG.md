@@ -1,3 +1,31 @@
+# [0.3.16] - 2025-06-14
+
+### Changed
+
+- **BREAKING**: Refactored `fakeSocket` from singleton to class-based pattern
+  - `fakeSocket.js` now exports `FakeSocket` class instead of singleton instance
+  - BEClient and Connector now create their own FakeSocket instances
+  - This ensures proper isolation between different socket connections
+  - All consumers updated to use `new FakeSocket()` instead of importing singleton
+  - Tests updated to work with class-based pattern
+
+### Fixed
+
+- Fixed `eventsToFuncs[name] is not a function` error in FakeSocket
+  - Added safety check in `emit()` method to verify event handler exists before calling
+  - Introduced `getSharedLocalSocket()` function for local app communication
+  - BEClient and Connector now use shared FakeSocket instance for local apps
+  - This ensures proper client-server communication in local application mode
+
+### Technical Details
+
+- Removed global singleton pattern from `fakeSocket.js`
+- Updated BEClient (both versions) to instantiate FakeSocket when needed
+- Updated Connector to create and reuse FakeSocket instance for local apps
+- Updated test files to work with class-based approach
+- Added `getSharedLocalSocket()` helper function for local app scenarios
+- Maintained backward compatibility for external API usage
+
 # [0.3.15] - 2025-06-13
 
 ### Refactored

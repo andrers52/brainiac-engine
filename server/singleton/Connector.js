@@ -14,8 +14,8 @@
 
 import { EObject } from "arslib";
 import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
+import { getSharedLocalSocket } from "../../common/fakeSocket.js";
 import { Vector, vect } from "../../common/geometry/Vector.js";
-import { fakeSocket } from "../../common/singleton/fakeSocket.js";
 import { environment } from "../agent/singleton/Environment.js";
 
 import { Camera } from "../../server/agent/Camera.js";
@@ -258,7 +258,7 @@ function Connector() {
 
       app.use(express.static("."));
     } else {
-      io = fakeSocket;
+      io = getSharedLocalSocket();
     }
 
     /**
@@ -267,7 +267,7 @@ function Connector() {
      * @private
      */
     io.on("connection", function (socketInput) {
-      if (localApp) socketInput = fakeSocket;
+      if (localApp) socketInput = io; // Use the same shared FakeSocket instance
 
       /** @type {Object} The client socket connection */
       let socket = socketInput; //define connection socket here

@@ -1,14 +1,14 @@
 "use strict";
 
 import { Assert, Sound } from "arslib";
-import { BECommonDefinitions } from "../common/BECommonDefinitions.js";
-import { getSharedLocalSocket } from "../common/fakeSocket.js";
-import { rect } from "../common/geometry/Rectangle.js";
-import { BEClientDefinitions } from "./BEClientDefinitions.js";
-import { ParticlesContainer } from "./ParticlesContainer.js";
-import { ResourceStore } from "./ResourceStore.js";
-import { Screen } from "./Screen.js";
-import { UserEvents } from "./UserEvents.js";
+import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
+import { getSharedLocalSocket } from "../../common/fakeSocket.js";
+import { rect } from "../../common/geometry/Rectangle.js";
+import { BEClientDefinitions } from "../BEClientDefinitions.js";
+import { ParticlesContainer } from "../ParticlesContainer.js";
+import { ResourceStore } from "../ResourceStore.js";
+import { Screen } from "../Screen.js";
+import { UserEvents } from "../UserEvents.js";
 
 /**
  * @fileoverview Brainiac Engine Client - Main client-side game engine controller.

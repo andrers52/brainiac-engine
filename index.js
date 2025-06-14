@@ -35,10 +35,10 @@ export * from "./client/UserEvents.js";
 
 // common
 export * from "./common/BECommonDefinitions.js";
+export * from "./common/fakeSocket.js";
 export * from "./common/geometry/Rectangle.js";
 export * from "./common/geometry/Vector.js";
 export * from "./common/geometry/Vector3D.js";
-export * from "./common/singleton/fakeSocket.js";
 
 // server
 export * from "./server/agent/Agent.js";

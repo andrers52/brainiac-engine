@@ -25,14 +25,28 @@ function FakeSocket() {
     // window.dispatchEvent(new CustomEvent(name, {
     //   detail: data, bubbles: true, composed: true
     // }))
-    eventsToFuncs[name](data);
+    if (eventsToFuncs[name] && typeof eventsToFuncs[name] === "function") {
+      eventsToFuncs[name](data);
+    }
   };
 }
 
 /**
- * Global instance of the fake socket
+ * Shared FakeSocket instance for local apps where client and server
+ * need to communicate through the same socket
  * @type {FakeSocket}
  */
-var fakeSocket = new FakeSocket();
+let sharedLocalSocket = null;
 
-export { fakeSocket };
+/**
+ * Gets or creates a shared FakeSocket instance for local app communication
+ * @returns {FakeSocket} The shared FakeSocket instance
+ */
+function getSharedLocalSocket() {
+  if (!sharedLocalSocket) {
+    sharedLocalSocket = new FakeSocket();
+  }
+  return sharedLocalSocket;
+}
+
+export { getSharedLocalSocket };
