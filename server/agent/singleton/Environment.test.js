@@ -2,12 +2,13 @@ import { strict as assert } from "assert";
 import sinon from "sinon";
 import { Vector } from "../../../common/geometry/Vector.js";
 import { spaceSegments } from "../../singleton/SpaceSegments.js";
-import { environment } from "./Environment.js";
+import { Environment } from "./Environment.js";
 
 describe("Environment", function () {
-  let agent, nearbyAgent, clock;
+  let environment, agent, nearbyAgent, clock;
 
   beforeEach(function () {
+    environment = new Environment();
     agent = {
       id: 1,
       isCamera: false,

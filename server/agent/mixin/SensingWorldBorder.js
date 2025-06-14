@@ -1,7 +1,7 @@
 "use strict";
 import { Assert } from "arslib";
 import { Vector } from "../../../common/geometry/Vector.js";
-import { environment } from "../../../server/agent/singleton/Environment.js";
+import { BEServer } from "../../singleton/BEServer.js";
 
 /**
  * @fileoverview World boundary sensing system for agents.
@@ -40,13 +40,29 @@ export function SensingWorldBorder(sensingDistanceInput) {
     let leftPosition = self.getPosition().clone().add(leftVector);
     let rightPosition = self.getPosition().clone().add(rightVector);
 
-    if (!environment.getWorldRectangle().checkPointInside(upPosition))
+    if (
+      !BEServer.getEnvironment()
+        .getWorldRectangle()
+        .checkPointInside(upPosition)
+    )
       resultVector.add(upVector);
-    if (!environment.getWorldRectangle().checkPointInside(downPosition))
+    if (
+      !BEServer.getEnvironment()
+        .getWorldRectangle()
+        .checkPointInside(downPosition)
+    )
       resultVector.add(downVector);
-    if (!environment.getWorldRectangle().checkPointInside(leftPosition))
+    if (
+      !BEServer.getEnvironment()
+        .getWorldRectangle()
+        .checkPointInside(leftPosition)
+    )
       resultVector.add(leftVector);
-    if (!environment.getWorldRectangle().checkPointInside(rightPosition))
+    if (
+      !BEServer.getEnvironment()
+        .getWorldRectangle()
+        .checkPointInside(rightPosition)
+    )
       resultVector.add(rightVector);
 
     return resultVector.equal(new Vector()) ? null : resultVector;

@@ -2,7 +2,7 @@ import { strict as assert } from "assert";
 import sinon from "sinon";
 import { rect } from "../../../common/geometry/Rectangle.js";
 import { Vector } from "../../../common/geometry/Vector.js";
-import { environment } from "../singleton/Environment.js";
+import { BEServer } from "../../singleton/BEServer.js";
 import { SensingAgent } from "./SensingAgent.js";
 
 describe("SensingAgent", function () {
@@ -23,7 +23,9 @@ describe("SensingAgent", function () {
       onSensingMostForwardAgent: sinon.spy(),
     };
 
-    nearbyAgentsStub = sinon.stub(environment, "getNearbyAgents").returns([]);
+    nearbyAgentsStub = sinon
+      .stub(BEServer.getEnvironment(), "getNearbyAgents")
+      .returns([]);
   });
 
   afterEach(function () {

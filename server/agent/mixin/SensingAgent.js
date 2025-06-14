@@ -3,7 +3,7 @@
 import { Assert } from "arslib";
 import { rect } from "../../../common/geometry/Rectangle.js";
 import { Vector } from "../../../common/geometry/Vector.js";
-import { environment } from "../singleton/Environment.js";
+import { BEServer } from "../../singleton/BEServer.js";
 
 /**
  * @fileoverview Agent sensing system for detecting nearby agents and user interactions.
@@ -74,7 +74,7 @@ export function SensingAgent(
   function getSensingAgents() {
     //return undefined or first perceived agent
     sensingRect.center = self.getPosition().clone();
-    let nearbyAgents = environment.getNearbyAgents(self);
+    let nearbyAgents = BEServer.getEnvironment().getNearbyAgents(self);
     if (!nearbyAgents.length) return null;
     let detectedNearbyAgents = nearbyAgents.filter(
       (agent) =>

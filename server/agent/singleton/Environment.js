@@ -10,12 +10,6 @@ import { AgentDefinitions } from "../AgentDefinitions.js";
  * @module Environment
  */
 
-/** @type {number} Global agent ID counter */
-let agentId = 1;
-
-/** @type {Object.<number, Object>} Collection of all agents in the environment */
-let agents = {};
-
 /**
  * Environment class that manages all agents, cameras, and world state.
  * Handles agent lifecycle, collision detection, behavior execution, and user events.
@@ -24,6 +18,12 @@ let agents = {};
  * @constructor
  */
 function Environment() {
+  /** @type {number} Agent ID counter */
+  let agentId = 1;
+
+  /** @type {Object.<number, Object>} Collection of all agents in the environment */
+  let agents = {};
+
   /** @type {Rectangle} The world boundary rectangle */
   let worldRectangle;
 
@@ -321,10 +321,4 @@ function Environment() {
   };
 }
 
-/**
- * Singleton instance of the Environment.
- * @type {Environment}
- * @instance
- */
-let environment = new Environment();
-export { environment };
+export { Environment };

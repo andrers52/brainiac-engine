@@ -16,11 +16,10 @@ import { EObject } from "arslib";
 import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
 import { getSharedLocalSocket } from "../../common/fakeSocket.js";
 import { Vector, vect } from "../../common/geometry/Vector.js";
-import { environment } from "../agent/singleton/Environment.js";
+import { BEServer } from "./BEServer.js";
 
 import { Camera } from "../../server/agent/Camera.js";
 import { FollowsAgent } from "../../server/agent/mixin/behavior_component/FollowsAgent.js";
-import { BEServer } from "../../server/singleton/BEServer.js";
 import { User } from "../User.js";
 
 /** @type {Object.<string, User>} Map of user IDs to User objects */
@@ -131,7 +130,7 @@ function Connector() {
     for (var id in idToUsers) {
       let user = idToUsers[id];
       if (!user.camera) continue;
-      let nearbyAgents = environment.getNearbyAgentsByRectangle(
+      let nearbyAgents = BEServer.getEnvironment().getNearbyAgentsByRectangle(
         user.camera.rectangle,
       );
 

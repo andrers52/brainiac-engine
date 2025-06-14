@@ -1,7 +1,6 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
 import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
-import { environment } from "../agent/singleton/Environment.js";
 import { BEServer } from "./BEServer.js";
 import { Connector } from "./Connector.js";
 
@@ -42,8 +41,10 @@ describe("Connector", function () {
       start: sinon.spy(),
     };
 
-    sinon.stub(environment, "getNearbyAgentsByRectangle").returns([user.agent]);
-    sinon.stub(environment, "propagateUserEvent");
+    sinon
+      .stub(BEServer.getEnvironment(), "getNearbyAgentsByRectangle")
+      .returns([user.agent]);
+    sinon.stub(BEServer.getEnvironment(), "propagateUserEvent");
     clock = sinon.useFakeTimers();
   });
 
@@ -51,10 +52,10 @@ describe("Connector", function () {
     // Reset BEServer.currentApp
     BEServer.currentApp = null;
 
-    if (environment.getNearbyAgentsByRectangle.restore)
-      environment.getNearbyAgentsByRectangle.restore();
-    if (environment.propagateUserEvent.restore)
-      environment.propagateUserEvent.restore();
+    if (BEServer.getEnvironment().getNearbyAgentsByRectangle.restore)
+      BEServer.getEnvironment().getNearbyAgentsByRectangle.restore();
+    if (BEServer.getEnvironment().propagateUserEvent.restore)
+      BEServer.getEnvironment().propagateUserEvent.restore();
     clock.restore();
   });
 

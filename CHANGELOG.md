@@ -1,3 +1,31 @@
+# [0.3.17] - 2025-06-14
+
+### Changed
+
+- **BREAKING**: Refactored Environment from singleton to instance-based pattern
+  - `Environment.js` now exports only the `Environment` class, no singleton instance
+  - BEServer now owns and manages Environment instance via `this.environment`
+  - Added `BEServer.getEnvironment()` method to access the environment instance
+  - All imports and usage updated from singleton `environment` to `BEServer.getEnvironment()`
+  - Updated components: Connector, Agent, SensingAgent, SensingWorldBorder mixins
+  - Updated all test files to work with new instance-based pattern
+  - Fixed Z32Server.js import to use new pattern
+
+### Benefits
+
+- **Better Architecture**: Environment is now properly owned and managed by BEServer
+- **Easier Testing**: Tests can create independent Environment instances
+- **Clearer Dependencies**: Components explicitly depend on BEServer for environment access
+- **No Global State**: Removed problematic singleton global state pattern
+- **Thread Safety**: Multiple BEServer instances can have independent environments
+
+### Technical Details
+
+- Environment class functionality remains identical - only instantiation pattern changed
+- All 619 tests continue to pass with full backward compatibility
+- Maintains ES module compatibility
+- Clean separation of concerns with BEServer as environment owner
+
 # [0.3.16] - 2025-06-14
 
 ### Changed

@@ -1,7 +1,7 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
 import { Vector } from "../../../common/geometry/Vector.js";
-import { environment } from "../singleton/Environment.js";
+import { BEServer } from "../../singleton/BEServer.js";
 import { SensingWorldBorder } from "./SensingWorldBorder.js";
 
 describe("SensingWorldBorder", function () {
@@ -14,9 +14,11 @@ describe("SensingWorldBorder", function () {
       onSensingWorldBorder: sinon.spy(),
     };
 
-    worldRectangleStub = sinon.stub(environment, "getWorldRectangle").returns({
-      checkPointInside: sinon.stub().returns(true),
-    });
+    worldRectangleStub = sinon
+      .stub(BEServer.getEnvironment(), "getWorldRectangle")
+      .returns({
+        checkPointInside: sinon.stub().returns(true),
+      });
 
     SensingWorldBorder.call(agent);
   });

@@ -3,7 +3,7 @@
 import { Assert, Platform } from "arslib";
 import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
 import { AgentDefinitions } from "../agent/AgentDefinitions.js";
-import { environment } from "../agent/singleton/Environment.js";
+import { Environment } from "../agent/singleton/Environment.js";
 import { connector } from "./Connector.js";
 
 /**
@@ -36,6 +36,8 @@ async function fetchAsync(file) {
  * @class BEServerConstructor
  */
 function BEServerConstructor() {
+  /** @type {Environment} The game environment instance */
+  this.environment = new Environment();
   /**
    * Reads configuration from JSON file, supporting both browser and Node.js environments.
    * @async
@@ -78,7 +80,7 @@ function BEServerConstructor() {
    * @memberof BEServerConstructor
    */
   this.start = function () {
-    environment.start(
+    this.environment.start(
       BECommonDefinitions.WORLD_WIDTH,
       BECommonDefinitions.WORLD_HEIGHT,
     );
@@ -141,7 +143,16 @@ function BEServerConstructor() {
    * @param {Object} [agent] - Specific agent to receive the event. If not provided, nearby agents receive it.
    */
   this.propagateUserEvent = function (event, arg, agent) {
-    environment.propagateUserEvent(event, arg, agent);
+    this.environment.propagateUserEvent(event, arg, agent);
+  };
+
+  /**
+   * Gets the environment instance.
+   * @memberof BEServerConstructor
+   * @returns {Environment} The environment instance
+   */
+  this.getEnvironment = function () {
+    return this.environment;
   };
 }
 

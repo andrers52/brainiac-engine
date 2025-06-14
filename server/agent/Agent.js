@@ -4,7 +4,7 @@ import { Assert } from "arslib";
 import { Rectangle, rect } from "../../common/geometry/Rectangle.js";
 import { Vector } from "../../common/geometry/Vector.js";
 
-import { environment } from "./singleton/Environment.js";
+import { BEServer } from "../singleton/BEServer.js";
 
 /**
  * @file Core agent system for the Brainiac Engine.
@@ -43,7 +43,7 @@ function agentInitialize(imageName, inputRectangle, isSolid) {
   /** @type {number} Latency in milliseconds for onMouseMoveHit events */
   this.onMouseMoveHitLatencyInMillis = 10;
   /** @type {Rectangle} Reference to the world boundary rectangle */
-  this.worldRectangle = environment.getWorldRectangle();
+  this.worldRectangle = BEServer.getEnvironment().getWorldRectangle();
 
   this.rectangle = inputRectangle || new Rectangle();
   this.imageName = imageName;
@@ -54,7 +54,7 @@ function agentInitialize(imageName, inputRectangle, isSolid) {
    */
   this.die = function () {
     this.isAlive = false;
-    environment.removeAgent(this);
+    BEServer.getEnvironment().removeAgent(this);
   };
 
   /**
@@ -69,7 +69,7 @@ function agentInitialize(imageName, inputRectangle, isSolid) {
 
   if (this.isSolid) {
     let overlappingAgent =
-      environment.otherAgentOverlappingWithProposedRectangle(
+      BEServer.getEnvironment().otherAgentOverlappingWithProposedRectangle(
         this,
         this.rectangle,
       );
@@ -90,7 +90,7 @@ function agentInitialize(imageName, inputRectangle, isSolid) {
     }, this.onMouseMoveHitLatencyInMillis);
   }
 
-  environment.addAgent(this);
+  BEServer.getEnvironment().addAgent(this);
   return this;
 }
 
@@ -239,7 +239,7 @@ let proto = {
     Assert.assert(!isNaN(distance.x) && !isNaN(distance.y));
 
     this.rectangle.move(distance);
-    environment.updateAgent(this); //record last agent position (collision controll)
+    BEServer.getEnvironment().updateAgent(this); //record last agent position (collision controll)
     return this;
   },
 
@@ -286,7 +286,7 @@ let proto = {
     }
 
     let overlappingAgent =
-      environment.otherAgentOverlappingWithProposedRectangle(
+      BEServer.getEnvironment().otherAgentOverlappingWithProposedRectangle(
         this,
         testRectangle,
       );

@@ -1,7 +1,7 @@
 "use strict";
 
 import { camera } from "../node_modules/brainiac-engine/server/agent/Camera.js";
-import { environment } from "../node_modules/brainiac-engine/server/agent/singleton/Environment.js";
+import { BEServer } from "../node_modules/brainiac-engine/server/singleton/BEServer.js";
 import { createButton } from "../node_modules/brainiac-engine/server/ui/Button.js";
 
 function WidgetsServer() {
@@ -15,7 +15,7 @@ function WidgetsServer() {
   this.start = function () {
     //BE.setBackgroundImage(BE.TestApp.InteractionTests.Definitions.WORLD_BACKGROUND_IMAGE);
     // environment.setWorldRectangle(camera.rectangle.size)
-    camera.rectangle = environment.getWorldRectangle().clone();
+    camera.rectangle = BEServer.getEnvironment().getWorldRectangle().clone();
     //BEServer.setBackgroundImageName(Definitions.WORLD_BACKGROUND_IMAGE)
 
     /* *** WIDGET INTERACTION TESTS *** */
