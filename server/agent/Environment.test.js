@@ -1,7 +1,6 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
-import { Vector } from "../../../common/geometry/Vector.js";
-import { spaceSegments } from "../../singleton/SpaceSegments.js";
+import { Vector } from "../../common/geometry/Vector.js";
 import { Environment } from "./Environment.js";
 
 describe("Environment", function () {
@@ -34,51 +33,53 @@ describe("Environment", function () {
       },
     };
 
-    sinon.stub(spaceSegments, "addAgent");
-    sinon.stub(spaceSegments, "getNearbyAgents").returns([nearbyAgent]);
+    sinon.stub(environment.spaceSegments, "addAgent");
     sinon
-      .stub(spaceSegments, "getNearbyAgentsByRectangle")
+      .stub(environment.spaceSegments, "getNearbyAgents")
       .returns([nearbyAgent]);
-    sinon.stub(spaceSegments, "removeAgent");
-    sinon.stub(spaceSegments, "updateAgent");
     sinon
-      .stub(spaceSegments, "getNearbyAgentsByPosition")
+      .stub(environment.spaceSegments, "getNearbyAgentsByRectangle")
       .returns([nearbyAgent]);
-    sinon.stub(spaceSegments, "clear");
-    sinon.stub(spaceSegments, "start"); // Add spy for start method
+    sinon.stub(environment.spaceSegments, "removeAgent");
+    sinon.stub(environment.spaceSegments, "updateAgent");
+    sinon
+      .stub(environment.spaceSegments, "getNearbyAgentsByPosition")
+      .returns([nearbyAgent]);
+    sinon.stub(environment.spaceSegments, "clear");
+    sinon.stub(environment.spaceSegments, "start"); // Add spy for start method
     clock = sinon.useFakeTimers();
   });
 
   afterEach(function () {
-    spaceSegments.addAgent.restore();
-    spaceSegments.getNearbyAgents.restore();
-    spaceSegments.getNearbyAgentsByRectangle.restore();
-    spaceSegments.removeAgent.restore();
-    spaceSegments.updateAgent.restore();
-    spaceSegments.getNearbyAgentsByPosition.restore();
-    spaceSegments.clear.restore();
-    spaceSegments.start.restore(); // Restore the start spy
+    environment.spaceSegments.addAgent.restore();
+    environment.spaceSegments.getNearbyAgents.restore();
+    environment.spaceSegments.getNearbyAgentsByRectangle.restore();
+    environment.spaceSegments.removeAgent.restore();
+    environment.spaceSegments.updateAgent.restore();
+    environment.spaceSegments.getNearbyAgentsByPosition.restore();
+    environment.spaceSegments.clear.restore();
+    environment.spaceSegments.start.restore(); // Restore the start spy
     clock.restore();
   });
 
   it("should add an agent", function () {
     environment.addAgent(agent);
     assert.strictEqual(environment.getAgents()[agent.id], agent);
-    assert(spaceSegments.addAgent.calledOnce);
+    assert(environment.spaceSegments.addAgent.calledOnce);
   });
 
   it("should remove an agent", function () {
     environment.addAgent(agent);
     environment.removeAgent(agent);
     assert.strictEqual(environment.getAgents()[agent.id], undefined);
-    assert(spaceSegments.removeAgent.calledOnce);
+    assert(environment.spaceSegments.removeAgent.calledOnce);
   });
 
   it("should get nearby agents", function () {
     environment.addAgent(agent);
     const nearbyAgents = environment.getNearbyAgents(agent);
     assert.strictEqual(nearbyAgents.length, 1);
-    assert(spaceSegments.getNearbyAgents.calledOnce);
+    assert(environment.spaceSegments.getNearbyAgents.calledOnce);
   });
 
   it("should get nearby user agents", function () {
@@ -86,13 +87,13 @@ describe("Environment", function () {
     nearbyAgent.isUserAgent = sinon.stub().returns(true); // Make nearbyAgent a user agent
     const nearbyUserAgents = environment.getNearbyUserAgents(agent);
     assert.strictEqual(nearbyUserAgents.length, 1);
-    assert(spaceSegments.getNearbyAgents.calledOnce);
+    assert(environment.spaceSegments.getNearbyAgents.calledOnce);
   });
 
   it("should update an agent", function () {
     environment.addAgent(agent);
     environment.updateAgent(agent);
-    assert(spaceSegments.updateAgent.calledOnce);
+    assert(environment.spaceSegments.updateAgent.calledOnce);
   });
 
   it("should check if agent exists", function () {
@@ -115,7 +116,7 @@ describe("Environment", function () {
     environment.addAgent(agent);
     environment.killAllAgents();
     assert(agent.die.calledOnce);
-    assert(spaceSegments.clear.calledOnce);
+    assert(environment.spaceSegments.clear.calledOnce);
   });
 
   it("should propagate user event", function () {
@@ -131,6 +132,6 @@ describe("Environment", function () {
     environment.start(100, 100);
     assert.strictEqual(environment.getWorldRectangle().size.x, 100);
     assert.strictEqual(environment.getWorldRectangle().size.y, 100);
-    assert(spaceSegments.start.calledOnce);
+    assert(environment.spaceSegments.start.calledOnce);
   });
 });

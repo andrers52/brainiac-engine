@@ -1,3 +1,14 @@
+# [0.3.19] - 2025-06-14
+
+### Changed
+
+- **BREAKING**: Refactored SpaceSegments from singleton to instance-based pattern
+  - `SpaceSegments.js` now exports only the `SpaceSegments` class, no singleton instance
+  - Environment now owns and manages SpaceSegments instance via `this.spaceSegments`
+  - All imports and usage updated from singleton `spaceSegments` to `environment.spaceSegments`
+  - Updated all test files to work with new instance-based pattern
+  - Improved spatial indexing system architecture and testability
+
 # [0.3.18] - 2025-06-14
 
 ### Changed

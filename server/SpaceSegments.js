@@ -15,7 +15,7 @@ import { Assert } from "arslib";
  * @constructor
  * @class SpaceSegments
  */
-function SpaceSegments() {
+export function SpaceSegments() {
   /** @constant {number} Default number of rows in the spatial grid */
   const DEFAULT_NUM_SEGMENT_ROWS = 20;
   /** @constant {number} Default number of columns in the spatial grid */
@@ -253,12 +253,3 @@ function SpaceSegments() {
     return [].concat.apply([], arraysOfAgents); // flatten arrays
   };
 }
-
-/**
- * Singleton instance of the spatial indexing system.
- * @type {SpaceSegments}
- * @instance
- */
-var spaceSegments = new SpaceSegments();
-
-export { spaceSegments };

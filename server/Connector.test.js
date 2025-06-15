@@ -1,9 +1,9 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
-import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
-import { getSharedLocalSocket } from "../../common/fakeSocket.js";
-import { BEServer } from "./BEServer.js";
+import { BECommonDefinitions } from "../common/BECommonDefinitions.js";
+import { getSharedLocalSocket } from "../common/fakeSocket.js";
 import { Connector } from "./Connector.js";
+import { BEServer } from "./singleton/BEServer.js";
 
 describe("Connector", function () {
   let connector, socket, user, clock;

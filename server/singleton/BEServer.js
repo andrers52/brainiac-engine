@@ -4,8 +4,8 @@ import { Assert, Platform } from "arslib";
 import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
 import { getSharedLocalSocket } from "../../common/fakeSocket.js";
 import { AgentDefinitions } from "../agent/AgentDefinitions.js";
-import { Environment } from "../agent/singleton/Environment.js";
-import { Connector } from "./Connector.js";
+import { Environment } from "../agent/Environment.js";
+import { Connector } from "../Connector.js";
 
 /**
  * @file Main server singleton for the Brainiac Engine.

@@ -13,13 +13,13 @@
  */
 
 import { EObject } from "arslib";
-import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
-import { Vector, vect } from "../../common/geometry/Vector.js";
-import { BEServer } from "./BEServer.js";
+import { BECommonDefinitions } from "../common/BECommonDefinitions.js";
+import { Vector, vect } from "../common/geometry/Vector.js";
+import { BEServer } from "./singleton/BEServer.js";
 
-import { Camera } from "../../server/agent/Camera.js";
-import { FollowsAgent } from "../../server/agent/mixin/behavior_component/FollowsAgent.js";
-import { User } from "../User.js";
+import { Camera } from "./agent/Camera.js";
+import { FollowsAgent } from "./agent/mixin/behavior_component/FollowsAgent.js";
+import { User } from "./User.js";
 
 /** @type {Object.<string, User>} Map of user IDs to User objects */
 var idToUsers = {};

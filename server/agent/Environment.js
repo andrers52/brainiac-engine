@@ -1,9 +1,9 @@
 "use strict";
 
-import { Rectangle } from "../../../common/geometry/Rectangle.js";
-import { Vector } from "../../../common/geometry/Vector.js";
-import { spaceSegments } from "../../singleton/SpaceSegments.js";
-import { AgentDefinitions } from "../AgentDefinitions.js";
+import { Rectangle } from "../../common/geometry/Rectangle.js";
+import { Vector } from "../../common/geometry/Vector.js";
+import { SpaceSegments } from "../SpaceSegments.js";
+import { AgentDefinitions } from "./AgentDefinitions.js";
 
 /**
  * @file Environment singleton that manages all agents in the game world.
@@ -26,6 +26,9 @@ function Environment() {
 
   /** @type {Rectangle} The world boundary rectangle */
   let worldRectangle;
+
+  /** @type {SpaceSegments} Spatial indexing system for efficient agent queries */
+  this.spaceSegments = new SpaceSegments();
 
   /**
    * Gets all agents in the environment.
@@ -62,7 +65,7 @@ function Environment() {
    */
   this.addAgent = function (agent) {
     agent.id = agentId;
-    spaceSegments.addAgent(agent);
+    this.spaceSegments.addAgent(agent);
     agents[agentId] = agent;
     agentId++;
   };
@@ -74,7 +77,7 @@ function Environment() {
    * @returns {Array<Object>} Array of nearby agents
    */
   this.getNearbyAgents = function (agent) {
-    return spaceSegments.getNearbyAgents(agent);
+    return this.spaceSegments.getNearbyAgents(agent);
   };
 
   /**
@@ -84,7 +87,7 @@ function Environment() {
    * @returns {Array<Object>} Array of nearby user agents
    */
   this.getNearbyUserAgents = function (agent) {
-    let agents = spaceSegments.getNearbyAgents(agent);
+    let agents = this.spaceSegments.getNearbyAgents(agent);
     return agents.filter((agent) => agent.isUserAgent());
   };
 
@@ -95,7 +98,7 @@ function Environment() {
    */
   this.removeAgent = function (agent) {
     delete agents[agent.id];
-    spaceSegments.removeAgent(agent);
+    this.spaceSegments.removeAgent(agent);
   };
 
   /**
@@ -129,7 +132,7 @@ function Environment() {
     for (let id in agents) {
       if (!agentIsSingleton(agents[id])) agents[id].die();
     }
-    spaceSegments.clear();
+    this.spaceSegments.clear();
   };
 
   /**
@@ -138,7 +141,7 @@ function Environment() {
    * @param {Object} agent - The agent to update
    */
   this.updateAgent = function (agent) {
-    spaceSegments.updateAgent(agent);
+    this.spaceSegments.updateAgent(agent);
   };
 
   /**
@@ -148,7 +151,7 @@ function Environment() {
    * @returns {Array<Object>} Array of agents within the rectangle
    */
   this.getNearbyAgentsByRectangle = function (encompassingRectangle) {
-    return spaceSegments.getNearbyAgentsByRectangle(encompassingRectangle);
+    return this.spaceSegments.getNearbyAgentsByRectangle(encompassingRectangle);
   };
 
   /**
@@ -169,7 +172,7 @@ function Environment() {
     //pre calculated for circle collision
     let agentRadius = proposedRectangle.meanSize() / 2;
 
-    let nearbyAgents = spaceSegments.getNearbyAgents(agent);
+    let nearbyAgents = this.spaceSegments.getNearbyAgents(agent);
     for (let index = 0; index < nearbyAgents.length; index++) {
       let nearbyAgent = nearbyAgents[index];
 
@@ -278,7 +281,9 @@ function Environment() {
    * @param {Object} [agent] - Specific agent to target. If not provided, targets nearby agents.
    */
   this.propagateUserEvent = function (event, arg, agent) {
-    let ags = agent ? [agent] : spaceSegments.getNearbyAgentsByPosition(arg);
+    let ags = agent
+      ? [agent]
+      : this.spaceSegments.getNearbyAgentsByPosition(arg);
     ags.forEach((agent) => {
       if (!agent[event] && +!agent[event + "Hit"]) return;
       lastArg = arg || lastArg; //keep last arg if no new arg is received (mouseDown uses position of mouseMove)
@@ -316,7 +321,7 @@ function Environment() {
       new Vector(),
       new Vector(WORLD_WIDTH, WORLD_HEIGHT),
     );
-    spaceSegments.start(WORLD_WIDTH, WORLD_HEIGHT);
+    this.spaceSegments.start(WORLD_WIDTH, WORLD_HEIGHT);
     executeBehavior();
   };
 }

@@ -1,11 +1,13 @@
 import { strict as assert } from "assert";
-import { spaceSegments } from "./SpaceSegments.js";
+import { SpaceSegments } from "./SpaceSegments.js";
 
 describe("SpaceSegments", () => {
   const WORLD_WIDTH = 100;
   const WORLD_HEIGHT = 100;
+  let spaceSegments;
 
   beforeEach(() => {
+    spaceSegments = new SpaceSegments();
     spaceSegments.start(WORLD_WIDTH, WORLD_HEIGHT);
   });
 
