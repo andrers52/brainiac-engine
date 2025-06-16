@@ -11,7 +11,13 @@
 
 import { Assert, EArray, Random } from "arslib";
 
-import { ImageUtil } from "arslib";
+// Attempt to import ImageUtil, but have a fallback for Node.js/test environments
+let ArslibImageUtil;
+try {
+  ({ ImageUtil: ArslibImageUtil } = await import("arslib"));
+} catch (e) {
+  // In test environment or if arslib doesn't export it as expected
+}
 
 import { Effect } from "./image/effect/Effect.js";
 
@@ -21,6 +27,13 @@ import { Effect } from "./image/effect/Effect.js";
  * @constructor
  */
 function ResourceStore() {
+  // Prioritize global ImageUtil if available (e.g., in tests), otherwise use imported.
+  const ResolvedImageUtil =
+    (typeof window !== "undefined" && window.ImageUtil) ||
+    (typeof self !== "undefined" && self.ImageUtil) ||
+    (typeof global !== "undefined" && global.ImageUtil) ||
+    ArslibImageUtil;
+
   //resource types
   /**
    * @type {string[]}
@@ -437,7 +450,10 @@ function ResourceStore() {
    */
   this.createNewImage = function (width, height, permanent = false) {
     let newImageName = this.createNewImageName(permanent);
-    this.addLocalResource(newImageName, ImageUtil.createCanvas(width, height));
+    this.addLocalResource(
+      newImageName,
+      ResolvedImageUtil.createCanvas(width, height),
+    );
     return newImageName;
   };
 
@@ -449,7 +465,7 @@ function ResourceStore() {
    */
   this.cloneImage = function (imageName) {
     let originalImage = this.retrieveResourceObject(imageName);
-    let newCanvas = ImageUtil.createCanvas(
+    let newCanvas = ResolvedImageUtil.createCanvas(
       originalImage.width,
       originalImage.height,
     );

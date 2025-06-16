@@ -1,3 +1,24 @@
+# [0.3.20] - 2025-06-16
+
+### Changed
+
+- **arslib Integration**: Updated to `arslib` version 0.6.1.
+- **ResourceStore**: Refactored `ResourceStore.js` to dynamically resolve `ImageUtil` from `window`, `self`, `global`, or the imported module, ensuring compatibility in both browser and Node.js/test environments.
+- **Test Environment**: Updated `ResourceStore.test.js` to unconditionally mock browser-specific `arslib` modules (e.g., `ImageUtil`) to prevent issues when running tests in Node.js.
+- **Platform Compatibility**: Improved overall robustness of the test environment and platform-agnostic module resolution.
+
+### Fixed
+
+- **arslib Integration**: Resolved issues with `arslib` browser module imports in Node.js/test environments.
+  - `ResourceStore.test.js` now correctly mocks `arslib/browser/image-util` to prevent errors caused by empty module exports in Node.js.
+- **Test Environment**: Ensured `ResourceStore.test.js` passes reliably by unconditionally mocking browser-specific `arslib` modules.
+
+### Enhanced
+
+- **Platform Agnostic Module Resolution**: Improved `ResourceStore.js` to robustly resolve `ImageUtil`.
+  - `ImageUtil` is now sourced from `window`, `self`, `global`, or direct import, ensuring compatibility across browser, Node.js, and test environments.
+  - This change enhances the engine's adaptability to different JavaScript runtimes and testing setups.
+
 # [0.3.19] - 2025-06-14
 
 ### Changed

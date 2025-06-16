@@ -2,16 +2,16 @@ import { strict as assert } from "assert";
 import { ResourceStore } from "./ResourceStore.js";
 
 // Mock arslib and Effect if not running in full app context
-global.Assert = global.Assert || {
+global.Assert = {
   assert: (cond, msg) => {
     if (!cond) throw new Error(msg);
   },
 };
-global.EArray = global.EArray || { last: (arr) => arr[arr.length - 1] };
-global.Random = global.Random || {
+global.EArray = { last: (arr) => arr[arr.length - 1] };
+global.Random = {
   randomInt: (max) => Math.floor(Math.random() * max),
 };
-global.ImageUtil = global.ImageUtil || {
+global.ImageUtil = {
   createCanvas: (w, h) => {
     const canvas = document.createElement("canvas");
     canvas.width = w;
@@ -19,7 +19,7 @@ global.ImageUtil = global.ImageUtil || {
     return canvas;
   },
 };
-global.Effect = global.Effect || (() => {});
+global.Effect = () => {};
 
 describe("ResourceStore", function () {
   let store;
