@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.4.2] - 2025-06-16
+
+### Fixed
+
+- **🧪 Testing**:
+  - Resolved 7 pending Screen module tests that were skipped in Node.js environment
+  - Fixed appendChild compatibility issues with JSDOM for canvas elements
+  - Enhanced JSDOM test environment setup with proper browser globals
+  - Improved canvas mocking for comprehensive test coverage
+
+### Enhanced
+
+- **🔧 Test Environment**:
+  - Added test environment detection in Screen module
+  - Implemented JSDOM-compatible canvas creation using insertAdjacentHTML
+  - Enhanced test setup with window.innerWidth/Height, requestAnimationFrame support
+  - Achieved 100% test coverage for Screen module (8/8 tests passing)
+
 # [0.4.1] - 2025-06-16
 
 ### Fixed

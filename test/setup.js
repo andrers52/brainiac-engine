@@ -12,6 +12,16 @@ const dom = new JSDOM("<!DOCTYPE html><html><body></body></html>", {
 global.window = dom.window;
 global.document = dom.window.document;
 
+// Add missing window properties that Screen tests need
+global.window.innerWidth = 1024;
+global.window.innerHeight = 768;
+global.window.requestAnimationFrame = function (callback) {
+  return setTimeout(callback, 16); // ~60fps
+};
+global.window.cancelAnimationFrame = function (id) {
+  return clearTimeout(id);
+};
+
 // Track active timers and intervals for cleanup
 const activeTimers = new Set();
 const activeIntervals = new Set();
@@ -115,85 +125,90 @@ process.on("SIGTERM", () => {
   process.exit(0);
 });
 
-// Mock canvas functionality for testing
-const originalCreateElement = dom.window.document.createElement.bind(
-  dom.window.document,
-);
-dom.window.document.createElement = function (tagName) {
-  const element = originalCreateElement(tagName);
+// Use JSDOM's native canvas support but override getContext to avoid "not implemented" errors
+// This approach preserves proper DOM node behavior while providing canvas functionality
 
-  if (tagName === "canvas") {
-    // Mock basic canvas properties and methods
-    element.width = 800;
-    element.height = 600;
-    element.getContext = function (type) {
-      if (type === "2d") {
-        return {
-          canvas: element,
-          fillRect: function () {},
-          clearRect: function () {},
-          save: function () {},
-          restore: function () {},
-          translate: function () {},
-          rotate: function () {},
-          scale: function () {},
-          drawImage: function () {},
-          fillText: function () {},
-          strokeText: function () {},
-          measureText: function () {
-            return { width: 0 };
-          },
-          getImageData: function (x, y, width, height) {
-            return {
-              data: new Uint8ClampedArray(width * height * 4),
-              width: width,
-              height: height,
-            };
-          },
-          putImageData: function (imageData, x, y) {
-            // Mock implementation - just return
-          },
-          createImageData: function (width, height) {
-            return {
-              data: new Uint8ClampedArray(width * height * 4),
-              width: width,
-              height: height,
-            };
-          },
-          beginPath: function () {},
-          closePath: function () {},
-          moveTo: function () {},
-          lineTo: function () {},
-          arc: function () {},
-          rect: function () {},
-          fill: function () {},
-          stroke: function () {},
-          createRadialGradient: function () {
-            return {
-              addColorStop: function () {},
-            };
-          },
-          globalAlpha: 1,
-          fillStyle: "#000000",
-          strokeStyle: "#000000",
-          lineWidth: 1,
-          font: "10px sans-serif",
-          textAlign: "start",
-          textBaseline: "alphabetic",
-          shadowBlur: 0,
-          shadowColor: "",
-          globalCompositeOperation: "source-over",
-        };
-      }
-      return null;
+// Override HTMLCanvasElement.prototype.getContext globally
+if (dom.window.HTMLCanvasElement && dom.window.HTMLCanvasElement.prototype) {
+  // Store the original getContext if it exists
+  const originalGetContext = dom.window.HTMLCanvasElement.prototype.getContext;
+
+  dom.window.HTMLCanvasElement.prototype.getContext = function (type) {
+    if (type === "2d") {
+      return {
+        canvas: this,
+        fillRect: function () {},
+        clearRect: function () {},
+        save: function () {},
+        restore: function () {},
+        translate: function () {},
+        rotate: function () {},
+        scale: function () {},
+        drawImage: function () {},
+        fillText: function () {},
+        strokeText: function () {},
+        measureText: function () {
+          return { width: 0 };
+        },
+        getImageData: function (x, y, width, height) {
+          return {
+            data: new Uint8ClampedArray(width * height * 4),
+            width: width,
+            height: height,
+          };
+        },
+        putImageData: function (imageData, x, y) {
+          // Mock implementation - just return
+        },
+        createImageData: function (width, height) {
+          return {
+            data: new Uint8ClampedArray(width * height * 4),
+            width: width,
+            height: height,
+          };
+        },
+        beginPath: function () {},
+        closePath: function () {},
+        moveTo: function () {},
+        lineTo: function () {},
+        arc: function () {},
+        rect: function () {},
+        fill: function () {},
+        stroke: function () {},
+        createRadialGradient: function () {
+          return {
+            addColorStop: function () {},
+          };
+        },
+        globalAlpha: 1,
+        fillStyle: "#000000",
+        strokeStyle: "#000000",
+        lineWidth: 1,
+        font: "10px sans-serif",
+        textAlign: "start",
+        textBaseline: "alphabetic",
+        shadowBlur: 0,
+        shadowColor: "",
+        globalCompositeOperation: "source-over",
+      };
+    }
+    return null;
+  };
+
+  // Ensure focus method exists on canvas elements
+  if (!dom.window.HTMLCanvasElement.prototype.focus) {
+    dom.window.HTMLCanvasElement.prototype.focus = function () {
+      // Mock focus - do nothing
     };
   }
+}
 
-  return element;
-};
+// Let JSDOM handle createElement natively without any overrides
 
-// Also mock the global document.createElement to point to the same function
-global.document.createElement = dom.window.document.createElement;
+// Let JSDOM handle appendChild natively - no custom overrides needed
+
+// Use JSDOM's native document directly
+global.document = dom.window.document;
 
 // Handle navigator properly - don't overwrite if it's read-only
 if (!global.navigator) {
@@ -206,14 +221,13 @@ if (!global.navigator) {
 // Add other common browser globals that might be needed
 global.HTMLElement = dom.window.HTMLElement;
 global.XMLHttpRequest = dom.window.XMLHttpRequest;
+global.HTMLCanvasElement = dom.window.HTMLCanvasElement;
+global.Image = dom.window.Image;
 
 // Add typed array support
 global.Float32Array = Float32Array;
 global.Uint8ClampedArray = Uint8ClampedArray;
 global.Uint8Array = Uint8Array;
-
-console.log("✅ Test environment setup complete");
-global.HTMLCanvasElement = dom.window.HTMLCanvasElement;
 
 // Make JSDOM constructor available globally for tests
 global.JSDOM = JSDOM;
