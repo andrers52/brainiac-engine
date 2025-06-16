@@ -1,6 +1,6 @@
 # Brainiac Engine Manual 📚
 
-Complete documentation for the Brainiac Engine - a powerful JavaScript framework for building interactive applications and games.
+Documentation for the Brainiac Engine - a JavaScript framework for building interactive applications and games.
 
 ## Table of Contents
 
@@ -229,7 +229,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 - 📖 **Documentation**: Full API docs available in code comments
 - 🐛 **Issues**: [GitHub Issues](https://github.com/andrers52/brainiac-engine/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/andrers52/brainiac-engine/discussions)
+- � **Questions**: Use GitHub Issues for questions and feature requests
 
 ---
 

@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.4.1] - 2025-06-16
+
+### Fixed
+
+- **📖 Documentation**:
+  - Fixed corrupted emoji display in Support section
+  - Removed non-existent GitHub Discussions link
+  - Updated support documentation to point to GitHub Issues for all inquiries
+  - Enhanced MANUAL.md support section with clearer guidance
+
+### Enhanced
+
+- **🆘 Support**: Improved support documentation accuracy
+  - Consolidated support channels to use GitHub Issues for bugs, questions, and feature requests
+  - Updated both README.md and MANUAL.md with consistent support information
+  - Provided clearer guidance for users seeking help
+
 # [0.4.0] - 2025-06-16
 
 ### BREAKING CHANGES - Major Architecture Refactor

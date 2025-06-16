@@ -1,6 +1,6 @@
 # Brainiac Engine 🧠
 
-A powerful JavaScript framework for building interactive applications and games with modern web technologies.
+A JavaScript framework for building interactive applications and games with modern web technologies.
 
 [![npm version](https://img.shields.io/npm/v/brainiac-engine.svg)](https://www.npmjs.com/package/brainiac-engine)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -79,7 +79,7 @@ MIT License. See [LICENSE](LICENSE) file for details.
 ## 🆘 Support
 
 - 🐛 **Issues**: [GitHub Issues](https://github.com/andrers52/brainiac-engine/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/andrers52/brainiac-engine/discussions)
+- 📖 **Documentation**: See [MANUAL.md](MANUAL.md) for detailed guides
 
 ---
 
