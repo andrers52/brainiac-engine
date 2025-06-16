@@ -1,7 +1,6 @@
 "use strict";
 import { Assert } from "arslib";
 import { Vector } from "../../../common/geometry/Vector.js";
-import { BEServer } from "../../singleton/BEServer.js";
 
 /**
  * @fileoverview World boundary sensing system for agents.
@@ -13,10 +12,11 @@ import { BEServer } from "../../singleton/BEServer.js";
 
 /**
  * Adds world border sensing capabilities to an agent.
+ * @param {BEServer} beServer - The BEServer instance.
  * @param {number} [sensingDistanceInput] - Distance ahead to sense for world borders.
  * @throws {Error} If agent doesn't implement onSensingWorldBorder event handler.
  */
-export function SensingWorldBorder(sensingDistanceInput) {
+export function SensingWorldBorder(beServer, sensingDistanceInput) {
   Assert.assert(
     this.onSensingWorldBorder,
     "Error: added SensingWorldBorder to agent without implementing onSensingWorldBorder event handler",
@@ -41,25 +41,29 @@ export function SensingWorldBorder(sensingDistanceInput) {
     let rightPosition = self.getPosition().clone().add(rightVector);
 
     if (
-      !BEServer.getEnvironment()
+      !beServer
+        .getEnvironment()
         .getWorldRectangle()
         .checkPointInside(upPosition)
     )
       resultVector.add(upVector);
     if (
-      !BEServer.getEnvironment()
+      !beServer
+        .getEnvironment()
         .getWorldRectangle()
         .checkPointInside(downPosition)
     )
       resultVector.add(downVector);
     if (
-      !BEServer.getEnvironment()
+      !beServer
+        .getEnvironment()
         .getWorldRectangle()
         .checkPointInside(leftPosition)
     )
       resultVector.add(leftVector);
     if (
-      !BEServer.getEnvironment()
+      !beServer
+        .getEnvironment()
         .getWorldRectangle()
         .checkPointInside(rightPosition)
     )

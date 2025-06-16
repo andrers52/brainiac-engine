@@ -3,7 +3,6 @@
 import { Assert } from "arslib";
 import { Rectangle } from "../../../common/geometry/Rectangle.js";
 import { Vector } from "../../../common/geometry/Vector.js";
-import { BEServer } from "../../singleton/BEServer.js";
 
 /**
  * @fileoverview State-based image and audio management for agents.
@@ -22,6 +21,7 @@ import { BEServer } from "../../singleton/BEServer.js";
 
 /**
  * Adds state-based image and audio changing capabilities to an agent.
+ * @param {BEServer} beServer - The BEServer instance.
  * @param {Object} configurationObj - State configuration object.
  * @param {string} configurationObj.defaultState - Default state name.
  * @param {Array} configurationObj.states - Array of state definitions.
@@ -30,7 +30,7 @@ import { BEServer } from "../../singleton/BEServer.js";
  * @param {string} [configurationObj.states[].audioName] - Optional audio name for this state.
  * @throws {Error} If configuration is invalid or resources are missing.
  */
-export function ChangesImageWithState(configurationObj) {
+export function ChangesImageWithState(beServer, configurationObj) {
   let self = this;
 
   let states = [];
@@ -95,7 +95,7 @@ export function ChangesImageWithState(configurationObj) {
       );
     }
     self.audioName = audioPerState[state];
-    BEServer.getConnector().playSoundInClient(self.audioName);
+    beServer.getConnector().playSoundInClient(self.audioName); // Use injected beServer instance
   }
 
   /**

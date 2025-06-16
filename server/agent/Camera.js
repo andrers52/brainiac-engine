@@ -29,8 +29,8 @@ import { createAgent } from "./Agent.js";
  * const playerCamera = Camera(player);
  * playerCamera.start(new Vector(800, 600), player.getPosition());
  */
-export function Camera(owner) {
-  let camera = createAgent(null, 100, 100, false);
+export function Camera(beServer, owner) {
+  let camera = createAgent(beServer, null, 100, 100, false);
 
   /** @type {boolean} Identifies this agent as a camera */
   camera.isCamera = true;

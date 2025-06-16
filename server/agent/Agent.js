@@ -4,7 +4,7 @@ import { Assert } from "arslib";
 import { Rectangle, rect } from "../../common/geometry/Rectangle.js";
 import { Vector } from "../../common/geometry/Vector.js";
 
-import { BEServer } from "../singleton/BEServer.js";
+import { BEServer } from "../BEServer.js"; // Corrected import path
 
 /**
  * @file Core agent system for the Brainiac Engine.
@@ -30,20 +30,23 @@ import { BEServer } from "../singleton/BEServer.js";
 /**
  * Initializes an agent with basic properties and adds it to the environment.
  * @private
+ * @param {BEServer} beServer - The BEServer instance.
  * @param {string} imageName - Name of the image resource for the agent
  * @param {Rectangle} [inputRectangle] - Initial rectangle bounds for the agent
  * @param {boolean} isSolid - Whether the agent blocks movement of other agents
  * @returns {Object|null} The initialized agent or null if initialization fails
  */
-function agentInitialize(imageName, inputRectangle, isSolid) {
+function agentInitialize(beServer, imageName, inputRectangle, isSolid) {
   this.isAlive = true;
   this.imageName = null;
   this.isVisible = true;
   this.isSolid = isSolid;
+  /** @type {BEServer} Reference to the beServer instance */
+  this.beServer = beServer;
   /** @type {number} Latency in milliseconds for onMouseMoveHit events */
   this.onMouseMoveHitLatencyInMillis = 10;
   /** @type {Rectangle} Reference to the world boundary rectangle */
-  this.worldRectangle = BEServer.getEnvironment().getWorldRectangle();
+  this.worldRectangle = beServer.getEnvironment().getWorldRectangle();
 
   this.rectangle = inputRectangle || new Rectangle();
   this.imageName = imageName;
@@ -54,7 +57,7 @@ function agentInitialize(imageName, inputRectangle, isSolid) {
    */
   this.die = function () {
     this.isAlive = false;
-    BEServer.getEnvironment().removeAgent(this);
+    beServer.getEnvironment().removeAgent(this);
   };
 
   /**
@@ -68,11 +71,9 @@ function agentInitialize(imageName, inputRectangle, isSolid) {
   };
 
   if (this.isSolid) {
-    let overlappingAgent =
-      BEServer.getEnvironment().otherAgentOverlappingWithProposedRectangle(
-        this,
-        this.rectangle,
-      );
+    let overlappingAgent = beServer
+      .getEnvironment()
+      .otherAgentOverlappingWithProposedRectangle(this, this.rectangle);
     if (overlappingAgent && overlappingAgent.isSolid) return null;
   }
 
@@ -90,12 +91,13 @@ function agentInitialize(imageName, inputRectangle, isSolid) {
     }, this.onMouseMoveHitLatencyInMillis);
   }
 
-  BEServer.getEnvironment().addAgent(this);
+  beServer.getEnvironment().addAgent(this);
   return this;
 }
 
 /**
  * Creates a new agent with simplified parameters.
+ * @param {BEServer} beServer - The BEServer instance.
  * @param {string} imageName - Name of the image resource for the agent
  * @param {number} [width=100] - Width of the agent in pixels
  * @param {number} [height=100] - Height of the agent in pixels
@@ -105,6 +107,7 @@ function agentInitialize(imageName, inputRectangle, isSolid) {
  * @returns {Object|null} The created agent or null if creation fails
  */
 let createAgent = function (
+  beServer, // Add beServer parameter
   imageName,
   width = 100,
   height = 100,
@@ -113,6 +116,7 @@ let createAgent = function (
   yPos = 0,
 ) {
   return createAgentWithRectangle(
+    beServer, // Pass beServer
     imageName,
     rect(xPos, yPos, width, height),
     isSolid,
@@ -121,18 +125,26 @@ let createAgent = function (
 
 /**
  * Creates a new agent with a specific rectangle.
+ * @param {BEServer} beServer - The BEServer instance.
  * @param {string} imageName - Name of the image resource for the agent
  * @param {Rectangle} inputRectangle - Rectangle defining agent's position and size
  * @param {boolean} [isSolid=true] - Whether the agent blocks movement of other agents
  * @returns {Object|null} The created agent or null if creation fails
  */
 let createAgentWithRectangle = function (
+  beServer, // Add beServer parameter
   imageName,
   inputRectangle,
   isSolid = true,
 ) {
   let agent = Object.create(proto);
-  return agentInitialize.call(agent, imageName, inputRectangle, isSolid);
+  return agentInitialize.call(
+    agent,
+    beServer,
+    imageName,
+    inputRectangle,
+    isSolid,
+  ); // Pass beServer
 };
 
 /**
@@ -239,7 +251,7 @@ let proto = {
     Assert.assert(!isNaN(distance.x) && !isNaN(distance.y));
 
     this.rectangle.move(distance);
-    BEServer.getEnvironment().updateAgent(this); //record last agent position (collision controll)
+    this.beServer.getEnvironment().updateAgent(this); //record last agent position (collision controll)
     return this;
   },
 
@@ -285,11 +297,9 @@ let proto = {
       //   return distanceMovingY
     }
 
-    let overlappingAgent =
-      BEServer.getEnvironment().otherAgentOverlappingWithProposedRectangle(
-        this,
-        testRectangle,
-      );
+    let overlappingAgent = this.beServer
+      .getEnvironment()
+      .otherAgentOverlappingWithProposedRectangle(this, testRectangle);
 
     if (
       !overlappingAgent ||

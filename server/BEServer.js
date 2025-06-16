@@ -1,11 +1,11 @@
 "use strict";
 
 import { Assert, Platform } from "arslib";
-import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
-import { getSharedLocalSocket } from "../../common/fakeSocket.js";
-import { AgentDefinitions } from "../agent/AgentDefinitions.js";
-import { Environment } from "../agent/Environment.js";
-import { Connector } from "../Connector.js";
+import { BECommonDefinitions } from "../common/BECommonDefinitions.js";
+import { getSharedLocalSocket } from "../common/fakeSocket.js";
+import { AgentDefinitions } from "./agent/AgentDefinitions.js";
+import { Environment } from "./agent/Environment.js";
+import { Connector } from "./Connector.js";
 
 /**
  * @file Main server singleton for the Brainiac Engine.
@@ -40,7 +40,7 @@ function BEServerConstructor() {
   /** @type {Environment} The game environment instance */
   this.environment = new Environment();
   /** @type {Connector} The connector instance for client-server communication */
-  this.connector = new Connector();
+  this.connector = new Connector(this); // Pass this BEServer instance to Connector
   /** @type {Object|null} The fake socket instance for local apps */
   this.fakeSocket = null;
   /**
@@ -54,10 +54,8 @@ function BEServerConstructor() {
     if (!Platform.isNode()) {
       return await fetchAsync(BECommonDefinitions.CONFIG_JSON);
     } else {
-      const fs = require("fs");
-      const util = require("util");
-      const readFileAsync = util.promisify(fs.readFile);
-      const resultStr = await readFileAsync(BECommonDefinitions.CONFIG_JSON, {
+      const { readFile } = await import("fs/promises");
+      const resultStr = await readFile(BECommonDefinitions.CONFIG_JSON, {
         encoding: "utf8",
       });
       console.log(resultStr);
@@ -71,20 +69,23 @@ function BEServerConstructor() {
    * Continuously sends visible agent data to clients at regular intervals.
    * @private
    */
-  function _sendClientVisibleAgents() {
-    BEServer.connector.setVisibleAgents();
-    setTimeout(
+  const _sendClientVisibleAgents = () => {
+    if (this.stopped) return; // Don't continue if server is stopped
+    this.connector.setVisibleAgents();
+    this.visibleAgentsTimerId = setTimeout(
       _sendClientVisibleAgents,
       AgentDefinitions.AGENTS_CLIENT_REFRESH_INTERVAL,
     );
-  }
+  };
 
   /**
    * Starts the Brainiac Engine server.
    * Initializes the environment, loads configuration, and sets up the connector.
    * @memberof BEServerConstructor
    */
-  this.start = function () {
+  this.start = function (configOverride, onReady) {
+    this.stopped = false; // Initialize stopped flag
+    this.visibleAgentsTimerId = null; // Initialize timer ID tracker
     this.environment.start(
       BECommonDefinitions.WORLD_WIDTH,
       BECommonDefinitions.WORLD_HEIGHT,
@@ -115,9 +116,9 @@ function BEServerConstructor() {
       return backgroundImageName;
     };
 
-    _readConfig().then((config) => {
+    _readConfig().then(async (config) => {
       /** @type {Object} Server configuration object */
-      this.config = config;
+      this.config = configOverride || config;
       BECommonDefinitions.start(this.config); //adjust to config
       if (BECommonDefinitions.config.buildType === "deploy")
         Assert.disableAllVerifications = true;
@@ -127,8 +128,51 @@ function BEServerConstructor() {
         this.fakeSocket = getSharedLocalSocket();
       }
 
-      this.connector.start(!!this.config.localApp, this.fakeSocket);
+      await this.connector.start(!!this.config.localApp, this.fakeSocket);
+
+      if (onReady) {
+        onReady();
+      }
     });
+  };
+  /**
+   * Starts the server synchronously for testing purposes.
+   * Skips configuration loading and connector setup.
+   * @memberof BEServerConstructor
+   */
+  this.startSync = function () {
+    this.stopped = false;
+    this.visibleAgentsTimerId = null;
+    this.environment.startForTests(
+      BECommonDefinitions.WORLD_WIDTH,
+      BECommonDefinitions.WORLD_HEIGHT,
+    );
+    this.currentApp = null;
+    this.currentAppName = "";
+
+    // Set up a minimal config for tests
+    this.config = { buildType: "test", localApp: false };
+    BECommonDefinitions.start(this.config);
+  };
+
+  /**
+   * Stops the Brainiac Engine server and cleans up resources.
+   * @memberof BEServerConstructor
+   */
+  this.stop = function () {
+    this.stopped = true;
+    if (this.visibleAgentsTimerId) {
+      clearTimeout(this.visibleAgentsTimerId);
+      this.visibleAgentsTimerId = null;
+    }
+    if (this.environment && this.environment.stop) {
+      this.environment.stop();
+    }
+    if (this.connector && this.connector.stop) {
+      this.connector.stop();
+    }
+    this.currentApp = null;
+    this.currentAppName = "";
   };
 
   /**
@@ -139,11 +183,13 @@ function BEServerConstructor() {
    * @param {Object} [config] - Optional configuration object
    */
   this.startApp = function (appName, app, config) {
-    this.start(config);
-    BEServer.currentApp = app;
-    BEServer.currentAppName = appName;
-    BEServer.currentApp.start();
-    _sendClientVisibleAgents();
+    const self = this;
+    this.start(config, function () {
+      self.currentApp = app;
+      self.currentAppName = appName;
+      self.currentApp.start();
+      _sendClientVisibleAgents();
+    });
   };
 
   /**
@@ -181,6 +227,6 @@ function BEServerConstructor() {
  * @type {BEServerConstructor}
  * @instance
  */
-var BEServer = new BEServerConstructor();
+// var BEServer = new BEServerConstructor(); // Remove singleton instance
 
-export { BEServer };
+export { BEServerConstructor as BEServer }; // Export the constructor

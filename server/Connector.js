@@ -14,8 +14,8 @@
 
 import { EObject } from "arslib";
 import { BECommonDefinitions } from "../common/BECommonDefinitions.js";
-import { Vector, vect } from "../common/geometry/Vector.js";
-import { BEServer } from "./singleton/BEServer.js";
+import { Vector } from "../common/geometry/Vector.js";
+import { BEServer } from "./BEServer.js";
 
 import { Camera } from "./agent/Camera.js";
 import { FollowsAgent } from "./agent/mixin/behavior_component/FollowsAgent.js";
@@ -28,11 +28,16 @@ var idToUsers = {};
  * Constructor for the client-server connection manager.
  * Manages WebSocket connections, user sessions, and real-time communication.
  * @constructor
+ * @param {BEServer} beServer - The BEServer instance.
  * @class Connector
  */
-function Connector() {
+function Connector(beServer) {
   /** @type {Object} Socket.IO server instance */
   var io;
+  /** @type {Object} HTTP server instance (for cleanup) */
+  var httpServer;
+  /** @type {boolean} Whether this connector is running in local app mode */
+  var isLocalApp = false;
 
   /**
    * Gets all connected user IDs.
@@ -129,9 +134,9 @@ function Connector() {
     for (var id in idToUsers) {
       let user = idToUsers[id];
       if (!user.camera) continue;
-      let nearbyAgents = BEServer.getEnvironment().getNearbyAgentsByRectangle(
-        user.camera.rectangle,
-      );
+      let nearbyAgents = beServer
+        .getEnvironment()
+        .getNearbyAgentsByRectangle(user.camera.rectangle);
 
       let userVisibleAgents = nearbyAgents.filter(
         // camera will be sent separately
@@ -215,12 +220,19 @@ function Connector() {
    * @param {number} owningAgentId - ID of the agent that owns the user to remove
    */
   this.removeUserByOwningAgentId = function (owningAgentId) {
-    for (var id in idToUsers) {
-      let user = idToUsers[id];
-      if (user.agent && user.agent.id === owningAgentId) {
-        BEServer.currentApp.onUserDead(user);
-        //setTimeout(() => user.socket.disconnect(), 2000);
-        delete idToUsers[id];
+    let user = this.getUsers().find(
+      (user) => user.getOwningAgent().id === owningAgentId,
+    );
+    if (user) {
+      // Call the application's onUserDead handler
+      if (beServer.currentApp && beServer.currentApp.onUserDead) {
+        // Use injected beServer instance
+        beServer.currentApp.onUserDead(user); // Use injected beServer instance
+      }
+      // Clean up user session
+      delete idToUsers[user.id];
+      if (user.socket) {
+        user.socket.disconnect();
       }
     }
   };
@@ -230,12 +242,17 @@ function Connector() {
    * @memberof Connector
    * @param {boolean} localApp - Whether this is a local application (uses fake socket) or networked (uses real WebSocket)
    * @param {Object} [fakeSocket] - The fake socket instance to use for local apps (provided by BEServer)
-   */
-  this.start = function (localApp, fakeSocket) {
+   */ this.start = async function (localApp, fakeSocket) {
+    isLocalApp = !!localApp;
+
     if (!localApp) {
+      // Dynamic imports for server dependencies (only when running in server mode)
+      const { default: cors } = await import("cors");
+      const { default: express } = await import("express");
+      const { createServer } = await import("http");
+      const { Server: SocketIOServer } = await import("socket.io");
+
       // var compression = require('compression')
-      const cors = require("cors");
-      var express = require("express");
       var app = express();
 
       const corsOptions = {
@@ -244,11 +261,11 @@ function Connector() {
 
       app.use(cors(corsOptions));
 
-      var server = require("http").Server(app);
+      httpServer = createServer(app);
 
-      io = require("socket.io")(server);
+      io = new SocketIOServer(httpServer);
 
-      server.listen(BECommonDefinitions.WEB_PORT, function () {
+      httpServer.listen(BECommonDefinitions.WEB_PORT, function () {
         console.log(
           "Web server listening at port %d",
           BECommonDefinitions.WEB_PORT,
@@ -278,7 +295,7 @@ function Connector() {
        * @private
        */
       function removeUser() {
-        BEServer.currentApp.onUserDead(user);
+        beServer.currentApp.onUserDead(user);
         delete idToUsers[user.id];
       }
 
@@ -311,23 +328,23 @@ function Connector() {
           BECommonDefinitions.WORLD_HEIGHT = cameraSize.y;
         }
         //warn game_server of connection
-        BEServer.currentApp.onUserConnected(user, cameraSize);
+        beServer.currentApp.onUserConnected(user, cameraSize);
         idToUsers[user.id] = user;
 
-        user.camera = new Camera(user);
-        if (BEServer.config.cameraFollowUser) {
+        user.camera = new Camera(beServer, user);
+        if (beServer.config.cameraFollowUser) {
           user.camera.start(cameraSize, user.agent.getPosition());
           FollowsAgent.call(user.camera, user.agent, true);
-        } else user.camera.start(cameraSize, vect(0, 0));
+        } else user.camera.start(cameraSize, new Vector(0, 0));
 
         //tell the client we are ready
         socket.emit("BEServer.clientStartReady", {
           userAgentId: user.agent ? user.agent.id : 0,
-          backgroundImagename: BEServer.getBackgroundImageName(),
+          backgroundImagename: beServer.getBackgroundImageName(),
         });
 
-        BEServer.currentApp.sendInitialData &&
-          BEServer.currentApp.sendInitialData(user);
+        beServer.currentApp.sendInitialData &&
+          beServer.currentApp.sendInitialData(user);
 
         /**
          * Handles user input events from the client.
@@ -337,7 +354,7 @@ function Connector() {
          */
         socket.on("userEvent", function (eventAndVectorArg) {
           //if(!user.agent) return // user not logged
-          BEServer.propagateUserEvent(
+          beServer.propagateUserEvent(
             eventAndVectorArg.event,
             eventAndVectorArg.arg,
             user.agent,
@@ -350,10 +367,32 @@ function Connector() {
        */
       socket.on("requestInitialPageInfo", () => {
         socket.emit("requestInitialPageInfoReady", {
-          highScores: BEServer.currentApp.getHighScores(),
+          highScores: beServer.currentApp.getHighScores(),
         });
       });
     });
+  };
+
+  /**
+   * Stops the connector and cleans up resources.
+   * @memberof Connector
+   */
+  this.stop = function () {
+    // Clear user connections
+    idToUsers = {};
+
+    // Close HTTP server if running in server mode
+    if (!isLocalApp && httpServer) {
+      httpServer.closeAllConnections?.(); // Close all connections immediately if available
+      httpServer.close();
+      httpServer = null;
+    }
+
+    // Close Socket.IO server
+    if (io && io.close) {
+      io.close();
+    }
+    io = null;
   };
 }
 

@@ -3,7 +3,7 @@
 import { Assert } from "arslib";
 import { rect } from "../../../common/geometry/Rectangle.js";
 import { Vector } from "../../../common/geometry/Vector.js";
-import { BEServer } from "../../singleton/BEServer.js";
+import { BEServer } from "../../BEServer.js";
 
 /**
  * @fileoverview Agent sensing system for detecting nearby agents and user interactions.
@@ -20,12 +20,14 @@ import { BEServer } from "../../singleton/BEServer.js";
 
 /**
  * Adds sensing capabilities to an agent for detecting nearby agents.
+ * @param {BEServer} beServer - The BEServer instance.
  * @param {Function} [detector=() => false] - Function that determines if an agent should be detected.
  * @param {number} [sensingDistance=100] - Maximum distance for sensing other agents.
  * @param {number} [delay=250] - Delay between sensing checks in milliseconds.
  * @throws {Error} If agent doesn't implement any of the required sensing event handlers.
  */
 export function SensingAgent(
+  beServer, // Add beServer parameter
   detector = () => false,
   sensingDistance = 100,
   delay = 250,
@@ -74,7 +76,7 @@ export function SensingAgent(
   function getSensingAgents() {
     //return undefined or first perceived agent
     sensingRect.center = self.getPosition().clone();
-    let nearbyAgents = BEServer.getEnvironment().getNearbyAgents(self);
+    let nearbyAgents = beServer.getEnvironment().getNearbyAgents(self); // Use injected beServer instance
     if (!nearbyAgents.length) return null;
     let detectedNearbyAgents = nearbyAgents.filter(
       (agent) =>

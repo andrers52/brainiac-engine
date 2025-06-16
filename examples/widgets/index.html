@@ -16,9 +16,12 @@
         -->
   <!-- imports -->
   <script type=module>
-    import { BEServer } from './node_modules/brainiac-engine/server/singleton/BEServer.js'
-    import { widgetsServer } from './js/widgets-server.js'      // *** SERVER START ***
-    BEServer.startApp('widgets', widgetsServer);
+    import { BEServer } from './node_modules/brainiac-engine/server/BEServer.js'; // Keep BEServer import for instantiation
+    import { WidgetsServer } from './js/widgets-server.js';      // *** SERVER START ***
+    const beServer = new BEServer(); // Instantiate BEServer
+    beServer.start(); // Start the server instance
+    const widgetsServer = new WidgetsServer(beServer); // Pass beServer to WidgetsServer
+    beServer.startApp('widgets', widgetsServer);
 
     import { BEClient } from './node_modules/brainiac-engine/client/BEClient.js';
     import { widgetsClient } from './js/widgets-client.js';

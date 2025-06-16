@@ -28,7 +28,16 @@ function Environment() {
   let worldRectangle;
 
   /** @type {SpaceSegments} Spatial indexing system for efficient agent queries */
-  this.spaceSegments = new SpaceSegments();
+  let spaceSegments = new SpaceSegments();
+
+  /** @type {boolean} Flag to indicate if environment is stopped */
+  this.stopped = false;
+
+  /** @type {number|null} Timer ID for behavior execution */
+  this.behaviorTimerId = null;
+
+  /** @type {SpaceSegments} Public reference to spatial indexing system */
+  this.spaceSegments = spaceSegments;
 
   /**
    * Gets all agents in the environment.
@@ -199,7 +208,8 @@ function Environment() {
    * @private
    */
   let executeBehavior = () => {
-    setTimeout(() => {
+    if (this.stopped) return; // Don't continue if environment is stopped
+    this.behaviorTimerId = setTimeout(() => {
       for (let id in agents) {
         if (!agents[id].behavior) continue;
         if (
@@ -213,6 +223,18 @@ function Environment() {
       }
       executeBehavior();
     }, AgentDefinitions.AGENTS_EXECUTION_INTERVAL);
+  };
+
+  /**
+   * Stops the environment and cleans up resources.
+   * @memberof Environment
+   */
+  this.stop = function () {
+    this.stopped = true;
+    if (this.behaviorTimerId) {
+      clearTimeout(this.behaviorTimerId);
+      this.behaviorTimerId = null;
+    }
   };
 
   /**
@@ -310,19 +332,37 @@ function Environment() {
   };
 
   /**
-   * Starts the environment with specified world dimensions.
-   * Initializes the world rectangle, space segments, and begins behavior execution.
+   * Starts the environment and executes agent behaviors at regular intervals.
    * @memberof Environment
    * @param {number} WORLD_WIDTH - Width of the world in pixels
    * @param {number} WORLD_HEIGHT - Height of the world in pixels
    */
   this.start = function (WORLD_WIDTH, WORLD_HEIGHT) {
+    this.stopped = false; // Reset stopped flag
+    this.behaviorTimerId = null; // Reset timer ID
     worldRectangle = new Rectangle(
       new Vector(),
       new Vector(WORLD_WIDTH, WORLD_HEIGHT),
     );
     this.spaceSegments.start(WORLD_WIDTH, WORLD_HEIGHT);
     executeBehavior();
+  };
+
+  /**
+   * Starts the environment for testing without behavior execution.
+   * @memberof Environment
+   * @param {number} WORLD_WIDTH - Width of the world in pixels
+   * @param {number} WORLD_HEIGHT - Height of the world in pixels
+   */
+  this.startForTests = function (WORLD_WIDTH, WORLD_HEIGHT) {
+    this.stopped = false;
+    this.behaviorTimerId = null;
+    worldRectangle = new Rectangle(
+      new Vector(),
+      new Vector(WORLD_WIDTH, WORLD_HEIGHT),
+    );
+    this.spaceSegments.start(WORLD_WIDTH, WORLD_HEIGHT);
+    // Don't call executeBehavior() for tests
   };
 }
 

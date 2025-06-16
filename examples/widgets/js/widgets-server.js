@@ -1,10 +1,11 @@
 "use strict";
 
 import { camera } from "../node_modules/brainiac-engine/server/agent/Camera.js";
-import { BEServer } from "../node_modules/brainiac-engine/server/singleton/BEServer.js";
+// import { BEServer } from "../node_modules/brainiac-engine/server/BEServer.js"; // Remove direct import
 import { createButton } from "../node_modules/brainiac-engine/server/ui/Button.js";
 
-function WidgetsServer() {
+function WidgetsServer(beServer) {
+  // Accept BEServer instance as a parameter
   this.onUserConnected = function (user, cameraSize) {
     //button with action
     let button = createButton("blueParticle.jpg", null, () =>
@@ -15,8 +16,8 @@ function WidgetsServer() {
   this.start = function () {
     //BE.setBackgroundImage(BE.TestApp.InteractionTests.Definitions.WORLD_BACKGROUND_IMAGE);
     // environment.setWorldRectangle(camera.rectangle.size)
-    camera.rectangle = BEServer.getEnvironment().getWorldRectangle().clone();
-    //BEServer.setBackgroundImageName(Definitions.WORLD_BACKGROUND_IMAGE)
+    camera.rectangle = beServer.getEnvironment().getWorldRectangle().clone(); // Use injected beServer instance
+    //beServer.setBackgroundImageName(Definitions.WORLD_BACKGROUND_IMAGE) // Use injected beServer instance
 
     /* *** WIDGET INTERACTION TESTS *** */
     //button without action
@@ -88,6 +89,6 @@ function WidgetsServer() {
   this.finish = function () {};
 }
 
-let widgetsServer = new WidgetsServer();
+// let widgetsServer = new WidgetsServer(); // Instantiation will be handled by the calling application
 
-export { widgetsServer };
+export { WidgetsServer }; // Export the constructor
