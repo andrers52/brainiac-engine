@@ -42,9 +42,30 @@ export function ImageFilter(
 }
 
 /** @type {HTMLCanvasElement} Temporary canvas for image operations */
-ImageFilter.tmpCanvas = document.createElement("canvas");
+ImageFilter.tmpCanvas = null;
 /** @type {CanvasRenderingContext2D} Temporary canvas context for image operations */
-ImageFilter.tmpCtx = ImageFilter.tmpCanvas.getContext("2d");
+ImageFilter.tmpCtx = null;
+
+/**
+ * Initializes the temporary canvas and context if not already done
+ * @private
+ */
+function initTempCanvas() {
+  if (ImageFilter.tmpCanvas) return;
+
+  // Check if we're in a browser environment
+  if (typeof document !== "undefined") {
+    ImageFilter.tmpCanvas = document.createElement("canvas");
+    ImageFilter.tmpCtx = ImageFilter.tmpCanvas.getContext("2d");
+  } else {
+    // In Node.js environment, we can't create real canvas elements
+    // This is acceptable since image filtering is typically a client-side operation
+    console.warn(
+      "ImageFilter: Running in Node.js environment, canvas operations will be limited",
+    );
+    return;
+  }
+}
 
 /**
  * Creates ImageData with specified dimensions
@@ -53,6 +74,15 @@ ImageFilter.tmpCtx = ImageFilter.tmpCanvas.getContext("2d");
  * @returns {ImageData} New ImageData object
  */
 ImageFilter.createImageData = function (w, h) {
+  initTempCanvas();
+  if (!this.tmpCtx || typeof this.tmpCtx.createImageData !== "function") {
+    // Fallback for Node.js environment or when createImageData is not available
+    return {
+      width: w,
+      height: h,
+      data: new Uint8ClampedArray(w * h * 4),
+    };
+  }
   return this.tmpCtx.createImageData(w, h);
 };
 
@@ -112,7 +142,13 @@ ImageFilter.convolute = function (pixels, weights, opaque) {
 };
 
 /** Fallback for browsers without Float32Array support */
-if (!window.Float32Array) var Float32Array = Array;
+if (typeof globalThis !== "undefined" && globalThis.Float32Array) {
+  var Float32Array = globalThis.Float32Array;
+} else if (typeof window !== "undefined" && window.Float32Array) {
+  var Float32Array = window.Float32Array;
+} else {
+  var Float32Array = Array;
+}
 
 /**
  * Applies convolution filter to image data using Float32Array for extended range
@@ -135,9 +171,7 @@ ImageFilter.convoluteFloat32 = function (pixels, weights, opaque) {
   var output = {
     width: w,
     height: h,
-    data: new (globalThis.Float32Array || window.Float32Array || Float32Array)(
-      w * h * 4,
-    ),
+    data: new Float32Array(w * h * 4),
   };
   var dst = output.data;
 

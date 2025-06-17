@@ -587,7 +587,18 @@ Vector.isFaceUp = function (normal) {
   return normal.data[1] > 0;
 };
 
+/**
+ * Custom JSON serialization to ensure x and y properties are preserved.
+ * @returns {Object} Object with x and y properties for JSON serialization.
+ */
+Vector.prototype.toJSON = function () {
+  return {
+    x: this.data[0],
+    y: this.data[1],
+  };
+};
+
 //alias to simplify vector creation
 const vect = (x, y) => new Vector(x, y);
 
-export { vect, Vector };
+export { Vector, vect };

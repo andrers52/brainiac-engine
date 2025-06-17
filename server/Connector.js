@@ -12,7 +12,6 @@
  * - onUserDead: Called when a user disconnects or dies
  */
 
-import { EObject } from "arslib";
 import { BECommonDefinitions } from "../common/BECommonDefinitions.js";
 import { Vector } from "../common/geometry/Vector.js";
 import { BEServer } from "./BEServer.js";
@@ -143,11 +142,64 @@ function Connector(beServer) {
         (agent) => !agent.isCamera && user.camera.canBeSeen(agent.rectangle),
       );
 
-      // for network visualization
-      //console.log('userVisibleAgents:' + JSON.stringify(userVisibleAgents))
-      //console.log('Num userVisibleAgents:' + userVisibleAgents.length)
+      // Sanitize agent data to avoid circular references
+      let sanitizedAgents = userVisibleAgents.map((agent) => ({
+        id: agent.id,
+        imageName: agent.imageName,
+        rectangle: agent.rectangle
+          ? {
+              x: agent.rectangle.x,
+              y: agent.rectangle.y,
+              width: agent.rectangle.width,
+              height: agent.rectangle.height,
+              center: agent.rectangle.center
+                ? {
+                    x: agent.rectangle.center.x,
+                    y: agent.rectangle.center.y,
+                    data: [agent.rectangle.center.x, agent.rectangle.center.y],
+                  }
+                : {
+                    x: agent.rectangle.x + agent.rectangle.width / 2,
+                    y: agent.rectangle.y + agent.rectangle.height / 2,
+                    data: [
+                      agent.rectangle.x + agent.rectangle.width / 2,
+                      agent.rectangle.y + agent.rectangle.height / 2,
+                    ],
+                  },
+              size: agent.rectangle.size
+                ? {
+                    x: agent.rectangle.size.x,
+                    y: agent.rectangle.size.y,
+                    data: [agent.rectangle.size.x, agent.rectangle.size.y],
+                  }
+                : {
+                    x: agent.rectangle.width,
+                    y: agent.rectangle.height,
+                    data: [agent.rectangle.width, agent.rectangle.height],
+                  },
+            }
+          : null,
+        position: agent.getPosition ? agent.getPosition() : null,
+        orientation: agent.orientation,
+        energy: agent.energy,
+        userScore: agent.userScore,
+        name: agent.name,
+        type: agent.type,
+        isBonus: agent.isBonus,
+        isAI: agent.isAI,
+        // Include all ship properties (as they were originally)
+        thrust: agent.thrust,
+        currentWeapon: agent.currentWeapon,
+        alternateWeaponTimeLeft: agent.alternateWeaponTimeLeft,
+        userId: agent.userId,
+        // Add any other necessary properties that are safe to serialize
+      }));
 
-      user.socket.emit("update", userVisibleAgents);
+      // for network visualization
+      //console.log('userVisibleAgents:' + JSON.stringify(sanitizedAgents))
+      //console.log('Num userVisibleAgents:' + sanitizedAgents.length)
+
+      user.socket.emit("update", sanitizedAgents);
     }
   };
 
@@ -165,7 +217,47 @@ function Connector(beServer) {
 
     if (!idToUsers[camera.owner.id]) return;
 
-    idToUsers[camera.owner.id].socket.emit("camera", camera);
+    // Sanitize camera data to avoid circular references
+    let sanitizedCamera = {
+      id: camera.id,
+      rectangle: camera.rectangle
+        ? {
+            x: camera.rectangle.x,
+            y: camera.rectangle.y,
+            width: camera.rectangle.width,
+            height: camera.rectangle.height,
+            center: camera.rectangle.center
+              ? {
+                  x: camera.rectangle.center.x,
+                  y: camera.rectangle.center.y,
+                  data: [camera.rectangle.center.x, camera.rectangle.center.y],
+                }
+              : {
+                  x: camera.rectangle.x + camera.rectangle.width / 2,
+                  y: camera.rectangle.y + camera.rectangle.height / 2,
+                  data: [
+                    camera.rectangle.x + camera.rectangle.width / 2,
+                    camera.rectangle.y + camera.rectangle.height / 2,
+                  ],
+                },
+            size: camera.rectangle.size
+              ? {
+                  x: camera.rectangle.size.x,
+                  y: camera.rectangle.size.y,
+                  data: [camera.rectangle.size.x, camera.rectangle.size.y],
+                }
+              : {
+                  x: camera.rectangle.width,
+                  y: camera.rectangle.height,
+                  data: [camera.rectangle.width, camera.rectangle.height],
+                },
+          }
+        : null,
+      position: camera.getPosition ? camera.getPosition() : null,
+      // Add any other necessary camera properties that are safe to serialize
+    };
+
+    idToUsers[camera.owner.id].socket.emit("camera", sanitizedCamera);
   };
 
   /**
@@ -198,17 +290,29 @@ function Connector(beServer) {
    * @param {Object} contentObject - The message content object
    */
   this.messageToSingleGameClient = function (userId, message, contentObject) {
-    if (!idToUsers[userId]) return; //user has disconnected before death
+    console.log("DEBUG: Connector.messageToSingleGameClient called:", {
+      userId,
+      message,
+      contentObject,
+    }); // New log
+    if (!idToUsers[userId]) {
+      console.log("DEBUG: User has disconnected before death, userId:", userId); // New log
+      return; //user has disconnected before death
+    }
     try {
+      console.log("DEBUG: Emitting messageToGameClient to user:", userId); // New log
       idToUsers[userId].socket.emit("messageToGameClient", {
         message: message,
         contentObject: contentObject,
       });
     } catch (e) {
       console.log(
-        `data encoding error. Message is:${message},  contentObject is: ${JSON.stringify(
-          contentObject,
-        )}`,
+        `data encoding error. Message is: ${message}, Error: ${e.message}`,
+      );
+      console.log("ContentObject type:", typeof contentObject);
+      console.log(
+        "ContentObject keys:",
+        contentObject ? Object.keys(contentObject) : "null",
       );
     }
   };
@@ -221,7 +325,7 @@ function Connector(beServer) {
    */
   this.removeUserByOwningAgentId = function (owningAgentId) {
     let user = this.getUsers().find(
-      (user) => user.getOwningAgent().id === owningAgentId,
+      (user) => user.agent && user.agent.id === owningAgentId,
     );
     if (user) {
       // Call the application's onUserDead handler
@@ -267,8 +371,7 @@ function Connector(beServer) {
 
       httpServer.listen(BECommonDefinitions.WEB_PORT, function () {
         console.log(
-          "Web server listening at port %d",
-          BECommonDefinitions.WEB_PORT,
+          `Web server listening at port ${BECommonDefinitions.WEB_PORT}`,
         );
       });
 
@@ -316,11 +419,27 @@ function Connector(beServer) {
        */
       socket.on("BEServer.clientStart", function (startAppArgs) {
         //removeUser();
+        console.log("DEBUG: Full startAppArgs received:", startAppArgs);
         user.name = startAppArgs.userName;
 
         //BEServer.currentLanguage = startAppArgs.currentLanguage;
         let cameraSize = startAppArgs.cameraSize;
-        EObject.extend(cameraSize, Vector.prototype);
+        console.log("DEBUG: cameraSize received:", cameraSize);
+
+        // Fallback if cameraSize is invalid, and create proper Vector object
+        if (
+          !cameraSize ||
+          typeof cameraSize.x !== "number" ||
+          typeof cameraSize.y !== "number"
+        ) {
+          console.log("DEBUG: Invalid cameraSize, using fallback");
+          cameraSize = new Vector(900, 900); // Create proper Vector with fallback values
+        } else {
+          // Convert valid cameraSize to proper Vector object
+          cameraSize = new Vector(cameraSize.x, cameraSize.y);
+        }
+
+        console.log("DEBUG: Final cameraSize after processing:", cameraSize);
         console.log("EXEC: BEServer.clientStart");
 
         if (BECommonDefinitions.config.worldToCameraSize) {
@@ -354,11 +473,17 @@ function Connector(beServer) {
          */
         socket.on("userEvent", function (eventAndVectorArg) {
           //if(!user.agent) return // user not logged
-          beServer.propagateUserEvent(
-            eventAndVectorArg.event,
-            eventAndVectorArg.arg,
-            user.agent,
-          );
+          if (
+            eventAndVectorArg &&
+            eventAndVectorArg.event &&
+            eventAndVectorArg.arg
+          ) {
+            beServer.propagateUserEvent(
+              eventAndVectorArg.event,
+              eventAndVectorArg.arg,
+              user.agent,
+            );
+          }
         });
       });
 

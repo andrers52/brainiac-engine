@@ -34,6 +34,7 @@ import { UserEvents } from "./UserEvents.js";
 function BEClient() {
   // Instance state
   this.userName = "";
+  this.gameContainerId = "contentArea";
   this.onAfterDrawAgent = null;
   this.onBeforeDrawAgent = null;
   this.onAfterDrawScreen = null;
@@ -209,6 +210,13 @@ function BEClient() {
     } else this.socket = io(BECommonDefinitions.WEB_SOCKET_ADDRESS);
 
     //dispatch server messages
+    this.socket.on("connect", () => {});
+
+    this.socket.on("disconnect", (reason) => {
+      userEvents.stop();
+      location.reload();
+    });
+
     this.socket.on("update", (visibleAgentsInput) => {
       this.setVisibleAgents(visibleAgentsInput);
     });
@@ -233,7 +241,6 @@ function BEClient() {
         console.log(
           "Server message not understood: " + messageAndContentObj.message,
         );
-
       this.app[messageAndContentObj.message](
         messageAndContentObj.contentObject,
       );
@@ -270,8 +277,8 @@ function BEClient() {
       this.config = resourceStore.retrieveResourceObject(
         BECommonDefinitions.CONFIG_JSON,
       );
-      _startConnection();
       BECommonDefinitions.start(this.config);
+      _startConnection();
       if (BECommonDefinitions.config.buildType === "deploy")
         Assert.disableAllVerifications = true;
       this.connectToGameServer();
@@ -327,10 +334,20 @@ function BEClient() {
       if (this.config.worldToCameraSize) {
         screen.setWorldToCameraSize();
       }
+      // Set camera size to proper canvas size before sending to server
+      //screen.setCameraSizeToCanvas();
 
-      this.userName = "user";
-      this.app.showInitialScreenAndReturnUserName &&
-        (this.userName = await this.app.showInitialScreenAndReturnUserName());
+      //this.userName = "user"; // Removed default, will be set by showInitialScreenAndReturnUserName
+      if (this.app.showInitialScreenAndReturnUserName) {
+        this.userName = await this.app.showInitialScreenAndReturnUserName(this); // Pass BEClient instance
+      } else {
+        // Fallback or error if the method isn't defined on the app
+        console.warn(
+          "BEClient: app.showInitialScreenAndReturnUserName is not defined. Using default username.",
+        );
+        this.userName = BECommonDefinitions.DEFAULT_USER_NAME;
+      }
+
       let connectionArgsStr = {
         userName: this.userName,
         cameraSize: camera.rectangle.size,
@@ -379,6 +396,19 @@ function BEClient() {
    */
   this.setBackgroundImageName = (imageName) => {
     screen.setBackgroundImageName(imageName);
+  };
+
+  /**
+   * Starts a new game session with the given username.
+   * @param {string} userName - The username for the game session.
+   */
+  this.startGameSession = (userName) => {
+    this.userName = userName;
+    let connectionArgsStr = {
+      userName: this.userName,
+      cameraSize: camera.rectangle.size,
+    };
+    this.socket.emit("BEServer.clientStart", connectionArgsStr);
   };
 
   /**
