@@ -478,10 +478,15 @@ function Connector(beServer) {
             eventAndVectorArg.event &&
             eventAndVectorArg.arg
           ) {
+            // For mouse events, don't pass user agent to allow spatial search for widgets
+            const targetAgent = eventAndVectorArg.event.includes("Mouse")
+              ? null
+              : user.agent;
+
             beServer.propagateUserEvent(
               eventAndVectorArg.event,
               eventAndVectorArg.arg,
-              user.agent,
+              targetAgent,
             );
           }
         });

@@ -118,12 +118,12 @@ BEServer.startApp("my-game", new MyGameServer(), config);
 
 ### Configuration Parameters
 
-| Parameter                     | Type                          | Default | Description                                      |
-| ----------------------------- | ----------------------------- | ------- | ------------------------------------------------ |
-| `buildType`                   | `"dev" \| "deploy" \| "test"` | `"dev"` | Build environment type                           |
-| `playProceduralSoundInClient` | `boolean`                     | `false` | Enable procedural audio                          |
-| `userAlwaysAtCenterOfCamera`  | `boolean`                     | `true`  | Camera follows user vs independent               |
-| `localApp`                    | `boolean`                     | `true`  | Single-player (browser) vs multiplayer (Node.js) |
+| Parameter                     | Type                          | Default | Description                                   |
+| ----------------------------- | ----------------------------- | ------- | --------------------------------------------- |
+| `buildType`                   | `"dev" \| "deploy" \| "test"` | `"dev"` | Build environment type                        |
+| `playProceduralSoundInClient` | `boolean`                     | `false` | Enable procedural audio                       |
+| `userAlwaysAtCenterOfCamera`  | `boolean`                     | `true`  | Camera follows user vs independent            |
+| `localApp`                    | `boolean`                     | `true`  | `true` = single-player, `false` = multiplayer |
 
 ## 🛠️ Development
 

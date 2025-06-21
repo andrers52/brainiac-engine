@@ -62,7 +62,7 @@ export function HasHint(text, font = "GoodDog") {
   this.setHintText = function (text, font = creationFont) {
     if (this.hint && text === this.hint.getText()) return;
     if (this.hint) this.hint.die();
-    this.hint = createLabel(null, text, font, "white", "Black");
+    this.hint = createLabel(this.beServer, null, text, font, "white", "Black");
     hintBehavior.bind(this)(); //call first time to avoid appearing at the center of screen
   };
 

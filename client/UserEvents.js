@@ -135,9 +135,9 @@ function UserEvents() {
     // *** TODO: ADD EVENT SUBSCRIPTION PARAMETERS IN APP AND UNCOMMENT BELOW ***
     //"onKeyDown": ["window.onkeydown"],
     onResizeCanvas: ["window.onresize", "window.onresize"],
-    onMouseDown: ["window.onmousedown", "window.touchstart"],
-    onMouseMove: ["window.onmousemove", "window.touchmove"],
-    onMouseUp: ["window.onmouseup", "window.touchend", "window.touchleave"],
+    onMouseDown: ["window.onmousedown"], // Temporarily removed touchstart
+    onMouseMove: ["window.onmousemove"], // Temporarily removed touchmove
+    onMouseUp: ["window.onmouseup"], // Temporarily removed touchend and touchleave
   };
 
   /**
@@ -152,9 +152,11 @@ function UserEvents() {
       "Non valid event handler",
     );
 
-    eventsMapping[handler].forEach((event) =>
-      eval(event + " = " + handler + ";"),
-    );
+    console.log(`UserEvents: Enabling event ${handler}`);
+    eventsMapping[handler].forEach((event) => {
+      console.log(`UserEvents: Setting ${event} = ${handler}`);
+      eval(event + " = " + handler + ";");
+    });
   };
 
   /**

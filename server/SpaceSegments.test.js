@@ -12,8 +12,8 @@ describe("SpaceSegments", () => {
   });
 
   it("should initialize segments correctly", () => {
-    assert.equal(spaceSegments.NUM_SEGMENT_ROWS, 20);
-    assert.equal(spaceSegments.NUM_SEGMENT_COLUMNS, 20);
+    assert.equal(spaceSegments.NUM_SEGMENT_ROWS, 8);
+    assert.equal(spaceSegments.NUM_SEGMENT_COLUMNS, 8);
   });
 
   it("should add agent correctly", () => {

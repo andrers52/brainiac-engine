@@ -32,8 +32,13 @@ import { ChangeOnMouseDown } from "./mixin/ChangeOnMouseDown.js";
  *   this.playSoundInClient("click.wav");
  * });
  */
-export function createButton(imageName, inputRectangle, onMouseDownHit) {
-  let button = createWidget(imageName, inputRectangle);
+export function createButton(
+  beServer,
+  imageName,
+  inputRectangle,
+  onMouseDownHit,
+) {
+  let button = createWidget(beServer, imageName, inputRectangle);
 
   button.onMouseDownHit = button.onMouseDownHit
     ? EFunction.sequence(button.onMouseDownHit, onMouseDownHit, button)

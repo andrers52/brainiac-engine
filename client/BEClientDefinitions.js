@@ -19,7 +19,7 @@ BEClientDefinitions.LOADING_ANIMATION_CLASS_NAME = "centered";
 BEClientDefinitions.ANIMATION_INTERVAL = 90;
 
 /** @type {number} Mouse move event propagation latency in milliseconds */
-BEClientDefinitions.MOUSE_MOVE_PROPAGATION_LATENCY = 700;
+BEClientDefinitions.MOUSE_MOVE_PROPAGATION_LATENCY = 16; // ~60 FPS for smooth dragging
 /** @type {number} Mouse down event latency in milliseconds */
 BEClientDefinitions.MOUSE_DOWN_LATENCY = 500;
 

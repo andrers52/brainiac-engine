@@ -1,0 +1,6 @@
+{
+  "buildType": "dev",
+  "playProceduralSoundInClient": false,
+  "userAlwaysAtCenterOfCamera": false,
+  "localApp": true
+}

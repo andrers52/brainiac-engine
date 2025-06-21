@@ -107,7 +107,9 @@ function BEClient() {
         (agent) => !!agent.name && agent.name === this.userName,
       );
 
-      setCameraToAgentPosition(userAgent);
+      if (userAgent) {
+        setCameraToAgentPosition(userAgent);
+      }
     }
   };
 

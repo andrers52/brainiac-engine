@@ -62,26 +62,27 @@ function addVisibilityTestToCheckMove(camera) {
  * Creates a new widget based on an agent with widget-specific properties.
  * Widgets are non-solid UI elements that can display images and handle user interactions.
  *
+ * @param {Object} beServer - The BEServer instance
  * @param {string} imageName - Name of the image resource for the widget
  * @param {Rectangle} [inputRectangle] - Rectangle defining widget position and size
  * @returns {Object} The created widget with UI capabilities
  *
  * @example
  * // Create a simple widget
- * const widget = createWidget("icon.png");
+ * const widget = createWidget(beServer, "icon.png");
  *
  * @example
  * // Create a widget with specific dimensions
- * const panel = createWidget("panel.png", rect(100, 100, 200, 150));
+ * const panel = createWidget(beServer, "panel.png", rect(100, 100, 200, 150));
  *
  * @example
  * // Create a widget without an image (for invisible containers)
- * const container = createWidget(null, rect(0, 0, 300, 200));
+ * const container = createWidget(beServer, null, rect(0, 0, 300, 200));
  */
-export function createWidget(imageName, inputRectangle) {
+export function createWidget(beServer, imageName, inputRectangle) {
   let widget = inputRectangle
-    ? createAgentWithRectangle(imageName, inputRectangle)
-    : createAgent(imageName);
+    ? createAgentWithRectangle(beServer, imageName, inputRectangle)
+    : createAgent(beServer, imageName);
 
   widgetInitialize.call(widget, imageName, inputRectangle);
   return widget;

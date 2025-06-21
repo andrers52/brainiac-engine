@@ -17,7 +17,7 @@ import { Assert } from "arslib";
  */
 export function SpaceSegments() {
   /** @constant {number} Default number of rows in the spatial grid */
-  const DEFAULT_NUM_SEGMENT_ROWS = 20;
+  const DEFAULT_NUM_SEGMENT_ROWS = 8; // Larger segments for better dragging
   /** @constant {number} Default number of columns in the spatial grid */
   const DEFAULT_NUM_SEGMENT_COLUMNS = DEFAULT_NUM_SEGMENT_ROWS;
 
@@ -233,7 +233,9 @@ export function SpaceSegments() {
    * @returns {Array<Object>} Array of agents in the same segment as the position
    */
   this.getNearbyAgentsByPosition = function (position) {
-    return Object.values(_getSegmentByPosition(position).agents);
+    const segment = _getSegmentByPosition(position);
+    const agents = Object.values(segment.agents);
+    return agents;
   };
 
   /**

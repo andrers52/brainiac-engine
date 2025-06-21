@@ -1,0 +1,16 @@
+{
+    "name": "brainiac-engine-interaction-tests-example",
+    "version": "0.1.0",
+    "description": "Interactive tests example for Brainiac Engine",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "dev": "cd .. && npx http-server -p 8080 --symlinks -o /demo/index.html",
+        "install-deps": "npm install"
+    },
+    "dependencies": {
+    },
+    "devDependencies": {
+        "http-server": "14.1.1"
+    }
+}

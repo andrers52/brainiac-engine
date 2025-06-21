@@ -59,11 +59,13 @@ export function ChangeOnMouseDown(changeAction = "shrink") {
     return this;
   }
 
-  this.onMouseDownHit = EFunction.sequence(
-    this.onMouseDownHit,
-    executeChangeActionWhenMouseDown,
-    this,
-  );
+  this.onMouseDownHit = this.onMouseDownHit
+    ? EFunction.sequence(
+        this.onMouseDownHit,
+        executeChangeActionWhenMouseDown,
+        this,
+      )
+    : executeChangeActionWhenMouseDown;
 
   /**
    * Returns the agent to its original form when mouse is released.

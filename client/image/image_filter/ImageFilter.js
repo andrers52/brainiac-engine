@@ -53,18 +53,8 @@ ImageFilter.tmpCtx = null;
 function initTempCanvas() {
   if (ImageFilter.tmpCanvas) return;
 
-  // Check if we're in a browser environment
-  if (typeof document !== "undefined") {
-    ImageFilter.tmpCanvas = document.createElement("canvas");
-    ImageFilter.tmpCtx = ImageFilter.tmpCanvas.getContext("2d");
-  } else {
-    // In Node.js environment, we can't create real canvas elements
-    // This is acceptable since image filtering is typically a client-side operation
-    console.warn(
-      "ImageFilter: Running in Node.js environment, canvas operations will be limited",
-    );
-    return;
-  }
+  ImageFilter.tmpCanvas = document.createElement("canvas");
+  ImageFilter.tmpCtx = ImageFilter.tmpCanvas.getContext("2d");
 }
 
 /**
@@ -76,7 +66,7 @@ function initTempCanvas() {
 ImageFilter.createImageData = function (w, h) {
   initTempCanvas();
   if (!this.tmpCtx || typeof this.tmpCtx.createImageData !== "function") {
-    // Fallback for Node.js environment or when createImageData is not available
+    // Fallback when createImageData is not available
     return {
       width: w,
       height: h,

@@ -1,6 +1,7 @@
 "use strict";
 
-import { Assert } from "arslib";
+import { Assert, EFunction } from "arslib";
+import { Vector } from "../../../common/geometry/Vector.js";
 
 /**
  * @file Mixin that provides drag and drop functionality for agents.
@@ -34,45 +35,47 @@ export function Draggable(canDragAlongX, canDragAlongY) {
     canDragAlongX || canDragAlongY,
     "Draggable error: you must select at least one axys for drag",
   );
-  /** @type {boolean} Whether the agent is currently being dragged */
-  let isBeingDragged = false;
 
-  /** @type {Vector} Mouse position when dragging started */
-  let originalMousePosition;
-  /** @type {Vector} Agent position when dragging started */
-  let originalPosition;
   /** @type {boolean} Flag indicating this agent is draggable */
   this.isDraggable = true;
 
-  /** @type {Object} Reference to this agent */
-  let self = this;
+  /** @type {boolean} Whether the agent is currently being dragged */
+  this.isBeingDragged = false;
+
+  /** @type {Vector} Mouse position when dragging started */
+  this.originalMousePosition = null;
+  /** @type {Vector} Agent position when dragging started */
+  this.originalPosition = null;
 
   /**
    * Starts the dragging operation.
    * @private
    * @param {Vector} originalMousePositionInput - The mouse position where dragging started
    */
-  function startDragging(originalMousePositionInput) {
-    isBeingDragged = true;
-    originalMousePosition = originalMousePositionInput.clone();
-    originalPosition = self.getPosition().clone();
-  }
+  this.startDragging = (originalMousePositionInput) => {
+    console.log(`Draggable: Starting drag on agent ${this.id}`);
+    // Always reset dragging state with fresh positions
+    this.isBeingDragged = true;
+    this.originalMousePosition = originalMousePositionInput.clone();
+    this.originalPosition = this.getPosition().clone();
+  };
 
-  this.onMouseDownHit = EFunction.sequence(
-    this.onMouseDownHit,
-    startDragging,
-    this,
-  );
+  this.onMouseDownHit = this.onMouseDownHit
+    ? EFunction.sequence(this.onMouseDownHit, this.startDragging, this)
+    : this.startDragging;
 
   /**
    * Stops the dragging operation.
    * @private
    */
-  function stopDragging() {
-    isBeingDragged = false;
-  }
+  this.stopDragging = () => {
+    console.log(`Draggable: Stopping drag on agent ${this.id}`);
+    this.isBeingDragged = false;
+  };
 
-  this.onMouseUp = EFunction.sequence(this.onMouseUp, stopDragging, this);
+  this.onMouseUp = this.onMouseUp
+    ? EFunction.sequence(this.onMouseUp, this.stopDragging, this)
+    : this.stopDragging;
 
   /**
    * Handles mouse movement during dragging.
@@ -81,19 +84,41 @@ export function Draggable(canDragAlongX, canDragAlongY) {
    * @param {Vector} newMouseWorldPosition - Current mouse position in world coordinates
    * @returns {Object} This agent instance for method chaining
    */
-  this.onMouseMove = function (newMouseWorldPosition) {
-    if (!isBeingDragged) return;
+  this.handleMouseMove = (newMouseWorldPosition) => {
+    if (!this.isBeingDragged) return this;
+
+    // Safety check: ensure we have valid original positions
+    if (!this.originalPosition || !this.originalMousePosition) {
+      console.warn("Draggable: missing original positions, stopping drag");
+      this.isBeingDragged = false;
+      return this;
+    }
 
     //moving relative to mouse movement
-    let newWorldPosition = originalPosition
+    let newWorldPosition = this.originalPosition
       .clone()
-      .add(newMouseWorldPosition.clone().subtract(originalMousePosition));
-    this.setPosition(
-      new Vector(
-        canDragAlongX ? newWorldPosition.x : this.rectangle.center.x,
-        canDragAlongY ? newWorldPosition.y : this.rectangle.center.y,
-      ),
+      .add(newMouseWorldPosition.clone().subtract(this.originalMousePosition));
+
+    const finalPosition = new Vector(
+      canDragAlongX ? newWorldPosition.x : this.rectangle.center.x,
+      canDragAlongY ? newWorldPosition.y : this.rectangle.center.y,
     );
+
+    this.setPosition(finalPosition);
+
+    // Update spatial index after position change
+    if (this.beServer) {
+      this.beServer.getEnvironment().updateAgent(this);
+
+      // Sync position changes to clients
+      this.beServer.getConnector().setVisibleAgents();
+    }
+
     return this;
   };
+
+  // Register onMouseMove to handle dragging, but only respond when actually being dragged
+  this.onMouseMove = this.onMouseMove
+    ? EFunction.sequence(this.onMouseMove, this.handleMouseMove, this)
+    : this.handleMouseMove;
 }

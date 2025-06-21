@@ -1,6 +1,6 @@
 {
     "name": "brainiac-engine",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "description": "A comprehensive 2D game engine with agent-based architecture, real-time multiplayer support, and advanced visual effects.",
     "main": "index.js",
     "type": "module",

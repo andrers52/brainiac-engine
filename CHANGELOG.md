@@ -5,6 +5,56 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.4.4] - 2025-06-21
+
+### Added
+
+- **🎮 Interactive Demo System**: Complete modernized demo suite replacing old examples
+  - Added comprehensive draggable objects demo with robust mouse handling
+  - Added widget containers, mixins, sensing, and raster graphics demos
+  - New demo framework with modular demo files and unified server architecture
+  - Enhanced demo UI with CSS styling and responsive design
+
+- **🖱️ Enhanced Draggable System**: Improved draggable agent functionality
+  - Fixed draggable agents to respond properly to mouse events with hit detection
+  - Added robust drag state management preventing infinite dragging or stuck states
+  - Enhanced spatial indexing integration for reliable drag operations
+  - Added extensive debugging and logging for draggable event flow
+
+### Fixed
+
+- **🧪 Test Suite**: Fixed SpaceSegments test assertions
+  - Updated test expectations to match current implementation (8 segments vs 20)
+  - Aligned test assertions with actual SpaceSegments default configuration
+
+- **🎯 Client Robustness**: Enhanced BEClient stability
+  - Added safety checks to prevent errors when no user agent is present
+  - Improved client handling of missing agents and edge cases
+  - Enhanced error handling in client-server communication
+
+- **🏗️ Environment System**: Improved server event routing and spatial queries
+  - Fixed mouse event routing to properly search for agents in spatial index
+  - Enhanced onMouseUp handling to prevent stuck dragging states
+  - Improved spatial indexing reliability for interactive demos
+
+### Enhanced
+
+- **📚 Documentation**: Updated MANUAL.md with demo information
+  - Added comprehensive demo documentation and usage instructions
+  - Enhanced development and testing guidance
+
+- **🎨 UI Components**: Modernized widget and mixin systems
+  - Updated Button, Label, and Widget components for better demo integration
+  - Enhanced ChangeOnMouseDown and HasHint mixins
+  - Improved draggable mixin with explicit dependency injection
+
+### Migration Notes
+
+- **Demo System**: Old examples have been replaced with new demo system
+  - New demo location: `/demo/` directory with modular architecture
+  - Run demos with `cd demo && python3 -m http.server 8000`
+  - Access demos at `http://localhost:8000`
+
 # [0.4.3] - 2025-06-17
 
 ### Fixed

@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html style="background-color: #000000;">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Advanced Interactive Tests - Brainiac Engine</title>
+  <link href="css/style.css" rel="stylesheet" type="text/css">
+  <!-- Import Map for ES Modules -->
+  <script type="importmap">
+  {
+    "imports": {
+      "brainiac-engine": "/index.js",
+      "arslib": "/node_modules/arslib/index.js"
+    }
+  }
+  </script>
+</head>
+
+<body style="background-color: #000000;">
+  <div class="demo-controls">
+    <h3>Interactive Demos</h3>
+    <button id="btn-mixins" data-demo="mixins">Visual Effects</button>
+    <button id="btn-sensing" data-demo="sensing">Collision & Sensing</button>
+    <button id="btn-widgets" data-demo="widgets">UI Widgets</button>
+    <button id="btn-draggable" data-demo="draggable">Draggable Objects</button>
+    <button id="btn-containers" data-demo="containers">Layout Containers</button>
+    <button id="btn-raster" data-demo="raster">Grid Movement</button>
+  </div>
+
+  <div class="demo-info" id="demo-info">
+    <strong>Advanced Interactive Demo</strong><br>
+    Select a demo from the controls to see different engine features.
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

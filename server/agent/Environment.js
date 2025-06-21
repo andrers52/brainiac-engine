@@ -6,7 +6,13 @@ import { SpaceSegments } from "../SpaceSegments.js";
 import { AgentDefinitions } from "./AgentDefinitions.js";
 
 /**
- * @file Environment singleton that manages all agents in the game world.
+ * @file Environment singleton that manages all agents i    console.log("Environment propagateUserEvent:", {
+      event,
+      nearbyAgentsCount: ags.length,
+      totalAgentsInEnv: Object.keys(agents).length,
+      mousePosition: arg ? `(${arg.x}, ${arg.y})` : 'no position',
+      nearbyAgentIds: ags.map(a => `${a.id}@(${a.getPosition().x},${a.getPosition().y})`)
+    }); world.
  * @module Environment
  */
 
@@ -306,27 +312,116 @@ function Environment() {
     let ags = agent
       ? [agent]
       : this.spaceSegments.getNearbyAgentsByPosition(arg);
+
+    // Safety check: avoid infinite mouse move processing when no dragging is active
+    if (event === "onMouseMove" && !agent && ags.length === 0) {
+      // Check if any agents are currently being dragged
+      const draggedAgents = Object.values(agents).filter(
+        (a) => a.isDraggable && a.isBeingDragged,
+      );
+
+      if (draggedAgents.length === 0) {
+        // No agents found at mouse position and no agents being dragged
+        // Skip processing this mouse move event to prevent infinite loops
+        return;
+      }
+    }
+
+    if (event === "onMouseDown") {
+      console.log(
+        `Environment: Found ${ags.length} agents for ${event} at position ${
+          arg ? `(${arg.x}, ${arg.y})` : "null"
+        }`,
+      );
+
+      if (ags.length > 0) {
+        console.log(
+          `Environment: Agent IDs found:`,
+          ags.map((a) => a.id),
+        );
+      }
+    }
+    if ((event === "onMouseMove" || event === "onMouseUp") && !agent) {
+      const draggedAgents = [];
+      Object.values(agents).forEach((a) => {
+        if (a.isDraggable && a.isBeingDragged && !ags.includes(a)) {
+          ags.push(a);
+          draggedAgents.push(a.id);
+        }
+      });
+      if (event === "onMouseUp" && draggedAgents.length > 0) {
+        console.log(
+          `Environment: Added dragged agents to ${event}:`,
+          draggedAgents,
+        );
+      }
+    }
+
     ags.forEach((agent) => {
-      if (!agent[event] && +!agent[event + "Hit"]) return;
+      if (!agent[event] && !agent[event + "Hit"]) {
+        return;
+      }
       lastArg = arg || lastArg; //keep last arg if no new arg is received (mouseDown uses position of mouseMove)
+
+      // Debug logging for mouse down events to understand hit detection
+      if (event === "onMouseDown") {
+        console.log(`Environment: Checking ${event} for agent ${agent.id}:`);
+        if (lastArg) {
+          const hitResult = agent.checkHit(lastArg);
+          console.log(`  - checkHit result: ${hitResult}`);
+        }
+      }
+
       //key
       if (event === "onKeyDown") {
         agent.onKeyDown && agent.onKeyDown(arg);
         return;
       }
-      //mouse
-      //EObject.extend(arg, Vector.prototype);
+
+      // Special case: dragged agents should always receive onMouseMove events
+      if (
+        event === "onMouseMove" &&
+        agent.isDraggable &&
+        agent.isBeingDragged
+      ) {
+        agent.onMouseMove && agent.onMouseMove(arg);
+        return;
+      }
+
+      // Special case: dragged agents should always receive onMouseUp events
+      if (event === "onMouseUp" && agent.isDraggable && agent.isBeingDragged) {
+        console.log(`Calling onMouseUp for dragged agent ${agent.id}`);
+        agent.onMouseUp && agent.onMouseUp(arg);
+        return;
+      }
+
+      //mouse hit detection
       if (
         ["onMouseDown", "onMouseUp", "onMouseMove"].includes(event) &&
         agent.isVisible &&
-        lastArg &&
-        agent.checkHit(lastArg)
+        lastArg
       ) {
-        //if there is no arg there is no hit
-        let eventToCall = event + "Hit"; //onMouseDownHit, onMouseUpHit, onMouseMoveHit
-        agent[eventToCall] && agent[eventToCall](arg);
-        return;
+        const hitResult = agent.checkHit(lastArg);
+
+        if (event === "onMouseDown") {
+          console.log(
+            `Agent ${agent.id} hit check for ${event}: hit=${hitResult}`,
+          );
+        }
+
+        if (hitResult) {
+          //if there is no arg there is no hit
+          let eventToCall = event + "Hit"; //onMouseDownHit, onMouseUpHit, onMouseMoveHit
+          if (event === "onMouseDown") {
+            console.log(
+              `Hit detected! Calling ${eventToCall} on agent ${agent.id}`,
+            );
+          }
+          agent[eventToCall] && agent[eventToCall](arg);
+          return;
+        }
       }
+
       agent[event] && agent[event](arg);
     });
   };

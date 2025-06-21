@@ -1,0 +1,61 @@
+* { margin: 0; padding: 0;}
+
+body, html {
+  height: 100%;
+  background-color: #000000;
+  overflow: hidden;
+}
+
+/* Demo Controls Styles */
+.demo-controls {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  z-index: 1000;
+  min-width: 200px;
+}
+
+.demo-controls h3 {
+  margin: 0 0 10px 0;
+  color: #4CAF50;
+}
+
+.demo-controls button {
+  display: block;
+  width: 100%;
+  margin: 5px 0;
+  padding: 8px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.demo-controls button:hover {
+  background: #45a049;
+}
+
+.demo-controls button.active {
+  background: #ff6b6b;
+}
+
+.demo-info {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-family: monospace;
+  font-size: 12px;
+  max-width: 300px;
+}

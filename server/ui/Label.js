@@ -72,6 +72,7 @@ let protoLabel = {
  * );
  */
 export function createLabel(
+  beServer,
   rectangle,
   text = "",
   fontFace = "GoodDog",
@@ -79,7 +80,7 @@ export function createLabel(
   textColor = "black",
 ) {
   rectangle = rectangle || rect(0, 0, text.length * 5, 15);
-  let label = createWidget(null, rectangle);
+  let label = createWidget(beServer, null, rectangle);
   EObject.extend(label, protoLabel);
   /** @type {string} The text content of the label */
   label.text = text;
