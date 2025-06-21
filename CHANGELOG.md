@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **🎮 Interactive Demo System**: Complete modernized demo suite replacing old examples
+
   - Added comprehensive draggable objects demo with robust mouse handling
   - Added widget containers, mixins, sensing, and raster graphics demos
   - New demo framework with modular demo files and unified server architecture
@@ -24,10 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **🧪 Test Suite**: Fixed SpaceSegments test assertions
+
   - Updated test expectations to match current implementation (8 segments vs 20)
   - Aligned test assertions with actual SpaceSegments default configuration
 
 - **🎯 Client Robustness**: Enhanced BEClient stability
+
   - Added safety checks to prevent errors when no user agent is present
   - Improved client handling of missing agents and edge cases
   - Enhanced error handling in client-server communication
@@ -40,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhanced
 
 - **📚 Documentation**: Updated MANUAL.md with demo information
+
   - Added comprehensive demo documentation and usage instructions
   - Enhanced development and testing guidance
 
