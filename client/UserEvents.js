@@ -5,6 +5,8 @@ import { Vector, vect } from "../common/geometry/Vector.js";
 import { CoordinatesConversion } from "./CoordinatesConversion.js";
 
 //generated events to be called on agents:
+// Note: Hit events will be created by the
+// environment and passed to the agents
 //onMouseDown(mouseWorldPosition)
 //onMouseDownHit
 //onMouseDownNoAgentHit
@@ -30,6 +32,8 @@ function UserEvents() {
 
   let mouseCanvasPosition = null;
   let mousePositionChanged = false;
+  let lastPropagatedPosition = null; // Track last position we sent to avoid duplicate events
+  let isMouseDown = false; // Track if mouse is currently down
 
   /**
    * Gets the current mouse position in world coordinates
@@ -101,7 +105,7 @@ function UserEvents() {
     //if (navigator.userAgent.match(/Android/i)) {
     //event.preventDefault();
     //}
-    //onMouseMove(event); //needed for z32, review for other games...
+    isMouseDown = true; // Track that mouse is down
     propagate("onMouseDown", self.mouseWorldPosition());
     event.stopPropagation();
   }
@@ -112,6 +116,8 @@ function UserEvents() {
    */
   function onMouseUp(event) {
     mouseCanvasPosition = getMouseCanvasPosition(event);
+    isMouseDown = false; // Track that mouse is up
+    mousePositionChanged = false; // Stop any pending mouse moves
     propagate("onMouseUp", self.mouseWorldPosition());
   }
 
@@ -120,12 +126,19 @@ function UserEvents() {
    * @param {MouseEvent} event - The mouse event
    */
   function onMouseMove(event) {
-    //if (navigator.userAgent.match(/Android/i)) {
     event.preventDefault();
-    //}
+    const newPosition = getMouseCanvasPosition(event);
 
-    mouseCanvasPosition = getMouseCanvasPosition(event);
-    mousePositionChanged = true;
+    // Only set changed flag if position actually changed
+    if (
+      !mouseCanvasPosition ||
+      newPosition.x !== mouseCanvasPosition.x ||
+      newPosition.y !== mouseCanvasPosition.y
+    ) {
+      mouseCanvasPosition = newPosition;
+      // Only mark as changed if mouse is down (for dragging) or if this is general movement tracking
+      mousePositionChanged = true;
+    }
   }
 
   /* enable/disable events */
@@ -152,9 +165,7 @@ function UserEvents() {
       "Non valid event handler",
     );
 
-    console.log(`UserEvents: Enabling event ${handler}`);
     eventsMapping[handler].forEach((event) => {
-      console.log(`UserEvents: Setting ${event} = ${handler}`);
       eval(event + " = " + handler + ";");
     });
   };
@@ -179,7 +190,17 @@ function UserEvents() {
    */
   function propagateMouseMoveOnInterval() {
     if (mousePositionChanged) {
-      propagate("onMouseMove", self.mouseWorldPosition());
+      const currentPosition = self.mouseWorldPosition();
+
+      // Only propagate if the position actually changed from last propagated position
+      if (
+        !lastPropagatedPosition ||
+        !currentPosition.equal(lastPropagatedPosition)
+      ) {
+        propagate("onMouseMove", currentPosition);
+        lastPropagatedPosition = currentPosition.clone();
+      }
+
       mousePositionChanged = false;
     }
   }

@@ -63,14 +63,14 @@ position.add(velocity);
 
 ## 📖 Documentation
 
-- 📚 **[Complete Manual](MANUAL.md)** - Detailed documentation, configuration, and examples
-- 🎯 **[API Reference](MANUAL.md#api-documentation)** - Full API documentation
-- 🛠️ **[Development Guide](MANUAL.md#development)** - Setup and contribution guidelines
-- ⚙️ **[Configuration](MANUAL.md#configuration)** - Configuration options and setup
+- 📚 **[Complete Manual](docs/MANUAL.md)** - Detailed documentation, configuration, and examples
+- 🎯 **[API Reference](docs/MANUAL.md#api-documentation)** - Full API documentation
+- 🛠️ **[Development Guide](docs/MANUAL.md#development)** - Setup and contribution guidelines
+- ⚙️ **[Configuration](docs/MANUAL.md#configuration)** - Configuration options and setup
 
 ## 🤝 Contributing
 
-We welcome contributions! See the [development guide](MANUAL.md#development) for detailed instructions.
+We welcome contributions! See the [development guide](docs/MANUAL.md#development) for detailed instructions.
 
 ## 📄 License
 
@@ -79,7 +79,7 @@ MIT License. See [LICENSE](LICENSE) file for details.
 ## 🆘 Support
 
 - 🐛 **Issues**: [GitHub Issues](https://github.com/andrers52/brainiac-engine/issues)
-- 📖 **Documentation**: See [MANUAL.md](MANUAL.md) for detailed guides
+- 📖 **Documentation**: See [MANUAL.md](docs/MANUAL.md) for detailed guides
 
 ---
 

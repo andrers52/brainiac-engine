@@ -1,23 +1,10 @@
 Todo
 
-- remove bespoke unit test framework
- - convert all tests to mocha
-
-
-- integrate canvas with html widgets
-  - remove widget children (button, etc...)
-  - change widget to widget placeholder
-
-- move draw world border to z32
-
-create separate examples from interactive tests
 
 - Environment  - Agents behavior execution
   - add nearby parameter (nearby 2, 3, 4 squares, etc)
   - execute with nearby user 2 (now is 1)
 
-- add genetic engine to ai agents
-  - create mechanism to recover best agents minds to server
 ** FIX THIS **
 - particles overreacting zoom
 
@@ -27,7 +14,7 @@ move socket management in BEClient to ClientConnector (to be created).
 -config.json -> BEConfig object in be/common
   - create single version option in config
     - BeServer runs on a webworker
-  - run both z32 and mimi games
+
 
 
 
@@ -127,7 +114,7 @@ apply memoize to image resize and rotation
 retain world aspect ratio in screen
 
 be version number separated from game version
-  - create BEConfig singleton in be/common
+  - create BEConfig in be/common
 
 create random color effect for agent (generalizing from shapes)
 -------------------------

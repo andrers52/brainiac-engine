@@ -290,17 +290,10 @@ function Connector(beServer) {
    * @param {Object} contentObject - The message content object
    */
   this.messageToSingleGameClient = function (userId, message, contentObject) {
-    console.log("DEBUG: Connector.messageToSingleGameClient called:", {
-      userId,
-      message,
-      contentObject,
-    }); // New log
     if (!idToUsers[userId]) {
-      console.log("DEBUG: User has disconnected before death, userId:", userId); // New log
       return; //user has disconnected before death
     }
     try {
-      console.log("DEBUG: Emitting messageToGameClient to user:", userId); // New log
       idToUsers[userId].socket.emit("messageToGameClient", {
         message: message,
         contentObject: contentObject,
@@ -419,12 +412,10 @@ function Connector(beServer) {
        */
       socket.on("BEServer.clientStart", function (startAppArgs) {
         //removeUser();
-        console.log("DEBUG: Full startAppArgs received:", startAppArgs);
         user.name = startAppArgs.userName;
 
         //BEServer.currentLanguage = startAppArgs.currentLanguage;
         let cameraSize = startAppArgs.cameraSize;
-        console.log("DEBUG: cameraSize received:", cameraSize);
 
         // Fallback if cameraSize is invalid, and create proper Vector object
         if (
@@ -432,15 +423,11 @@ function Connector(beServer) {
           typeof cameraSize.x !== "number" ||
           typeof cameraSize.y !== "number"
         ) {
-          console.log("DEBUG: Invalid cameraSize, using fallback");
           cameraSize = new Vector(900, 900); // Create proper Vector with fallback values
         } else {
           // Convert valid cameraSize to proper Vector object
           cameraSize = new Vector(cameraSize.x, cameraSize.y);
         }
-
-        console.log("DEBUG: Final cameraSize after processing:", cameraSize);
-        console.log("EXEC: BEServer.clientStart");
 
         if (BECommonDefinitions.config.worldToCameraSize) {
           BECommonDefinitions.WORLD_WIDTH = cameraSize.x;
@@ -470,6 +457,7 @@ function Connector(beServer) {
          * @param {Object} eventAndVectorArg - Event data from client
          * @param {string} eventAndVectorArg.event - Event name
          * @param {*} eventAndVectorArg.arg - Event argument
+         * @param {Object} [eventAndVectorArg.clientCamera] - Client camera for viewport filtering
          */
         socket.on("userEvent", function (eventAndVectorArg) {
           //if(!user.agent) return // user not logged
@@ -486,6 +474,7 @@ function Connector(beServer) {
             beServer.propagateUserEvent(
               eventAndVectorArg.event,
               eventAndVectorArg.arg,
+              eventAndVectorArg.clientCamera, // Pass client camera for viewport filtering
               targetAgent,
             );
           }

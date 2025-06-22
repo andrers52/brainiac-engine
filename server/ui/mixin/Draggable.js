@@ -53,7 +53,6 @@ export function Draggable(canDragAlongX, canDragAlongY) {
    * @param {Vector} originalMousePositionInput - The mouse position where dragging started
    */
   this.startDragging = (originalMousePositionInput) => {
-    console.log(`Draggable: Starting drag on agent ${this.id}`);
     // Always reset dragging state with fresh positions
     this.isBeingDragged = true;
     this.originalMousePosition = originalMousePositionInput.clone();
@@ -69,12 +68,16 @@ export function Draggable(canDragAlongX, canDragAlongY) {
    * @private
    */
   this.stopDragging = () => {
-    console.log(`Draggable: Stopping drag on agent ${this.id}`);
     this.isBeingDragged = false;
   };
 
+  // Hook into both onMouseUp and onMouseUpHit to ensure dragging stops
   this.onMouseUp = this.onMouseUp
     ? EFunction.sequence(this.onMouseUp, this.stopDragging, this)
+    : this.stopDragging;
+
+  this.onMouseUpHit = this.onMouseUpHit
+    ? EFunction.sequence(this.onMouseUpHit, this.stopDragging, this)
     : this.stopDragging;
 
   /**
@@ -89,7 +92,6 @@ export function Draggable(canDragAlongX, canDragAlongY) {
 
     // Safety check: ensure we have valid original positions
     if (!this.originalPosition || !this.originalMousePosition) {
-      console.warn("Draggable: missing original positions, stopping drag");
       this.isBeingDragged = false;
       return this;
     }

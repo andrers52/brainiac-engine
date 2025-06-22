@@ -11,12 +11,12 @@ describe("Environment", function () {
     agent = {
       id: 1,
       isCamera: false,
-      isSingleton: false,
       isUserAgent: sinon.stub().returns(false),
       isVisible: true, // Required for mouse event propagation
       rectangle: {
         center: new Vector(0, 0),
         meanSize: sinon.stub().returns(10),
+        checkIntersection: sinon.stub().returns(true),
       },
       behavior: sinon.spy(),
       die: sinon.spy(),
@@ -25,11 +25,11 @@ describe("Environment", function () {
     nearbyAgent = {
       id: 2,
       isCamera: false,
-      isSingleton: false,
       isUserAgent: sinon.stub().returns(false),
       rectangle: {
         center: new Vector(0, 0),
         meanSize: sinon.stub().returns(10),
+        checkIntersection: sinon.stub().returns(true),
       },
     };
 
@@ -112,7 +112,7 @@ describe("Environment", function () {
     assert.strictEqual(overlappingAgent, nearbyAgent);
   });
 
-  it("should kill all non-singleton agents", function () {
+  it("should kill all agents", function () {
     environment.addAgent(agent);
     environment.killAllAgents();
     assert(agent.die.calledOnce);

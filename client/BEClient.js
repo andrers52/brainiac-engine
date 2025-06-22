@@ -186,7 +186,11 @@ function BEClient() {
    * @param {*} arg - Event arguments/data to pass along.
    */
   const propagateUserEvent = (event, arg) => {
-    let eventAndArg = { event: event, arg: arg };
+    let eventAndArg = {
+      event: event,
+      arg: arg,
+      clientCamera: camera, // Include camera/client information for viewport filtering
+    };
     //propagate to server
     this.socket.emit("userEvent", eventAndArg);
     if (event.includes("Mouse")) return;

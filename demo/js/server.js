@@ -79,7 +79,7 @@ export class AdvancedInteractiveTestsServer {
     this.demoWidgets = [];
     this.currentDemo = null;
 
-    // More aggressive cleanup: kill all non-singleton agents and clear spatial index
+    // More aggressive cleanup: kill all agents and clear spatial index
     console.log(
       "Performing aggressive cleanup - killing all agents and clearing spatial index",
     );

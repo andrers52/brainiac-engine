@@ -9,7 +9,7 @@ export function startContainersDemo(server) {
     // Create agents first
     const ag1 = createAgent(
       server.beServer,
-      "media/images/black_square.png",
+      "media/images/blue_square.png",
       40,
       40,
       false,
@@ -30,7 +30,7 @@ export function startContainersDemo(server) {
     );
     const ag4 = createAgent(
       server.beServer,
-      "media/images/black_square.png",
+      "media/images/blue_square.png",
       40,
       40,
       false,

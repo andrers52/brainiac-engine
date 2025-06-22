@@ -11,7 +11,7 @@ export function startMixinsDemo(server) {
     // Pulsating black square
     const pulsateAgent = createAgent(
       beServer,
-      "media/images/black_square.png",
+      "media/images/blue_square.png",
       50,
       50,
       false,

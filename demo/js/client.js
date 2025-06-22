@@ -93,7 +93,7 @@ export function AdvancedInteractiveTestsClient() {
     console.log("getMediaAssets called");
     return [
       "media/images/star.png",
-      "media/images/black_square.png",
+      "media/images/blue_square.png",
       "media/images/blue_square.png",
       "media/images/bubble.png",
     ];

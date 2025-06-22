@@ -9,7 +9,7 @@ export function startRasterDemo(server) {
     // Create a raster-based agent
     const rasterAgent = createAgent(
       server.beServer,
-      "media/images/black_square.png",
+      "media/images/blue_square.png",
       50,
       50,
       false,

@@ -85,5 +85,11 @@ export function ChangeOnMouseDown(changeAction = "shrink") {
     ? EFunction.sequence(this.onMouseUp, returnToOriginalFormWhenMouseUp, this)
     : returnToOriginalFormWhenMouseUp;
 
-  this.onMouseUpHit = this.onMouseUp;
+  this.onMouseUpHit = this.onMouseUpHit
+    ? EFunction.sequence(
+        this.onMouseUpHit,
+        returnToOriginalFormWhenMouseUp,
+        this,
+      )
+    : returnToOriginalFormWhenMouseUp;
 }

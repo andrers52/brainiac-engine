@@ -26,7 +26,7 @@ export function startSensingDemo(server) {
     // Create a sensing agent that moves toward the obstacle
     const sensingAgent = createAgent(
       server.beServer,
-      "media/images/black_square.png",
+      "media/images/blue_square.png",
       40,
       40,
       false,

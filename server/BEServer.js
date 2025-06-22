@@ -8,7 +8,7 @@ import { Environment } from "./agent/Environment.js";
 import { Connector } from "./Connector.js";
 
 /**
- * @file Main server singleton for the Brainiac Engine.
+ * @file Main server for the Brainiac Engine.
  * Coordinates application startup, configuration loading, and client communication.
  * @module BEServer
  */
@@ -197,10 +197,11 @@ function BEServerConstructor() {
    * @memberof BEServerConstructor
    * @param {string} event - The event name (e.g., 'onMouseDown', 'onKeyPress')
    * @param {*} arg - Event argument (position for mouse events, key for keyboard events)
+   * @param {Object} [clientCamera] - Client camera for viewport filtering
    * @param {Object} [agent] - Specific agent to receive the event. If not provided, nearby agents receive it.
    */
-  this.propagateUserEvent = function (event, arg, agent) {
-    this.environment.propagateUserEvent(event, arg, agent);
+  this.propagateUserEvent = function (event, arg, clientCamera, agent) {
+    this.environment.propagateUserEvent(event, arg, clientCamera, agent);
   };
 
   /**
@@ -227,6 +228,6 @@ function BEServerConstructor() {
  * @type {BEServerConstructor}
  * @instance
  */
-// var BEServer = new BEServerConstructor(); // Remove singleton instance
+// var BEServer = new BEServerConstructor();
 
 export { BEServerConstructor as BEServer }; // Export the constructor

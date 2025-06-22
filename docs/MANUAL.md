@@ -6,6 +6,7 @@ Documentation for the Brainiac Engine - a JavaScript framework for building inte
 
 - [Project Structure](#project-structure)
 - [Core Concepts](#core-concepts)
+- [User Events System](user_events.md) - Complete guide to input handling
 - [Configuration](#configuration)
 - [Development](#development)
 - [API Documentation](#api-documentation)
@@ -17,12 +18,10 @@ Documentation for the Brainiac Engine - a JavaScript framework for building inte
 ```
 brainiac-engine/
 ├── client/          # Client-side modules
-│   ├── singleton/   # Screen, etc.
 │   ├── image/       # Image processing and effects
 │   └── ...
 ├── server/          # Server-side modules
 │   ├── agent/       # Entity system
-│   ├── singleton/   # Server management
 │   └── ...
 ├── common/          # Shared utilities
 │   ├── geometry/    # Vector, Rectangle, etc.

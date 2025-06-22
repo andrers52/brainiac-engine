@@ -6,13 +6,7 @@ import { SpaceSegments } from "../SpaceSegments.js";
 import { AgentDefinitions } from "./AgentDefinitions.js";
 
 /**
- * @file Environment singleton that manages all agents i    console.log("Environment propagateUserEvent:", {
-      event,
-      nearbyAgentsCount: ags.length,
-      totalAgentsInEnv: Object.keys(agents).length,
-      mousePosition: arg ? `(${arg.x}, ${arg.y})` : 'no position',
-      nearbyAgentIds: ags.map(a => `${a.id}@(${a.getPosition().x},${a.getPosition().y})`)
-    }); world.
+ * @file Environment that manages all agents in the world.
  * @module Environment
  */
 
@@ -45,6 +39,15 @@ function Environment() {
   /** @type {SpaceSegments} Public reference to spatial indexing system */
   this.spaceSegments = spaceSegments;
 
+  /** @type {Map<string, Set<Object>>} Event subscription system - maps event names to sets of subscribed agents */
+  let eventSubscriptions = new Map();
+
+  /** @type {Set<Object>} Agents that are currently in interactive states (dragging, pressed, etc.) */
+  let interactiveAgents = new Set();
+
+  /** @type {Map<Object, Object>} Maps agents to their client cameras for viewport filtering */
+  let agentToClientMap = new Map();
+
   /**
    * Gets all agents in the environment.
    * @memberof Environment
@@ -60,7 +63,7 @@ function Environment() {
    * @returns {Array<Object>} Array of camera agents
    */
   this.getCameras = function () {
-    return agents.filter((agent) => agent.isCamera);
+    return Object.values(agents).filter((agent) => agent.isCamera);
   };
 
   /**
@@ -114,6 +117,17 @@ function Environment() {
   this.removeAgent = function (agent) {
     delete agents[agent.id];
     this.spaceSegments.removeAgent(agent);
+
+    // Clean up event subscriptions
+    eventSubscriptions.forEach((subscribers) => {
+      subscribers.delete(agent);
+    });
+
+    // Remove from interactive state
+    interactiveAgents.delete(agent);
+
+    // Remove client mapping
+    agentToClientMap.delete(agent);
   };
 
   /**
@@ -127,25 +141,12 @@ function Environment() {
   };
 
   /**
-   * Checks if an agent is a singleton agent.
-   * @private
-   * @param {Object} agent - The agent to check
-   * @returns {boolean} True if agent is singleton
-   * @todo Remove this? (marked for review)
-   */
-  function agentIsSingleton(agent) {
-    return agent.isSingleton; // *** TODO: REMOVE THIS? ***
-  }
-
-  /**
-   * Kills all non-singleton agents in the environment.
+   * Kills all agents in the environment.
    * @memberof Environment
-   * @todo Check if this is necessary (marked for review)
    */
   this.killAllAgents = function () {
-    // *** TODO *** CHECK: IS THIS NECESSARY? ***
     for (let id in agents) {
-      if (!agentIsSingleton(agents[id])) agents[id].die();
+      agents[id].die();
     }
     this.spaceSegments.clear();
   };
@@ -193,7 +194,7 @@ function Environment() {
 
       if (agent.id === nearbyAgent.id) continue;
 
-      if (nearbyAgent.isSingleton || nearbyAgent.isCamera) continue;
+      if (nearbyAgent.isCamera) continue;
 
       // *** CIRCLE BASED COLLISION DETECTION ***
       let dist = proposedRectangle.center.distance(
@@ -249,7 +250,7 @@ function Environment() {
    * @returns {Array<Object>} Array of user agents
    */
   this.getUserAgents = function () {
-    agents.filter((agent) => agent.isUserAgent());
+    return Object.values(agents).filter((agent) => agent.isUserAgent());
   };
 
   /**
@@ -270,7 +271,6 @@ function Environment() {
     return worldRectangle;
   };
 
-  /** @type {*} Stores the last argument for event propagation */
   /** @type {*} Stores the last argument for event propagation */
   let lastArg;
 
@@ -301,129 +301,244 @@ function Environment() {
 */
 
   /**
-   * Propagates user events to relevant agents.
-   * Handles both keyboard and mouse events, including hit detection for mouse events.
+   * Propagates user events using the improved event system.
+   * Uses viewport filtering, event subscriptions, and state-based routing.
    * @memberof Environment
    * @param {string} event - The event name (e.g., 'onKeyDown', 'onMouseDown', etc.)
    * @param {*} arg - Event argument (position for mouse events, key for keyboard events)
-   * @param {Object} [agent] - Specific agent to target. If not provided, targets nearby agents.
+   * @param {Object} [clientCamera] - The client camera that generated this event (for viewport filtering)
+   * @param {Object} [targetAgent] - Specific agent to target. If provided, bypasses all filtering.
    */
-  this.propagateUserEvent = function (event, arg, agent) {
-    let ags = agent
-      ? [agent]
-      : this.spaceSegments.getNearbyAgentsByPosition(arg);
-
-    // Safety check: avoid infinite mouse move processing when no dragging is active
-    if (event === "onMouseMove" && !agent && ags.length === 0) {
-      // Check if any agents are currently being dragged
-      const draggedAgents = Object.values(agents).filter(
-        (a) => a.isDraggable && a.isBeingDragged,
-      );
-
-      if (draggedAgents.length === 0) {
-        // No agents found at mouse position and no agents being dragged
-        // Skip processing this mouse move event to prevent infinite loops
-        return;
-      }
+  this.propagateUserEvent = function (event, arg, clientCamera, targetAgent) {
+    // If targeting a specific agent, send directly
+    if (targetAgent) {
+      this.sendEventToAgent(targetAgent, event, arg);
+      return;
     }
 
-    if (event === "onMouseDown") {
-      console.log(
-        `Environment: Found ${ags.length} agents for ${event} at position ${
-          arg ? `(${arg.x}, ${arg.y})` : "null"
-        }`,
-      );
+    // Get agents to receive this event using the new filtering system
+    let targetAgents = this.getEventTargetAgents(event, arg, clientCamera);
 
-      if (ags.length > 0) {
-        console.log(
-          `Environment: Agent IDs found:`,
-          ags.map((a) => a.id),
-        );
-      }
-    }
-    if ((event === "onMouseMove" || event === "onMouseUp") && !agent) {
-      const draggedAgents = [];
-      Object.values(agents).forEach((a) => {
-        if (a.isDraggable && a.isBeingDragged && !ags.includes(a)) {
-          ags.push(a);
-          draggedAgents.push(a.id);
+    // Send events to all target agents
+    targetAgents.forEach((agent) => {
+      this.sendEventToAgent(agent, event, arg);
+    });
+  };
+
+  /**
+   * Determines which agents should receive a specific event.
+   * @memberof Environment
+   * @param {string} event - The event name
+   * @param {*} arg - Event argument
+   * @param {Object} clientCamera - The client camera (for viewport filtering)
+   * @returns {Array<Object>} Array of agents that should receive this event
+   */
+  this.getEventTargetAgents = function (event, arg, clientCamera) {
+    let targetAgents = [];
+
+    // 1. Always include agents with event subscriptions
+    if (eventSubscriptions.has(event)) {
+      eventSubscriptions.get(event).forEach((agent) => {
+        if (!targetAgents.includes(agent)) {
+          targetAgents.push(agent);
         }
       });
-      if (event === "onMouseUp" && draggedAgents.length > 0) {
-        console.log(
-          `Environment: Added dragged agents to ${event}:`,
-          draggedAgents,
-        );
+    }
+
+    // 2. For mouse events, include agents in interactive states (dragging, pressed, etc.)
+    if (["onMouseMove", "onMouseUp"].includes(event)) {
+      interactiveAgents.forEach((agent) => {
+        if (!targetAgents.includes(agent)) {
+          targetAgents.push(agent);
+        }
+      });
+    }
+
+    // 3. For all events, include agents visible to the client that generated the event
+    if (clientCamera) {
+      const visibleAgents = this.getAgentsVisibleToClient(clientCamera);
+      visibleAgents.forEach((agent) => {
+        if (!targetAgents.includes(agent)) {
+          targetAgents.push(agent);
+        }
+      });
+    } else {
+      // Fallback: if no camera provided, include all agents (for backward compatibility)
+      Object.values(agents).forEach((agent) => {
+        if (!targetAgents.includes(agent)) {
+          targetAgents.push(agent);
+        }
+      });
+    }
+
+    return targetAgents;
+  };
+
+  /**
+   * Sends an event to a specific agent, handling hit detection for mouse events.
+   * @memberof Environment
+   * @param {Object} agent - The agent to send the event to
+   * @param {string} event - The event name
+   * @param {*} arg - Event argument
+   */
+  this.sendEventToAgent = function (agent, event, arg) {
+    // Check if agent has any handler for this event
+    if (!agent[event] && !agent[event + "Hit"]) {
+      return;
+    }
+
+    // Handle keyboard events directly
+    if (event === "onKeyDown") {
+      agent[event] && agent[event](arg);
+      return;
+    }
+
+    // Handle resize events directly
+    if (event === "onResizeCanvas") {
+      agent[event] && agent[event](arg);
+      return;
+    }
+
+    // Handle mouse events with hit detection
+    if (
+      ["onMouseDown", "onMouseUp", "onMouseMove"].includes(event) &&
+      agent.isVisible &&
+      arg
+    ) {
+      const hitResult = agent.checkHit(arg);
+
+      if (hitResult) {
+        // Mouse is over this agent - call Hit version
+        let hitEventName = event + "Hit";
+        if (agent[hitEventName]) {
+          agent[hitEventName](arg);
+
+          // Update interactive state for mouse down
+          if (event === "onMouseDown") {
+            this.setAgentInteractive(agent);
+          }
+        }
+
+        // Remove from interactive state on mouse up (regardless of hit)
+        if (event === "onMouseUp") {
+          this.setAgentNonInteractive(agent);
+        }
+        return;
       }
     }
 
-    ags.forEach((agent) => {
-      if (!agent[event] && !agent[event + "Hit"]) {
-        return;
-      }
-      lastArg = arg || lastArg; //keep last arg if no new arg is received (mouseDown uses position of mouseMove)
+    // Call general event handler
+    if (agent[event]) {
+      agent[event](arg);
 
-      // Debug logging for mouse down events to understand hit detection
+      // Update interactive state for mouse events
       if (event === "onMouseDown") {
-        console.log(`Environment: Checking ${event} for agent ${agent.id}:`);
-        if (lastArg) {
-          const hitResult = agent.checkHit(lastArg);
-          console.log(`  - checkHit result: ${hitResult}`);
-        }
+        this.setAgentInteractive(agent);
       }
 
-      //key
-      if (event === "onKeyDown") {
-        agent.onKeyDown && agent.onKeyDown(arg);
-        return;
+      // Remove from interactive state on mouse up
+      if (event === "onMouseUp") {
+        this.setAgentNonInteractive(agent);
       }
+    }
+  };
 
-      // Special case: dragged agents should always receive onMouseMove events
-      if (
-        event === "onMouseMove" &&
-        agent.isDraggable &&
-        agent.isBeingDragged
-      ) {
-        agent.onMouseMove && agent.onMouseMove(arg);
-        return;
+  /**
+   * Subscribes an agent to receive specific events.
+   * @memberof Environment
+   * @param {Object} agent - The agent to subscribe
+   * @param {string|Array<string>} events - Event name(s) to subscribe to
+   */
+  this.subscribeAgentToEvents = function (agent, events) {
+    const eventList = Array.isArray(events) ? events : [events];
+
+    eventList.forEach((event) => {
+      if (!eventSubscriptions.has(event)) {
+        eventSubscriptions.set(event, new Set());
       }
-
-      // Special case: dragged agents should always receive onMouseUp events
-      if (event === "onMouseUp" && agent.isDraggable && agent.isBeingDragged) {
-        console.log(`Calling onMouseUp for dragged agent ${agent.id}`);
-        agent.onMouseUp && agent.onMouseUp(arg);
-        return;
-      }
-
-      //mouse hit detection
-      if (
-        ["onMouseDown", "onMouseUp", "onMouseMove"].includes(event) &&
-        agent.isVisible &&
-        lastArg
-      ) {
-        const hitResult = agent.checkHit(lastArg);
-
-        if (event === "onMouseDown") {
-          console.log(
-            `Agent ${agent.id} hit check for ${event}: hit=${hitResult}`,
-          );
-        }
-
-        if (hitResult) {
-          //if there is no arg there is no hit
-          let eventToCall = event + "Hit"; //onMouseDownHit, onMouseUpHit, onMouseMoveHit
-          if (event === "onMouseDown") {
-            console.log(
-              `Hit detected! Calling ${eventToCall} on agent ${agent.id}`,
-            );
-          }
-          agent[eventToCall] && agent[eventToCall](arg);
-          return;
-        }
-      }
-
-      agent[event] && agent[event](arg);
+      eventSubscriptions.get(event).add(agent);
     });
+  };
+
+  /**
+   * Unsubscribes an agent from specific events.
+   * @memberof Environment
+   * @param {Object} agent - The agent to unsubscribe
+   * @param {string|Array<string>} events - Event name(s) to unsubscribe from
+   */
+  this.unsubscribeAgentFromEvents = function (agent, events) {
+    const eventList = Array.isArray(events) ? events : [events];
+
+    eventList.forEach((event) => {
+      if (eventSubscriptions.has(event)) {
+        eventSubscriptions.get(event).delete(agent);
+      }
+    });
+  };
+
+  /**
+   * Marks an agent as being in an interactive state.
+   * @memberof Environment
+   * @param {Object} agent - The agent to mark as interactive
+   */
+  this.setAgentInteractive = function (agent) {
+    interactiveAgents.add(agent);
+  };
+
+  /**
+   * Removes an agent from interactive state.
+   * @memberof Environment
+   * @param {Object} agent - The agent to remove from interactive state
+   */
+  this.setAgentNonInteractive = function (agent) {
+    interactiveAgents.delete(agent);
+  };
+
+  /**
+   * Associates an agent with a client camera for viewport filtering.
+   * @memberof Environment
+   * @param {Object} agent - The agent
+   * @param {Object} clientCamera - The client camera that can see this agent
+   */
+  this.setAgentClient = function (agent, clientCamera) {
+    agentToClientMap.set(agent, clientCamera);
+  };
+
+  /**
+   * Gets agents visible to a specific client camera.
+   * @memberof Environment
+   * @param {Object} clientCamera - The client camera
+   * @returns {Array<Object>} Array of agents visible to this client
+   */
+  this.getAgentsVisibleToClient = function (clientCamera) {
+    if (!clientCamera || !clientCamera.rectangle) {
+      return Object.values(agents); // Fallback to all agents if no camera
+    }
+
+    // Ensure clientCamera.rectangle is a proper Rectangle instance
+    let cameraRect = clientCamera.rectangle;
+    if (!cameraRect.checkIntersection) {
+      // Convert plain object to Rectangle instance
+      // Rectangle expects (centerPoint, size) where both are Vector instances
+      cameraRect = new Rectangle(
+        new Vector(cameraRect.center?.x || 0, cameraRect.center?.y || 0),
+        new Vector(cameraRect.size?.x || 0, cameraRect.size?.y || 0),
+      );
+    }
+
+    const allAgents = Object.values(agents);
+
+    const visibleAgents = allAgents.filter((agent) => {
+      if (!agent.isVisible || !agent.rectangle) {
+        return false;
+      }
+
+      // Check if agent intersects with camera viewport
+      const intersects = agent.rectangle.checkIntersection(cameraRect);
+      return intersects;
+    });
+
+    return visibleAgents;
   };
 
   /**
