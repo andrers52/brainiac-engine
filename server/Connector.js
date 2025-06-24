@@ -344,21 +344,19 @@ function Connector(beServer) {
 
     if (!localApp) {
       // Dynamic imports for server dependencies (only when running in server mode)
-      const { default: cors } = await import("cors");
-      const { default: express } = await import("express");
       const { createServer } = await import("http");
       const { Server: SocketIOServer } = await import("socket.io");
 
-      // var compression = require('compression')
-      var app = express();
+      // Use the Express app created by BEServer
+      const expressApp = beServer.getExpressApp();
 
-      const corsOptions = {
-        origin: `http://${BECommonDefinitions.WEB_SOCKET_ADDRESS_IP}`,
-      };
+      if (!expressApp) {
+        throw new Error(
+          "Express app not available from BEServer. Make sure BEServer.start() was called first.",
+        );
+      }
 
-      app.use(cors(corsOptions));
-
-      httpServer = createServer(app);
+      httpServer = createServer(expressApp);
 
       io = new SocketIOServer(httpServer);
 
@@ -367,8 +365,6 @@ function Connector(beServer) {
           `Web server listening at port ${BECommonDefinitions.WEB_PORT}`,
         );
       });
-
-      app.use(express.static("."));
     } else {
       io = fakeSocket;
     }

@@ -39,10 +39,39 @@ async function fetchAsync(file) {
 function BEServerConstructor() {
   /** @type {Environment} The game environment instance */
   this.environment = new Environment();
+
+  /** @type {Object|null} Express app instance for HTTP server */
+  this.expressApp = null;
+
   /** @type {Connector} The connector instance for client-server communication */
   this.connector = new Connector(this); // Pass this BEServer instance to Connector
+
   /** @type {Object|null} The fake socket instance for local apps */
   this.fakeSocket = null;
+
+  /** @type {boolean} Flag to track if the server has been started */
+  this.isStarted = false;
+
+  /** @type {string} Background image name for the application */
+  let backgroundImageName;
+
+  /**
+   * Sets the background image name for the application.
+   * @memberof BEServerConstructor
+   * @param {string} imageName - Name of the background image
+   */
+  this.setBackgroundImageName = function (imageName) {
+    backgroundImageName = imageName;
+  };
+
+  /**
+   * Gets the current background image name.
+   * @memberof BEServerConstructor
+   * @returns {string} The current background image name
+   */
+  this.getBackgroundImageName = function () {
+    return backgroundImageName;
+  };
   /**
    * Reads configuration from JSON file, supporting both browser and Node.js environments.
    * @async
@@ -84,6 +113,12 @@ function BEServerConstructor() {
    * @memberof BEServerConstructor
    */
   this.start = function (configOverride, onReady) {
+    if (this.isStarted) {
+      console.log("⚠️ BEServer already started, skipping duplicate start");
+      if (onReady) onReady();
+      return Promise.resolve();
+    }
+
     this.stopped = false; // Initialize stopped flag
     this.visibleAgentsTimerId = null; // Initialize timer ID tracker
     this.environment.start(
@@ -95,30 +130,16 @@ function BEServerConstructor() {
     /** @type {string} Name of the currently executing application */
     this.currentAppName = "";
 
-    /** @type {string} Background image name for the application */
-    let backgroundImageName;
-
-    /**
-     * Sets the background image name for the application.
-     * @memberof BEServerConstructor
-     * @param {string} imageName - Name of the background image
-     */
-    this.setBackgroundImageName = function (imageName) {
-      backgroundImageName = imageName;
-    };
-
-    /**
-     * Gets the current background image name.
-     * @memberof BEServerConstructor
-     * @returns {string} The current background image name
-     */
-    this.getBackgroundImageName = function () {
-      return backgroundImageName;
-    };
-
     _readConfig().then(async (config) => {
       /** @type {Object} Server configuration object */
       this.config = configOverride || config;
+
+      // Auto-detect browser environment and set localApp accordingly
+      if (!Platform.isNode() && this.config.localApp === undefined) {
+        this.config.localApp = true;
+        console.log("🌐 Browser environment detected - setting localApp: true");
+      }
+
       BECommonDefinitions.start(this.config); //adjust to config
       if (BECommonDefinitions.config.buildType === "deploy")
         Assert.disableAllVerifications = true;
@@ -128,7 +149,24 @@ function BEServerConstructor() {
         this.fakeSocket = getSharedLocalSocket();
       }
 
+      // Create Express app before starting connector (if not in local app mode AND in Node.js environment)
+      if (!this.config.localApp && Platform.isNode()) {
+        const { default: express } = await import("express");
+        const { default: cors } = await import("cors");
+
+        this.expressApp = express();
+
+        const corsOptions = {
+          origin: `http://${BECommonDefinitions.WEB_SOCKET_ADDRESS_IP}`,
+        };
+
+        this.expressApp.use(cors(corsOptions));
+        this.expressApp.use(express.static("."));
+      }
+
       await this.connector.start(!!this.config.localApp, this.fakeSocket);
+
+      this.isStarted = true; // Mark as started
 
       if (onReady) {
         onReady();
@@ -184,12 +222,23 @@ function BEServerConstructor() {
    */
   this.startApp = function (appName, app, config) {
     const self = this;
-    this.start(config, function () {
+
+    if (this.isStarted) {
+      // Server is already started, just set up the app
+      console.log("🎮 Setting up application on already started server");
       self.currentApp = app;
       self.currentAppName = appName;
       self.currentApp.start();
       _sendClientVisibleAgents();
-    });
+    } else {
+      // Server not started yet, start it first
+      this.start(config, function () {
+        self.currentApp = app;
+        self.currentAppName = appName;
+        self.currentApp.start();
+        _sendClientVisibleAgents();
+      });
+    }
   };
 
   /**
@@ -221,6 +270,102 @@ function BEServerConstructor() {
   this.getConnector = function () {
     return this.connector;
   };
+
+  /**
+   * Gets the Express app instance for custom route configuration.
+   * @memberof BEServerConstructor
+   * @returns {Object|null} Express app instance or null if not available
+   */
+  this.getExpressApp = function () {
+    return this.expressApp;
+  };
+
+  /**
+   * Configures routes on the Express app before starting the server.
+   * @memberof BEServerConstructor
+   * @param {Function} configureRoutes - Callback function to configure routes, receives the Express app
+   * @param {Object} configOverride - Optional configuration override
+   * @returns {Promise} Promise that resolves when the server is fully configured and started
+   */
+  this.startWithRoutes = function (configureRoutes, configOverride) {
+    return new Promise((resolve, reject) => {
+      if (this.isStarted) {
+        console.log("⚠️ BEServer already started, skipping duplicate start");
+        resolve();
+        return;
+      }
+
+      this.stopped = false; // Initialize stopped flag
+      this.visibleAgentsTimerId = null; // Initialize timer ID tracker
+
+      // Initialize environment with default world dimensions
+      this.environment.start(
+        BECommonDefinitions.WORLD_WIDTH,
+        BECommonDefinitions.WORLD_HEIGHT,
+      );
+
+      /** @type {Object|null} Reference to the currently executing application */
+      this.currentApp = null; //provides global access to the currently executing Game
+      /** @type {string} Name of the currently executing application */
+      this.currentAppName = "";
+
+      _readConfig()
+        .then(async (config) => {
+          try {
+            /** @type {Object} Server configuration object */
+            this.config = configOverride || config;
+
+            // Auto-detect browser environment and set localApp accordingly
+            if (!Platform.isNode() && this.config.localApp === undefined) {
+              this.config.localApp = true;
+              console.log(
+                "🌐 Browser environment detected - setting localApp: true",
+              );
+            }
+
+            BECommonDefinitions.start(this.config); //adjust to config
+            if (BECommonDefinitions.config.buildType === "deploy")
+              Assert.disableAllVerifications = true;
+
+            // Create fake socket for local apps
+            if (this.config.localApp) {
+              this.fakeSocket = getSharedLocalSocket();
+            }
+
+            // Create Express app before starting connector (if not in local app mode AND in Node.js environment)
+            if (!this.config.localApp && Platform.isNode()) {
+              const { default: express } = await import("express");
+              const { default: cors } = await import("cors");
+
+              this.expressApp = express();
+
+              const corsOptions = {
+                origin: `http://${BECommonDefinitions.WEB_SOCKET_ADDRESS_IP}`,
+              };
+
+              this.expressApp.use(cors(corsOptions));
+              this.expressApp.use(express.static("."));
+
+              // Configure custom routes before starting the connector
+              if (configureRoutes && typeof configureRoutes === "function") {
+                configureRoutes(this.expressApp);
+              }
+            }
+
+            await this.connector.start(!!this.config.localApp, this.fakeSocket);
+
+            this.isStarted = true; // Mark as started
+
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        })
+        .catch(reject);
+    });
+  };
+
+  // ...existing code...
 }
 
 /**

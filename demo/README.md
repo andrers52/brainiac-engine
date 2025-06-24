@@ -52,7 +52,7 @@ demo/
 2. **Start the development server:**
 
    ```bash
-   npm run dev
+   npm start
    ```
 
    This will:

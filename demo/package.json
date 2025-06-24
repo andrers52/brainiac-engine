@@ -5,7 +5,7 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "dev": "cd .. && npx http-server -p 8080 --symlinks -o /demo/index.html",
+        "start": "cd .. && npx http-server -p 8080 --symlinks -o /demo/index.html",
         "install-deps": "npm install"
     },
     "dependencies": {

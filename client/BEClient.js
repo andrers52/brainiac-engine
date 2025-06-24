@@ -213,8 +213,34 @@ function BEClient() {
       this.socket = getSharedLocalSocket();
       // *** IF LOCALAPP EMIT 'connection' ***
       this.socket.emit("connection", {}, () => {});
-    } else this.socket = io(BECommonDefinitions.WEB_SOCKET_ADDRESS);
+    } else {
+      // Import Socket.IO dynamically for multiplayer mode
+      import("socket.io-client")
+        .then(({ io }) => {
+          this.socket = io(BECommonDefinitions.WEB_SOCKET_ADDRESS);
+          this.setupSocketHandlers();
+        })
+        .catch((error) => {
+          console.error(
+            "❌ Failed to load Socket.IO for multiplayer mode:",
+            error,
+          );
+          console.log("💡 Falling back to local app mode");
+          this.config.localApp = true;
+          this.socket = getSharedLocalSocket();
+          this.socket.emit("connection", {}, () => {});
+          this.setupSocketHandlers();
+        });
+      return; // Exit early, socket handlers will be set up in the import callback
+    }
 
+    this.setupSocketHandlers();
+  };
+
+  /**
+   * Sets up socket event handlers for server communication.
+   */
+  this.setupSocketHandlers = () => {
     //dispatch server messages
     this.socket.on("connect", () => {});
 

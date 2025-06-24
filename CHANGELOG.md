@@ -5,6 +5,101 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.6.0] - 2025-06-23
+
+### MAJOR UPDATE - Express App Integration & SPA Support
+
+- **🌐 Express App Exposure**: Complete refactor of Express app ownership and accessibility
+  - BEServer now creates and owns the Express app instance
+  - Added `getExpressApp()` method to BEServer for external route configuration
+  - Enhanced architecture for better separation of concerns
+
+### Added
+
+- **🔧 Express App Access**: Applications can now easily configure custom Express routes
+
+  - `beServer.getExpressApp()` provides direct access to the Express application
+  - Enables SPA fallback routes, API endpoints, and custom middleware integration
+  - Improved developer experience for web application development
+
+- **📱 SPA Application Support**: Enhanced support for Single Page Applications
+
+  - Easy configuration of client-side routing fallback routes
+  - Better integration with modern web frameworks and build tools
+  - Streamlined development workflow for web-based games and applications
+
+- **🎮 Demo Improvements**: Enhanced demo system usability
+  - Added `npm start` command to demo package for standard workflow
+  - Maintained backward compatibility with `npm run dev`
+
+### Enhanced
+
+- **🏗️ Server Architecture**: Improved server initialization flow
+
+  - Express app is created in BEServer.start() before Connector initialization
+  - Cleaner dependency injection - BEServer creates app, passes to Connector
+  - Better error handling when Express app is not available
+
+- **🔌 Connector Simplification**: Streamlined Connector responsibilities
+  - Connector now receives Express app from BEServer instead of creating its own
+  - Reduced code duplication and improved maintainability
+  - Clearer separation between HTTP server setup and WebSocket management
+
+### Technical Improvements
+
+- **⚡ Development Workflow**: Enhanced development experience
+
+  - Better support for applications that need custom Express routes
+  - Simplified integration with existing Express-based applications
+  - Improved error messages and debugging information
+
+- **🔧 API Design**: More intuitive and flexible API
+  - Express app access follows standard patterns
+  - Consistent with modern Node.js application architecture
+  - Better documentation and examples for common use cases
+
+### Migration Notes
+
+For applications that need to add custom Express routes:
+
+```javascript
+// Before: No easy way to access Express app
+// Had to dig into Connector internals
+
+// After: Clean API access
+const beServer = new BEServer();
+await beServer.start();
+const app = beServer.getExpressApp();
+
+// Add custom routes
+app.get("/api/status", (req, res) => {
+  res.json({ status: "ok" });
+});
+
+// SPA fallback routes
+app.get("/dashboard", (req, res) => {
+  res.sendFile("index.html", { root: process.cwd() });
+});
+```
+
+### Use Cases
+
+This enhancement enables:
+
+- **SPA Applications**: Easy setup of client-side routing fallbacks
+- **API Development**: Simple addition of REST endpoints
+- **Middleware Integration**: Authentication, logging, compression, etc.
+- **Custom Static Serving**: Advanced static file configurations
+- **Modern Web Development**: Better integration with contemporary web tools
+
+### Testing
+
+- **✅ All Tests Pass**: 622+ tests continue to pass with enhanced architecture
+- **✅ Backward Compatibility**: Existing applications work without changes
+- **✅ Express Integration**: Verified Express app access and route configuration
+
+This release significantly improves the developer experience for web-based applications built with Brainiac Engine, making it easier to integrate with modern web development workflows while maintaining the engine's core gaming capabilities.
+
 # [0.5.0] - 2025-06-22
 
 ### MAJOR UPDATE - Advanced Event System Refactor
@@ -18,11 +113,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **📡 Event Subscription System**: Agents can now subscribe to specific events using `subscribeAgentToEvents()`
+
   - Supports both single event and array of events subscription
   - Automatic cleanup when agents are removed from environment
   - Event-driven architecture for better performance and maintainability
 
 - **🎮 Interactive State Management**: Advanced tracking of agent interaction states
+
   - Automatic tracking of agents in interactive states (dragging, pressed, etc.)
   - Persistent event delivery to interactive agents even when outside viewport
   - Smart state cleanup on mouse up events
@@ -35,12 +132,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhanced
 
 - **🏗️ Environment Architecture**: Completely refactored event propagation system
+
   - Removed all singleton dependencies from event system
   - Implemented `getEventTargetAgents()` for intelligent agent selection
   - Added `sendEventToAgent()` for consistent event delivery with hit detection
   - Enhanced `getAgentsVisibleToClient()` with proper viewport intersection logic
 
 - **🔌 Client-Server Communication**: Improved event data flow in multiplayer scenarios
+
   - Client camera data is properly transmitted with user events
   - Server-side Rectangle reconstruction from client data
   - Enhanced error handling and data validation
@@ -53,6 +152,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **🐛 Multiplayer Event Delivery**: Resolved critical issues with event routing in multiplayer mode
+
   - Fixed viewport filtering that was preventing events from reaching agents
   - Corrected Rectangle instance reconstruction from client camera data
   - Eliminated debug output that was cluttering console logs
@@ -72,6 +172,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Technical Improvements
 
 - **⚡ Performance**: Optimized event delivery with smart filtering
+
   - Viewport-based filtering reduces unnecessary event processing
   - Event subscription system minimizes computational overhead
   - Efficient Rectangle intersection calculations
