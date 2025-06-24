@@ -37,7 +37,7 @@ describe("Connector", function () {
 
     // Set up a mock currentApp on the instance
     beServer.currentApp = {
-      onUserDead: sinon.spy(),
+      onUserDisconnected: sinon.spy(),
       onUserConnected: sinon.spy(),
       sendInitialData: sinon.spy(),
       getHighScores: sinon.stub().returns([]),

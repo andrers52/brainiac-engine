@@ -9,7 +9,7 @@
 /**
  * Events generated to game server:
  * - onUserConnected: Called when a new user connects
- * - onUserDead: Called when a user disconnects or dies
+ * - onUserDisconnected: Called when a user disconnects or dies
  */
 
 import { BECommonDefinitions } from "../common/BECommonDefinitions.js";
@@ -312,7 +312,7 @@ function Connector(beServer) {
 
   /**
    * Removes a user from the system by their owning agent ID.
-   * Calls the application's onUserDead handler and cleans up the user session.
+   * Calls the application's onUserDisconnected handler and cleans up the user session.
    * @memberof Connector
    * @param {number} owningAgentId - ID of the agent that owns the user to remove
    */
@@ -321,10 +321,10 @@ function Connector(beServer) {
       (user) => user.agent && user.agent.id === owningAgentId,
     );
     if (user) {
-      // Call the application's onUserDead handler
-      if (beServer.currentApp && beServer.currentApp.onUserDead) {
+      // Call the application's onUserDisconnected handler
+      if (beServer.currentApp && beServer.currentApp.onUserDisconnected) {
         // Use injected beServer instance
-        beServer.currentApp.onUserDead(user); // Use injected beServer instance
+        beServer.currentApp.onUserDisconnected(user); // Use injected beServer instance
       }
       // Clean up user session
       delete idToUsers[user.id];
@@ -387,7 +387,7 @@ function Connector(beServer) {
        * @private
        */
       function removeUser() {
-        beServer.currentApp.onUserDead(user);
+        beServer.currentApp.onUserDisconnected(user);
         delete idToUsers[user.id];
       }
 

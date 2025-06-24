@@ -108,6 +108,112 @@ function BEServerConstructor() {
   };
 
   /**
+   * Validates an app object to ensure it implements all required methods for BEServer.
+   * @private
+   * @param {string} appName - Name of the application being validated
+   * @param {Object} app - Application object to validate
+   * @param {Function} app.start - Initializes the application
+   * @param {Function} app.onUserConnected - Called when a user connects (user, cameraSize)
+   * @param {Function} app.onUserDisconnected - Called when a user disconnects (user)
+   * @param {Function} [app.sendInitialData] - Optional method to send initial data to a user (user)
+   * @param {Function} [app.getHighScores] - Optional method to retrieve high scores for the initial page
+   * @param {Object} [config] - Optional configuration object to validate
+   * @param {string} [config.buildType] - Build type: "dev", "deploy", or "test"
+   * @param {string} [config.version] - Application version string
+   * @param {boolean} [config.playProceduralSoundInClient] - Whether to play procedural sounds in client
+   * @param {boolean} [config.userAlwaysAtCenterOfCamera] - Whether user is always centered in camera view
+   * @param {boolean} [config.localApp] - Whether app runs in local mode (no network) or multiplayer mode
+   * @param {boolean} [config.cameraFollowUser] - Whether camera follows user movement
+   * @param {boolean} [config.worldToCameraSize] - Whether to scale world to camera size
+   * @throws {Error} Throws if app object doesn't implement required methods or parameters are invalid
+   */
+  const _validateApp = (appName, app, config) => {
+    // Validate parameters using Assert
+    Assert.assertIsString(appName, "App name must be a string");
+    Assert.assertIsObject(app, "App must be an object");
+
+    // Validate required methods
+    Assert.assertIsFunction(app.start, "App must have a start() method");
+    Assert.assertIsFunction(
+      app.onUserConnected,
+      "App must have an onUserConnected() method",
+    );
+    Assert.assertIsFunction(
+      app.onUserDisconnected,
+      "App must have an onUserDisconnected() method",
+    );
+
+    // Validate optional methods (if they exist)
+    Assert.assertIsOptionalFunction(
+      app.sendInitialData,
+      "App.sendInitialData must be a function if provided",
+    );
+    Assert.assertIsOptionalFunction(
+      app.getHighScores,
+      "App.getHighScores must be a function if provided",
+    );
+
+    // Validate optional config parameter and its fields
+    if (config !== undefined) {
+      Assert.assertIsObject(config, "Config must be an object if provided");
+
+      // Validate config fields based on config.json structure
+      if (config.buildType !== undefined) {
+        Assert.assertIsString(
+          config.buildType,
+          "Config.buildType must be a string",
+        );
+        Assert.assertIsTrue(
+          ["dev", "deploy", "test"].includes(config.buildType),
+          "Config.buildType must be one of: 'dev', 'deploy', 'test'",
+        );
+      }
+
+      if (config.version !== undefined) {
+        Assert.assertIsString(
+          config.version,
+          "Config.version must be a string",
+        );
+      }
+
+      if (config.playProceduralSoundInClient !== undefined) {
+        Assert.assertIsBoolean(
+          config.playProceduralSoundInClient,
+          "Config.playProceduralSoundInClient must be a boolean",
+        );
+      }
+
+      if (config.userAlwaysAtCenterOfCamera !== undefined) {
+        Assert.assertIsBoolean(
+          config.userAlwaysAtCenterOfCamera,
+          "Config.userAlwaysAtCenterOfCamera must be a boolean",
+        );
+      }
+
+      if (config.localApp !== undefined) {
+        Assert.assertIsBoolean(
+          config.localApp,
+          "Config.localApp must be a boolean",
+        );
+      }
+
+      if (config.cameraFollowUser !== undefined) {
+        Assert.assertIsBoolean(
+          config.cameraFollowUser,
+          "Config.cameraFollowUser must be a boolean",
+        );
+      }
+
+      if (config.worldToCameraSize !== undefined) {
+        Assert.assertIsBoolean(
+          config.worldToCameraSize,
+          "Config.worldToCameraSize must be a boolean",
+        );
+      }
+    }
+  };
+
+  /**
    * Starts the Brainiac Engine server.
    * Initializes the environment, loads configuration, and sets up the connector.
    * @memberof BEServerConstructor
@@ -215,12 +321,29 @@ function BEServerConstructor() {
 
   /**
    * Starts a specific application on the server.
+   * Validates the app object using Assert to ensure it implements all required methods.
    * @memberof BEServerConstructor
    * @param {string} appName - Name of the application to start
-   * @param {Object} app - Application object with start() method and event handlers
+   * @param {Object} app - Application object that must implement the following required methods:
+   * @param {Function} app.start - Initializes the application
+   * @param {Function} app.onUserConnected - Called when a user connects (user, cameraSize)
+   * @param {Function} app.onUserDisconnected - Called when a user disconnects (user)
+   * @param {Function} [app.sendInitialData] - Optional method to send initial data to a user (user)
+   * @param {Function} [app.getHighScores] - Optional method to retrieve high scores for the initial page
    * @param {Object} [config] - Optional configuration object
+   * @param {string} [config.buildType] - Build type: "dev", "deploy", or "test"
+   * @param {string} [config.version] - Application version string
+   * @param {boolean} [config.playProceduralSoundInClient] - Whether to play procedural sounds in client
+   * @param {boolean} [config.userAlwaysAtCenterOfCamera] - Whether user is always centered in camera view
+   * @param {boolean} [config.localApp] - Whether app runs in local mode (no network) or multiplayer mode
+   * @param {boolean} [config.cameraFollowUser] - Whether camera follows user movement
+   * @param {boolean} [config.worldToCameraSize] - Whether to scale world to camera size
+   * @throws {Error} Throws if app object doesn't implement required methods or parameters are invalid
    */
   this.startApp = function (appName, app, config) {
+    // Validate app and parameters
+    _validateApp(appName, app, config);
+
     const self = this;
 
     if (this.isStarted) {

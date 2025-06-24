@@ -5,6 +5,81 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.6.1] - 2025-06-24
+
+### Enhanced - App Validation & Documentation Improvements
+
+- **🔧 Robust App Validation**: Comprehensive validation system for BEServer applications
+  - Extracted validation logic into dedicated `_validateApp` internal function
+  - Enhanced maintainability and code organization
+
+### Added
+
+- **📋 Comprehensive Config Validation**: Complete validation of configuration object fields
+
+  - `buildType`: Validates against allowed values ("dev", "deploy", "test")
+  - `version`: Application version string validation
+  - `playProceduralSoundInClient`: Boolean validation for procedural sound settings
+  - `userAlwaysAtCenterOfCamera`: Boolean validation for camera centering
+  - `localApp`: Boolean validation for single vs multiplayer mode
+  - `cameraFollowUser`: Boolean validation for camera following behavior
+  - `worldToCameraSize`: Boolean validation for world scaling
+
+- **📚 Enhanced JSDoc Documentation**: Comprehensive API documentation improvements
+  - Detailed config object property descriptions in both `_validateApp` and `startApp` methods
+  - Clear type annotations for all configuration fields
+  - Improved developer experience with better IDE support
+
+### Changed
+
+- **🔄 API Method Name Standardization**: Updated method naming for consistency
+  - **BREAKING**: `onUserDead` → `onUserDisconnected` for better semantic clarity
+  - Improved API consistency across the application lifecycle
+
+### Enhanced
+
+- **🏗️ Code Architecture**: Improved code organization and maintainability
+  - Centralized validation logic in reusable internal function
+  - Better separation of concerns between validation and application startup
+  - Enhanced error messages for clearer debugging
+
+### Technical Improvements
+
+- **⚡ Developer Experience**: Enhanced development workflow
+  - Clear validation error messages for configuration issues
+  - Comprehensive JSDoc documentation for better IDE autocomplete
+  - Type safety improvements for configuration objects
+
+### Migration Notes
+
+For applications using the old method name:
+
+```javascript
+// Before
+const app = {
+  onUserDead: (user) => {
+    // Handle user disconnection
+  },
+};
+
+// After
+const app = {
+  onUserDisconnected: (user) => {
+    // Handle user disconnection
+  },
+};
+```
+
+### Validation Benefits
+
+The enhanced validation system now catches common configuration errors early:
+
+- Type mismatches (e.g., `"localApp": "true"` instead of `"localApp": true`)
+- Invalid build types (only "dev", "deploy", "test" are allowed)
+- Incorrect property types for all configuration fields
+
+This release improves the robustness and developer experience of brainiac-engine while maintaining backward compatibility for all properly structured applications.
+
 # [0.6.0] - 2025-06-23
 
 ### MAJOR UPDATE - Express App Integration & SPA Support
