@@ -163,4 +163,19 @@ export class AdvancedInteractiveTestsServer {
       console.error("Error creating player agent:", error);
     }
   }
+  onUserDisconnected(user) {
+    console.log("User disconnected:", user.name);
+
+    // Remove the player agent if it exists
+    if (user.agent && typeof user.agent.die === "function") {
+      try {
+        console.log("Removing player agent for:", user.name);
+        user.agent.die();
+      } catch (error) {
+        console.error("Error removing player agent:", error);
+      }
+    } else {
+      console.warn("No player agent found for user:", user.name);
+    }
+  }
 }

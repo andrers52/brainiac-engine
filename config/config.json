@@ -1,0 +1,9 @@
+{
+  "buildType": "test",
+  "playProceduralSoundInClient": false,
+  "userAlwaysAtCenterOfCamera": false,
+  "localApp": true,
+  "version": "0.6.2",
+  "cameraFollowUser": true,
+  "worldToCameraSize": false
+}

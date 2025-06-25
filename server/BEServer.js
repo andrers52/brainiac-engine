@@ -49,9 +49,6 @@ function BEServerConstructor() {
   /** @type {Object|null} The fake socket instance for local apps */
   this.fakeSocket = null;
 
-  /** @type {boolean} Flag to track if the server has been started */
-  this.isStarted = false;
-
   /** @type {string} Background image name for the application */
   let backgroundImageName;
 
@@ -87,10 +84,7 @@ function BEServerConstructor() {
       const resultStr = await readFile(BECommonDefinitions.CONFIG_JSON, {
         encoding: "utf8",
       });
-      console.log(resultStr);
-      console.log(typeof resultStr);
       return JSON.parse(resultStr);
-      // return await JSON.parse((BECommonDefinitions.CONFIG_JSON))
     }
   }
 
@@ -217,66 +211,95 @@ function BEServerConstructor() {
    * Starts the Brainiac Engine server.
    * Initializes the environment, loads configuration, and sets up the connector.
    * @memberof BEServerConstructor
+   * @param {Object} [configOverride] - Optional configuration override
+   * @param {Function} [onReady] - Optional callback when server is ready
+   * @param {Function} [routeConfigurer] - Optional function to configure Express routes, receives the Express app
+   * @returns {Promise} Promise that resolves when server is started
    */
-  this.start = function (configOverride, onReady) {
-    if (this.isStarted) {
+  this.start = function (configOverride, onReady, routeConfigurer) {
+    // If only two arguments and second is a function but not a typical callback, treat as routeConfigurer
+    if (
+      arguments.length === 2 &&
+      typeof onReady === "function" &&
+      onReady.length === 1
+    ) {
+      routeConfigurer = onReady;
+      onReady = undefined;
+    }
+
+    // Support multiple call patterns for backward compatibility
+    if (this.stopped === false && this.config) {
       console.log("⚠️ BEServer already started, skipping duplicate start");
       if (onReady) onReady();
       return Promise.resolve();
     }
 
-    this.stopped = false; // Initialize stopped flag
-    this.visibleAgentsTimerId = null; // Initialize timer ID tracker
-    this.environment.start(
-      BECommonDefinitions.WORLD_WIDTH,
-      BECommonDefinitions.WORLD_HEIGHT,
-    );
-    /** @type {Object|null} Reference to the currently executing application */
-    this.currentApp = null; //provides global access to the currently executing Game
-    /** @type {string} Name of the currently executing application */
-    this.currentAppName = "";
+    return new Promise((resolve, reject) => {
+      this.stopped = false; // Initialize stopped flag
+      this.visibleAgentsTimerId = null; // Initialize timer ID tracker
+      this.environment.start(
+        BECommonDefinitions.WORLD_WIDTH,
+        BECommonDefinitions.WORLD_HEIGHT,
+      );
+      /** @type {Object|null} Reference to the currently executing application */
+      this.currentApp = null; //provides global access to the currently executing Game
+      /** @type {string} Name of the currently executing application */
+      this.currentAppName = "";
 
-    _readConfig().then(async (config) => {
-      /** @type {Object} Server configuration object */
-      this.config = configOverride || config;
+      _readConfig()
+        .then(async (config) => {
+          try {
+            /** @type {Object} Server configuration object */
+            this.config = configOverride || config;
 
-      // Auto-detect browser environment and set localApp accordingly
-      if (!Platform.isNode() && this.config.localApp === undefined) {
-        this.config.localApp = true;
-        console.log("🌐 Browser environment detected - setting localApp: true");
-      }
+            // Auto-detect browser environment and set localApp accordingly
+            if (!Platform.isNode() && this.config.localApp === undefined) {
+              this.config.localApp = true;
+              console.log(
+                "🌐 Browser environment detected - setting localApp: true",
+              );
+            }
 
-      BECommonDefinitions.start(this.config); //adjust to config
-      if (BECommonDefinitions.config.buildType === "deploy")
-        Assert.disableAllVerifications = true;
+            BECommonDefinitions.start(this.config); //adjust to config
+            if (BECommonDefinitions.config.buildType === "deploy")
+              Assert.disableAllVerifications = true;
 
-      // Create fake socket for local apps
-      if (this.config.localApp) {
-        this.fakeSocket = getSharedLocalSocket();
-      }
+            // Create fake socket for local apps
+            if (this.config.localApp) {
+              this.fakeSocket = getSharedLocalSocket();
+            }
 
-      // Create Express app before starting connector (if not in local app mode AND in Node.js environment)
-      if (!this.config.localApp && Platform.isNode()) {
-        const { default: express } = await import("express");
-        const { default: cors } = await import("cors");
+            // Create Express app before starting connector (if not in local app mode AND in Node.js environment)
+            if (!this.config.localApp && Platform.isNode()) {
+              const { default: express } = await import("express");
+              const { default: cors } = await import("cors");
 
-        this.expressApp = express();
+              this.expressApp = express();
 
-        const corsOptions = {
-          origin: `http://${BECommonDefinitions.WEB_SOCKET_ADDRESS_IP}`,
-        };
+              const corsOptions = {
+                origin: `http://${BECommonDefinitions.WEB_SOCKET_ADDRESS_IP}`,
+              };
 
-        this.expressApp.use(cors(corsOptions));
-        this.expressApp.use(express.static("."));
-      }
+              this.expressApp.use(cors(corsOptions));
+              this.expressApp.use(express.static("."));
 
-      await this.connector.start(!!this.config.localApp, this.fakeSocket);
+              // Configure custom routes if provided
+              if (routeConfigurer && typeof routeConfigurer === "function") {
+                routeConfigurer(this.expressApp);
+              }
+            }
 
-      this.isStarted = true; // Mark as started
+            await this.connector.start(!!this.config.localApp, this.fakeSocket);
 
-      if (onReady) {
-        onReady();
-      }
+            if (onReady) {
+              onReady();
+            }
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        })
+        .catch(reject);
     });
   };
   /**
@@ -346,22 +369,14 @@ function BEServerConstructor() {
 
     const self = this;
 
-    if (this.isStarted) {
-      // Server is already started, just set up the app
-      console.log("🎮 Setting up application on already started server");
+    // Always use start() method, which is now idempotent
+    return this.start(config).then(() => {
+      console.log("🎮 Setting up application on server");
       self.currentApp = app;
       self.currentAppName = appName;
       self.currentApp.start();
       _sendClientVisibleAgents();
-    } else {
-      // Server not started yet, start it first
-      this.start(config, function () {
-        self.currentApp = app;
-        self.currentAppName = appName;
-        self.currentApp.start();
-        _sendClientVisibleAgents();
-      });
-    }
+    });
   };
 
   /**
@@ -401,91 +416,6 @@ function BEServerConstructor() {
    */
   this.getExpressApp = function () {
     return this.expressApp;
-  };
-
-  /**
-   * Configures routes on the Express app before starting the server.
-   * @memberof BEServerConstructor
-   * @param {Function} configureRoutes - Callback function to configure routes, receives the Express app
-   * @param {Object} configOverride - Optional configuration override
-   * @returns {Promise} Promise that resolves when the server is fully configured and started
-   */
-  this.startWithRoutes = function (configureRoutes, configOverride) {
-    return new Promise((resolve, reject) => {
-      if (this.isStarted) {
-        console.log("⚠️ BEServer already started, skipping duplicate start");
-        resolve();
-        return;
-      }
-
-      this.stopped = false; // Initialize stopped flag
-      this.visibleAgentsTimerId = null; // Initialize timer ID tracker
-
-      // Initialize environment with default world dimensions
-      this.environment.start(
-        BECommonDefinitions.WORLD_WIDTH,
-        BECommonDefinitions.WORLD_HEIGHT,
-      );
-
-      /** @type {Object|null} Reference to the currently executing application */
-      this.currentApp = null; //provides global access to the currently executing Game
-      /** @type {string} Name of the currently executing application */
-      this.currentAppName = "";
-
-      _readConfig()
-        .then(async (config) => {
-          try {
-            /** @type {Object} Server configuration object */
-            this.config = configOverride || config;
-
-            // Auto-detect browser environment and set localApp accordingly
-            if (!Platform.isNode() && this.config.localApp === undefined) {
-              this.config.localApp = true;
-              console.log(
-                "🌐 Browser environment detected - setting localApp: true",
-              );
-            }
-
-            BECommonDefinitions.start(this.config); //adjust to config
-            if (BECommonDefinitions.config.buildType === "deploy")
-              Assert.disableAllVerifications = true;
-
-            // Create fake socket for local apps
-            if (this.config.localApp) {
-              this.fakeSocket = getSharedLocalSocket();
-            }
-
-            // Create Express app before starting connector (if not in local app mode AND in Node.js environment)
-            if (!this.config.localApp && Platform.isNode()) {
-              const { default: express } = await import("express");
-              const { default: cors } = await import("cors");
-
-              this.expressApp = express();
-
-              const corsOptions = {
-                origin: `http://${BECommonDefinitions.WEB_SOCKET_ADDRESS_IP}`,
-              };
-
-              this.expressApp.use(cors(corsOptions));
-              this.expressApp.use(express.static("."));
-
-              // Configure custom routes before starting the connector
-              if (configureRoutes && typeof configureRoutes === "function") {
-                configureRoutes(this.expressApp);
-              }
-            }
-
-            await this.connector.start(!!this.config.localApp, this.fakeSocket);
-
-            this.isStarted = true; // Mark as started
-
-            resolve();
-          } catch (error) {
-            reject(error);
-          }
-        })
-        .catch(reject);
-    });
   };
 
   // ...existing code...

@@ -5,6 +5,65 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.6.2] - 2025-06-25
+
+### Enhanced - Server Architecture Simplification
+
+- **🔧 Simplified Server Startup**: Streamlined server initialization by removing unnecessary complexity
+  - **BREAKING**: Removed `startWithRoutes()` method - use `start()` with optional `routeConfigurer` parameter instead
+  - **BREAKING**: Removed `isStarted` flag - server start is now idempotent using existing state checks
+  - Consolidated route configuration into single `start()` method for cleaner API
+
+### Changed
+
+- **🏗️ Unified Server Start Method**: Single, more flexible startup approach
+
+  - `start(configOverride, onReady, routeConfigurer)` now handles all server startup scenarios
+  - Route configuration moved to optional third parameter for better API consistency
+  - Automatic detection of function signatures for backward compatibility
+  - Simplified duplicate start detection using existing state properties
+
+- **📦 Reduced API Surface**: Eliminated redundant methods for better maintainability
+  - Removed complex dual-method architecture that was causing confusion
+  - Cleaner separation of concerns with single responsibility principle
+
+### Technical Improvements
+
+- **⚡ Better State Management**: More reliable server state tracking
+  - Uses existing `stopped` flag and `config` object for duplicate start detection
+  - Eliminated need for additional state tracking variables
+  - More robust and predictable server lifecycle management
+
+### Migration Notes
+
+Replace `startWithRoutes()` calls with the updated `start()` method:
+
+```javascript
+// Before
+await beServer.startWithRoutes((app) => {
+  app.get("/api/status", (req, res) => res.json({ status: "ok" }));
+}, config);
+
+// After
+await beServer.start(config, null, (app) => {
+  app.get("/api/status", (req, res) => res.json({ status: "ok" }));
+});
+
+// Or with Promise-based approach
+await beServer.start(config, undefined, (app) => {
+  app.get("/api/status", (req, res) => res.json({ status: "ok" }));
+});
+```
+
+### Benefits
+
+- **Simpler Mental Model**: One method to start the server, with optional customization
+- **Better Maintainability**: Less code duplication and clearer responsibility boundaries
+- **Improved Reliability**: Fewer edge cases and state management issues
+- **Consistent API**: All server configuration happens in the same place
+
+This release significantly simplifies the server startup process while maintaining all functionality and backward compatibility where possible.
+
 # [0.6.1] - 2025-06-24
 
 ### Enhanced - App Validation & Documentation Improvements
