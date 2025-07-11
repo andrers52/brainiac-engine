@@ -5,6 +5,112 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.7.0] - 2025-07-11
+
+### MAJOR UPDATE - LLM-Powered Intelligence System
+
+- **🤖 LLM Integration**: Complete integration of Large Language Models for intelligent agent decision-making
+  - **LLMService**: Centralized service for model loading, caching, and generation
+  - **Intelligence Mixin**: Agent-level mixin providing LLM-powered decision-making capabilities
+  - **Dual-Layer Caching**: In-memory and persistent caching using arslib FileStore
+  - **Transformers.js Support**: Built-in support for @xenova/transformers models
+
+### Added
+
+- **🧠 LLMService**: Comprehensive LLM management system
+  - Centralized model loading and initialization
+  - In-memory caching for fast access
+  - Persistent caching using arslib's FileStore (browser/Node.js)
+  - Support for custom LLM functions and transformers.js models
+  - Automatic model serialization/deserialization for storage
+  - Cache statistics and management utilities
+
+- **🎯 Intelligence Mixin**: LLM-powered agent decision-making
+  - Automatic state gathering (position, size, perceptions, etc.)
+  - Dynamic action discovery from agent methods and mixins
+  - Intelligent prompt construction for LLM decision-making
+  - Action scheduling integration for executing LLM decisions
+  - Message communication between intelligent agents
+  - Configurable thinking intervals and system prompts
+
+- **🧪 LLM Testing Infrastructure**: Comprehensive testing framework
+  - Mock LLM testing for fast CI/CD execution
+  - Real LLM testing for actual model validation
+  - Caching performance testing
+  - Integration testing for LLM service components
+  - Environment variable configuration for test modes
+
+- **📦 Enhanced Dependencies**: Updated core dependencies
+  - Upgraded arslib to 0.7.0 for improved FileStore integration
+  - Added @xenova/transformers for model loading and inference
+  - Enhanced package.json with LLM-specific test scripts
+
+### Enhanced
+
+- **🏗️ BEServer Integration**: LLM service management
+  - `initializeLLMService()` method for centralized LLM setup
+  - `getLLMService()` method for accessing the system LLM service
+  - Automatic LLM service lifecycle management
+  - Integration with agent creation and management
+
+- **📚 Documentation**: Comprehensive LLM system documentation
+  - Intelligence mixin README with usage examples
+  - LLMService API documentation
+  - Testing guide with mock/real mode explanations
+  - Updated README.md with LLM testing section
+
+### Technical Improvements
+
+- **⚡ Performance**: Optimized LLM operations with dual-layer caching
+  - In-memory cache for instant access to loaded models
+  - Persistent cache for cross-session model storage
+  - Automatic cache invalidation and management
+  - Efficient model serialization for storage
+
+- **🔧 Developer Experience**: Enhanced development workflow
+  - Comprehensive test scripts for LLM functionality
+  - Clear separation between mock and real LLM testing
+  - Environment variable configuration for different test modes
+  - Detailed error handling and logging
+
+### Migration Notes
+
+For applications wanting to use LLM-powered intelligence:
+
+```javascript
+// Initialize LLM service
+const beServer = new BEServer();
+await beServer.initializeLLMService({
+  modelPath: "Xenova/gpt2",
+  modelName: "GPT-2",
+  maxTokens: 100,
+  temperature: 0.7
+});
+
+// Create intelligent agent
+const agent = {
+  // ... agent properties
+  ...Intelligence({
+    agentName: "SmartAgent",
+    thinkingInterval: 1000,
+    perceptionFn: () => ["nearby objects", "distance to goal"]
+  })
+};
+
+// Agent can now make intelligent decisions
+const decision = await agent.makeIntelligentDecision();
+```
+
+### Testing
+
+- **✅ LLM Testing**: Comprehensive test suite for LLM functionality
+  - Mock mode: Fast execution (5s timeout) for CI/CD
+  - Real mode: Full model testing (60s timeout) for validation
+  - Caching tests: Performance and reliability validation
+  - Integration tests: End-to-end LLM service validation
+
+This release represents a significant expansion of Brainiac Engine's capabilities, adding sophisticated AI-powered intelligence to agents while maintaining full backward compatibility with existing applications.
+
 # [0.6.2] - 2025-06-25
 
 ### Enhanced - Server Architecture Simplification

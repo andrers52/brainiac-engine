@@ -6,6 +6,7 @@ import { getSharedLocalSocket } from "../common/fakeSocket.js";
 import { AgentDefinitions } from "./agent/AgentDefinitions.js";
 import { Environment } from "./agent/Environment.js";
 import { Connector } from "./Connector.js";
+import { LLMService, TransformersLLMService } from "./LLMService.js";
 
 /**
  * @file Main server for the Brainiac Engine.
@@ -48,6 +49,9 @@ function BEServerConstructor() {
 
   /** @type {Object|null} The fake socket instance for local apps */
   this.fakeSocket = null;
+
+  /** @type {LLMService} The system-wide LLM service */
+  this.llmService = new LLMService();
 
   /** @type {string} Background image name for the application */
   let backgroundImageName;
@@ -264,6 +268,20 @@ function BEServerConstructor() {
             if (BECommonDefinitions.config.buildType === "deploy")
               Assert.disableAllVerifications = true;
 
+            // Initialize LLM service if config contains LLM settings
+            if (this.config.llm) {
+              console.log("🤖 Initializing LLM service from config...");
+              await this.initializeLLMService({
+                modelPath: this.config.llm.modelUri,
+                modelName: this.config.llm.modelName,
+                maxTokens: this.config.llm.maxTokens,
+                temperature: this.config.llm.temperature,
+                enablePersistentCache: this.config.llm.enablePersistentCache,
+                enableMemoryCache: this.config.llm.enableMemoryCache
+              });
+              console.log(`✅ LLM service initialized with model: ${this.config.llm.modelName}`);
+            }
+
             // Create fake socket for local apps
             if (this.config.localApp) {
               this.fakeSocket = getSharedLocalSocket();
@@ -418,7 +436,52 @@ function BEServerConstructor() {
     return this.expressApp;
   };
 
-  // ...existing code...
+  /**
+   * Gets the LLM configuration from the server config.
+   * @memberof BEServerConstructor
+   * @returns {Object|null} The LLM configuration object or null if not configured
+   */
+  this.getLLMConfig = function () {
+    return this.config.llm || null;
+  };
+
+  /**
+   * Gets the system-wide LLM service.
+   * @memberof BEServerConstructor
+   * @returns {LLMService} The LLM service instance
+   */
+  this.getLLMService = function () {
+    return this.llmService;
+  };
+
+  /**
+   * Initializes the LLM service with the specified configuration.
+   * @param {Object} config - LLM service configuration
+   * @param {Function} [config.llmFunction] - Pre-loaded LLM function
+   * @param {string} [config.modelPath] - Path/name of the model to load
+   * @param {string} [config.modelName] - Name of the model being used
+   * @param {number} [config.maxTokens=100] - Maximum tokens for responses
+   * @param {number} [config.temperature=0.7] - Temperature for generation
+   * @param {string} [config.cacheKey] - Custom cache key for the model
+   */
+  this.initializeLLMService = async function(config) {
+    // Determine which LLM service to use based on the model path
+    const isHuggingFaceModel = config.modelPath && (
+      config.modelPath.includes('/') || 
+      config.modelPath.startsWith('Xenova/') ||
+      config.modelPath.startsWith('HuggingFace/')
+    );
+    
+    if (isHuggingFaceModel) {
+      console.log("🤖 Using TransformersLLMService for HuggingFace model");
+      this.llmService = new TransformersLLMService();
+    } else {
+      console.log("🤖 Using base LLMService");
+      this.llmService = new LLMService();
+    }
+    
+    await this.llmService.initialize(config);
+  };
 }
 
 /**

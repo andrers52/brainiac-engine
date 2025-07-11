@@ -8,3 +8,7 @@ package-lock.json
 
 # MAC stuff
 .DS_Store
+
+# Cache directories
+.cache/
+.cache/llm-models/

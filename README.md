@@ -14,6 +14,7 @@ A JavaScript framework for building interactive applications and games with mode
 - 🌐 **Network Communication** - Built-in Socket.IO integration for multiplayer support
 - 🏗️ **Agent System** - Flexible entity management with mixins and behaviors
 - 📐 **Geometry Utilities** - Vector math and collision detection
+- 🤖 **LLM Integration** - Built-in support for Large Language Models with caching and configuration
 
 ## 🎮 Games Built with Brainiac Engine
 
@@ -59,6 +60,48 @@ screen.start({
 const position = new Vector(100, 200);
 const velocity = new Vector(5, -3);
 position.add(velocity);
+```
+
+## 🧪 Testing
+
+### LLM Testing
+
+The system includes comprehensive LLM testing with both mock and real model support:
+
+```bash
+# Fast testing with mock LLM (recommended for CI/CD)
+npm run test:llm:mock
+
+# Full testing with real LLM (tests actual model inference)
+npm run test:llm:real
+
+# Run both mock and real tests
+npm run test:llm:both
+```
+
+**Testing Modes:**
+- **Mock Mode**: Fast execution (5s timeout), no real model loading, suitable for CI/CD
+- **Real Mode**: Slow execution (60s timeout), loads actual models, tests real LLM functionality
+- **Both**: Runs both mock and real tests sequentially
+
+**Environment Variables:**
+- `TEST_REAL_LLM=true` - Force real LLM testing
+- `TEST_REAL_LLM=false` - Force mock LLM testing
+
+**Note**: ONNX runtime warnings are automatically filtered for cleaner test output when using real models.
+
+### Test Scripts
+
+```bash
+# LLM-specific tests
+npm run test:llm          # Default (mock mode)
+npm run test:llm:mock     # Mock LLM testing
+npm run test:llm:real     # Real LLM testing  
+npm run test:llm:both     # Both modes
+
+# General testing
+npm test                  # All tests
+npm run test:watch        # Watch mode
 ```
 
 ## 📖 Documentation

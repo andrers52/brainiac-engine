@@ -75,5 +75,9 @@ export function ActionScheduler() {
     return this;
   };
 
+  // Ensure behavior is a function before sequencing
+  if (typeof this.behavior !== 'function') {
+    this.behavior = function() {};
+  }
   this.behavior = EFunction.sequence(this.behavior, this.execute, this);
 }
