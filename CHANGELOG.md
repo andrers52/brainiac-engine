@@ -5,6 +5,75 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.8.0] - 2025-08-02
+
+### MAJOR UPDATE - LLM Service Migration & Architecture Improvements
+
+- **🔄 LLM Service Migration**: Successfully migrated from local LLMService to arslib's centralized LLM service
+  - **Eliminated Code Duplication**: Removed local `server/LLMService.js` in favor of arslib's implementation
+  - **Centralized Maintenance**: LLM service improvements in arslib automatically benefit brainiac-engine
+  - **Enhanced Consistency**: Both projects now use the same LLM service implementation
+  - **Reduced Complexity**: Simplified brainiac-engine codebase by removing local LLM service code
+
+### Added
+
+- **📦 arslib Integration**: Enhanced dependency management
+  - Updated to arslib version 0.8.1 for latest LLM service features
+  - Seamless integration with arslib's LLM service architecture
+  - Improved module resolution and import handling
+
+### Changed
+
+- **🔄 Import Updates**: All LLM service imports now use arslib
+  - `BEServer.js`: Updated to import `LLMService` and `TransformersLLMService` from arslib
+  - `LLMService.test.js`: Updated to use arslib's LLM service implementation
+  - `LLMService.caching.test.js`: Updated to use arslib's caching system
+  - `LLMService.integration.test.js`: Updated to use arslib's integration features
+  - `Intelligence.test.js`: Updated to use arslib's test utilities
+  - `Intelligence.js`: Updated to use arslib's `createTestLLM` function
+
+### Removed
+
+- **🗑️ Local LLM Service**: Eliminated duplicate LLM service implementation
+  - Removed `brainiac-engine/server/LLMService.js` (replaced by arslib)
+  - Removed local LLM service exports from brainiac-engine's main index.js
+  - Simplified module structure and reduced maintenance overhead
+
+### Enhanced
+
+- **🧪 Test Reliability**: Improved test suite with arslib integration
+  - All LLM service tests pass with arslib implementation
+  - Enhanced test coverage for LLM service functionality
+  - Better integration testing for LLM-powered intelligence features
+
+### Technical Improvements
+
+- **⚡ Performance**: Optimized LLM service operations
+  - Leveraged arslib's mature caching and persistence systems
+  - Improved model loading and initialization performance
+  - Enhanced error handling and recovery mechanisms
+
+- **🔧 Developer Experience**: Streamlined development workflow
+  - Single source of truth for LLM service implementation
+  - Consistent API across brainiac-engine and arslib
+  - Reduced learning curve for developers using both projects
+
+### Migration Benefits
+
+- **Code Deduplication**: Eliminated duplicate LLM service code between brainiac-engine and arslib
+- **Centralized Maintenance**: LLM service improvements in arslib automatically benefit brainiac-engine
+- **Consistency**: Both projects now use the same LLM service implementation
+- **Reduced Complexity**: Simplified the brainiac-engine codebase by removing local LLM service code
+
+### Verification
+
+- **✅ All Tests Pass**: 50+ LLM service tests pass with arslib implementation
+- **✅ BEServer Integration**: BEServer successfully uses arslib's LLM service
+- **✅ Demo Compatibility**: Demo system works perfectly with migrated LLM service
+- **✅ Import Chain**: Complete import chain verification from demo → brainiac-engine → arslib
+
+This release represents a significant architectural improvement, eliminating code duplication while maintaining full functionality and improving maintainability.
+
 # [0.7.0] - 2025-07-11
 
 ### MAJOR UPDATE - LLM-Powered Intelligence System

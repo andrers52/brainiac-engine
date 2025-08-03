@@ -1,7 +1,7 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
 import { BEServer } from "../server/BEServer.js";
-import { LLMService, TransformersLLMService, createTestLLM } from "../server/LLMService.js";
+import { LLMService, TransformersLLMService, createTestLLM } from "arslib";
 
 // Environment variable to control real vs mock LLM testing
 const USE_REAL_LLM = process.env.TEST_REAL_LLM === "true";

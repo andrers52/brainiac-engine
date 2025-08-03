@@ -4,7 +4,7 @@ import { strict as assert } from "assert";
 import sinon from "sinon";
 import { Intelligence } from "./Intelligence.js";
 import { HasBehavior } from "../HasBehavior.js";
-import { LLMService, createTestLLM } from "../../../LLMService.js";
+import { LLMService, createTestLLM } from "arslib";
 
 describe("Intelligence", function () {
   let mockAgent, mockBEServer, mockEnvironment, mockLLM, intelligence;

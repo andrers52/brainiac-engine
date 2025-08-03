@@ -32,7 +32,7 @@ const mockFileStore = {
   getFile: sinon.stub().callsFake((id, success, error) => { success(null); })
 };
 
-import { LLMService, TransformersLLMService, createTestLLM } from "./LLMService.js";
+import { LLMService, TransformersLLMService, createTestLLM } from "arslib";
 
 /**
  * @fileoverview Tests for the LLMService class.
@@ -137,7 +137,7 @@ describe("LLMService", function() {
       // Since we now have a real FileStore implementation that's always available in Node.js,
       // we need to test the scenario where FileStore.isAvailable() returns false
       // by temporarily overriding the FileStore.isAvailable method
-      const { NodeFileStore } = await import("arslib/node/node-file-store.js");
+      const { NodeFileStore } = await import("arslib");
 
       const FileStore = NodeFileStore;
 

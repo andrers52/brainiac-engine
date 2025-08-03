@@ -1,12 +1,11 @@
 "use strict";
 
-import { Assert, Platform } from "arslib";
+import { Assert, Platform, LLMService, TransformersLLMService } from "arslib";
 import { BECommonDefinitions } from "../common/BECommonDefinitions.js";
 import { getSharedLocalSocket } from "../common/fakeSocket.js";
 import { AgentDefinitions } from "./agent/AgentDefinitions.js";
 import { Environment } from "./agent/Environment.js";
 import { Connector } from "./Connector.js";
-import { LLMService, TransformersLLMService } from "./LLMService.js";
 
 /**
  * @file Main server for the Brainiac Engine.

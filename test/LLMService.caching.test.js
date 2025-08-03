@@ -3,7 +3,7 @@
 import { strict as assert } from "assert";
 import sinon from "sinon";
 import { Platform } from "arslib";
-import { LLMService, TransformersLLMService, createTestLLM } from "../server/LLMService.js";
+import { LLMService, TransformersLLMService, createTestLLM } from "arslib";
 
 // Environment detection
 const IS_NODE = Platform.isNode();

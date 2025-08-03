@@ -3,7 +3,7 @@
 import { Assert } from "arslib";
 import { ActionScheduler } from "../action_scheduling/ActionScheduler.js";
 import { HasBehavior } from "../HasBehavior.js";
-import { createTestLLM } from "../../../LLMService.js";
+import { createTestLLM } from "arslib";
 
 /**
  * @fileoverview Intelligence mixin for LLM-powered agent decision making.

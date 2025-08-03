@@ -14,7 +14,8 @@ A JavaScript framework for building interactive applications and games with mode
 - 🌐 **Network Communication** - Built-in Socket.IO integration for multiplayer support
 - 🏗️ **Agent System** - Flexible entity management with mixins and behaviors
 - 📐 **Geometry Utilities** - Vector math and collision detection
-- 🤖 **LLM Integration** - Built-in support for Large Language Models with caching and configuration
+- 🤖 **LLM Integration** - Built-in support for Large Language Models with centralized arslib service
+- 🔄 **Modular Architecture** - Clean separation of concerns with arslib integration for shared utilities
 
 ## 🎮 Games Built with Brainiac Engine
 
@@ -66,7 +67,7 @@ position.add(velocity);
 
 ### LLM Testing
 
-The system includes comprehensive LLM testing with both mock and real model support:
+The system includes comprehensive LLM testing with both mock and real model support, powered by arslib's centralized LLM service:
 
 ```bash
 # Fast testing with mock LLM (recommended for CI/CD)
@@ -88,7 +89,7 @@ npm run test:llm:both
 - `TEST_REAL_LLM=true` - Force real LLM testing
 - `TEST_REAL_LLM=false` - Force mock LLM testing
 
-**Note**: ONNX runtime warnings are automatically filtered for cleaner test output when using real models.
+**Note**: ONNX runtime warnings are automatically filtered for cleaner test output when using real models. The LLM service is now centralized in arslib for better maintainability and consistency.
 
 ### Test Scripts
 
