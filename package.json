@@ -1,7 +1,7 @@
 {
     "name": "brainiac-engine",
     "version": "0.8.0",
-    "description": "A comprehensive 2D game engine with agent-based architecture, real-time multiplayer support, advanced visual effects, and LLM-powered intelligence with centralized arslib integration.",
+    "description": "A comprehensive 2D game engine with agent-based architecture, real-time multiplayer support, advanced visual effects, and LLM-powered intelligence.",
     "main": "index.js",
     "type": "module",
     "readme": "README.md",
