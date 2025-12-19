@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.8.1] - 2025-12-19
+
+- Removed LLM functionalities
+
 # [0.8.0] - 2025-08-02
 
 ### MAJOR UPDATE - LLM Service Migration & Architecture Improvements
@@ -49,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Technical Improvements
 
 - **⚡ Performance**: Optimized LLM service operations
+
   - Leveraged arslib's mature caching and persistence systems
   - Improved model loading and initialization performance
   - Enhanced error handling and recovery mechanisms
@@ -87,6 +92,7 @@ This release represents a significant architectural improvement, eliminating cod
 ### Added
 
 - **🧠 LLMService**: Comprehensive LLM management system
+
   - Centralized model loading and initialization
   - In-memory caching for fast access
   - Persistent caching using arslib's FileStore (browser/Node.js)
@@ -95,6 +101,7 @@ This release represents a significant architectural improvement, eliminating cod
   - Cache statistics and management utilities
 
 - **🎯 Intelligence Mixin**: LLM-powered agent decision-making
+
   - Automatic state gathering (position, size, perceptions, etc.)
   - Dynamic action discovery from agent methods and mixins
   - Intelligent prompt construction for LLM decision-making
@@ -103,6 +110,7 @@ This release represents a significant architectural improvement, eliminating cod
   - Configurable thinking intervals and system prompts
 
 - **🧪 LLM Testing Infrastructure**: Comprehensive testing framework
+
   - Mock LLM testing for fast CI/CD execution
   - Real LLM testing for actual model validation
   - Caching performance testing
@@ -117,6 +125,7 @@ This release represents a significant architectural improvement, eliminating cod
 ### Enhanced
 
 - **🏗️ BEServer Integration**: LLM service management
+
   - `initializeLLMService()` method for centralized LLM setup
   - `getLLMService()` method for accessing the system LLM service
   - Automatic LLM service lifecycle management
@@ -131,6 +140,7 @@ This release represents a significant architectural improvement, eliminating cod
 ### Technical Improvements
 
 - **⚡ Performance**: Optimized LLM operations with dual-layer caching
+
   - In-memory cache for instant access to loaded models
   - Persistent cache for cross-session model storage
   - Automatic cache invalidation and management
@@ -153,7 +163,7 @@ await beServer.initializeLLMService({
   modelPath: "Xenova/gpt2",
   modelName: "GPT-2",
   maxTokens: 100,
-  temperature: 0.7
+  temperature: 0.7,
 });
 
 // Create intelligent agent
@@ -162,8 +172,8 @@ const agent = {
   ...Intelligence({
     agentName: "SmartAgent",
     thinkingInterval: 1000,
-    perceptionFn: () => ["nearby objects", "distance to goal"]
-  })
+    perceptionFn: () => ["nearby objects", "distance to goal"],
+  }),
 };
 
 // Agent can now make intelligent decisions

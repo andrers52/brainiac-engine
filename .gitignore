@@ -11,4 +11,4 @@ package-lock.json
 
 # Cache directories
 .cache/
-.cache/llm-models/
+.cache/ars-storage/
