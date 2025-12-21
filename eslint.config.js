@@ -1,46 +1,35 @@
-import js from '@eslint/js';
-import globals from 'globals';
+import js from '@eslint/js'
 
 export default [
-  {
-    ignores: ['eslint.config.js'],
-  },
   js.configs.recommended,
   {
-    files: ['**/*.js', '**/*.mjs'],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2021,
       sourceType: 'module',
       globals: {
-        ...globals.browser,
-        ...globals.node
-      }
+        console: 'readonly',
+        document: 'readonly',
+        window: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        fetch: 'readonly',
+        WebSocket: 'readonly',
+        io: 'readonly',
+        Map: 'readonly',
+        Set: 'readonly',
+        Array: 'readonly',
+        JSON: 'readonly',
+        customElements: 'readonly',
+        HTMLElement: 'readonly',
+      },
     },
     rules: {
-      'no-console': 'off',
-      'indent': ['error', 2],
-      'linebreak-style': ['error', 'unix'],
-      'quotes': ['error', 'single', { avoidEscape: true }],
-      'semi': ['error', 'always']
-    }
+      'no-console': 'warn',
+      'no-unused-vars': 'warn',
+      'prefer-const': 'error',
+      'no-var': 'error',
+    },
   },
-  {
-    files: ['**/*.test.js', 'test/**/*.js'],
-    languageOptions: {
-      globals: {
-        ...globals.mocha,
-        ...globals.browser,
-        ...globals.node
-      }
-    }
-  },
-  {
-    files: ['**/*.cjs', '**/*.config.js', 'setup.js'],
-    languageOptions: {
-      sourceType: 'script',
-      globals: {
-        ...globals.node
-      }
-    }
-  }
-];
+]

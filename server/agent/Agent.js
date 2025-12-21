@@ -1,10 +1,24 @@
-'use strict';
+"use strict";
 
-import { Assert } from 'arslib';
-import { Rectangle, rect } from '../../common/geometry/Rectangle.js';
-import { Vector } from '../../common/geometry/Vector.js';
+import { Assert } from "arslib";
+import { Rectangle, rect } from "../../common/geometry/Rectangle.js";
+import { Vector } from "../../common/geometry/Vector.js";
 
-import { BEServer } from '../BEServer.js'; // Corrected import path
+/** @typedef {import('../BEServer.js').BEServer} BEServer */
+/**
+ * @typedef {Object} AgentInstance
+ * @property {number|string} id
+ * @property {boolean} isAlive
+ * @property {string|null} imageName
+ * @property {boolean} isVisible
+ * @property {boolean} isSolid
+ * @property {BEServer} beServer
+ * @property {number} onMouseMoveHitLatencyInMillis
+ * @property {Rectangle} worldRectangle
+ * @property {Rectangle} rectangle
+ * @property {function(): void} die
+ * @property {function(Object): boolean} equal
+ */
 
 /**
  * @file Core agent system for the Brainiac Engine.
@@ -33,10 +47,16 @@ import { BEServer } from '../BEServer.js'; // Corrected import path
  * @param {BEServer} beServer - The BEServer instance.
  * @param {string} imageName - Name of the image resource for the agent
  * @param {Rectangle} [inputRectangle] - Initial rectangle bounds for the agent
- * @param {boolean} isSolid - Whether the agent blocks movement of other agents
+ * @param {boolean} [isSolid=true] - Whether the agent blocks movement of other agents
+ * @this {AgentInstance}
  * @returns {Object|null} The initialized agent or null if initialization fails
  */
-function agentInitialize(beServer, imageName, inputRectangle, isSolid) {
+function agentInitialize(
+  beServer,
+  imageName,
+  inputRectangle = null,
+  isSolid = true,
+) {
   this.isAlive = true;
   this.imageName = null;
   this.isVisible = true;
@@ -71,24 +91,10 @@ function agentInitialize(beServer, imageName, inputRectangle, isSolid) {
   };
 
   if (this.isSolid) {
-    let overlappingAgent = beServer
+    const overlappingAgent = beServer
       .getEnvironment()
       .otherAgentOverlappingWithProposedRectangle(this, this.rectangle);
     if (overlappingAgent && overlappingAgent.isSolid) return null;
-  }
-
-  /** @type {boolean} Flag to control mouse move hit event latency */
-  let latencyTimePassed = true;
-
-  /**
-   * Starts the latency timer for mouse move hit events.
-   * @private
-   */
-  function startLatencyTime() {
-    latencyTimePassed = false;
-    setTimeout(() => {
-      latencyTimePassed = true;
-    }, this.onMouseMoveHitLatencyInMillis);
   }
 
   beServer.getEnvironment().addAgent(this);
@@ -106,7 +112,7 @@ function agentInitialize(beServer, imageName, inputRectangle, isSolid) {
  * @param {number} [yPos=0] - Initial Y position
  * @returns {Object|null} The created agent or null if creation fails
  */
-let createAgent = function (
+const createAgent = function (
   beServer, // Add beServer parameter
   imageName,
   width = 100,
@@ -131,13 +137,13 @@ let createAgent = function (
  * @param {boolean} [isSolid=true] - Whether the agent blocks movement of other agents
  * @returns {Object|null} The created agent or null if creation fails
  */
-let createAgentWithRectangle = function (
+const createAgentWithRectangle = function (
   beServer, // Add beServer parameter
   imageName,
   inputRectangle,
   isSolid = true,
 ) {
-  let agent = Object.create(proto);
+  const agent = Object.create(proto);
   return agentInitialize.call(
     agent,
     beServer,
@@ -151,7 +157,7 @@ let createAgentWithRectangle = function (
  * Agent prototype containing all agent methods and properties.
  * @namespace proto
  */
-let proto = {
+const proto = {
   /**
    * Checks if this agent is controlled by a user.
    * @memberof proto
@@ -222,7 +228,7 @@ let proto = {
    * @returns {boolean} True if movement was successful
    */
   set2DPosition(newPosition, force) {
-    let distance = this.getPosition().vectorDistance(newPosition);
+    const distance = this.getPosition().vectorDistance(newPosition);
     return this.move(distance, force);
   },
 
@@ -234,7 +240,7 @@ let proto = {
    * @returns {boolean} True if movement was successful
    */
   setPosition(newPosition, force) {
-    let distance = this.getPosition().vectorDistance(newPosition);
+    const distance = this.getPosition().vectorDistance(newPosition);
     return this.move(distance, force);
   },
 
@@ -246,7 +252,7 @@ let proto = {
    */
   forceMove(distance) {
     Assert.assert(
-      typeof distance.x === 'number' && typeof distance.y === 'number',
+      typeof distance.x === "number" && typeof distance.y === "number",
     );
     Assert.assert(!isNaN(distance.x) && !isNaN(distance.y));
 
@@ -268,7 +274,7 @@ let proto = {
     // Assert.assertIsNumber(distance.x)
     // Assert.assertIsNumber(distance.y)
 
-    let testRectangle = this.rectangle.clone();
+    const testRectangle = this.rectangle.clone();
 
     testRectangle.move(distance);
 
@@ -297,7 +303,7 @@ let proto = {
       //   return distanceMovingY
     }
 
-    let overlappingAgent = this.beServer
+    const overlappingAgent = this.beServer
       .getEnvironment()
       .otherAgentOverlappingWithProposedRectangle(this, testRectangle);
 
@@ -371,7 +377,7 @@ let proto = {
 
     if (!distance.x && !distance.y) return true; //not moving...
 
-    let distanceVectorAllowedToMove = this.checkMove(distance);
+    const distanceVectorAllowedToMove = this.checkMove(distance);
 
     if (distanceVectorAllowedToMove) {
       Assert.assertIsNumber(distanceVectorAllowedToMove.x);
@@ -451,9 +457,9 @@ let proto = {
    * @returns {Object} This agent instance for method chaining
    */
   moveTowardsPosition(positionToGetClose, scalarDistanceToMove) {
-    let vectorDistanceFromTarget =
+    const vectorDistanceFromTarget =
       this.getPosition().vectorDistance(positionToGetClose);
-    let vectorDistanceFromTargetToMove = vectorDistanceFromTarget
+    const vectorDistanceFromTargetToMove = vectorDistanceFromTarget
       .clone()
       .adjustToSize(scalarDistanceToMove);
 
@@ -487,7 +493,7 @@ let proto = {
    */
   moveTowardsOrientation(distance, orientation, force) {
     orientation = orientation || this.orientation || 0;
-    let displacementVect = Vector.makeFromAngleAndSize(orientation, distance);
+    const displacementVect = Vector.makeFromAngleAndSize(orientation, distance);
     return this.move(displacementVect, force);
   },
 
@@ -504,11 +510,11 @@ let proto = {
   setPositionRelativeToAgent(
     otherAgent,
     relativePosition,
-    insideOutside = 'inside',
+    insideOutside = "inside",
     offset = 0,
     force = false,
   ) {
-    let newRectangle = this.rectangle.clone();
+    const newRectangle = this.rectangle.clone();
 
     newRectangle.setPositionRelativeToRectangle(
       otherAgent.rectangle,
@@ -535,28 +541,28 @@ let proto = {
     padding,
     force,
   ) {
-    let agentToRectangleTranslations = {
-      above: 'topCenter',
-      below: 'bottomCenter',
-      left: 'leftCenter',
-      right: 'rightCenter',
-      aboveRight: 'topRight',
-      aboveLeft: 'topleft',
-      belowRight: 'bottomRight',
-      belowLeft: 'bottomLeft',
+    const agentToRectangleTranslations = {
+      above: "topCenter",
+      below: "bottomCenter",
+      left: "leftCenter",
+      right: "rightCenter",
+      aboveRight: "topRight",
+      aboveLeft: "topleft",
+      belowRight: "bottomRight",
+      belowLeft: "bottomLeft",
     };
     Assert.assertIsValidString(
       positionRelativeToOtherAgent,
       Object.keys(agentToRectangleTranslations),
-      'Invalid agent relative position',
+      "Invalid agent relative position",
     );
     padding = padding || 1; //minimum padding to avoid collision
-    let newRectangle = this.rectangle.clone();
+    const newRectangle = this.rectangle.clone();
 
     newRectangle.setPositionRelativeToRectangle(
       otherAgent.rectangle,
       agentToRectangleTranslations[positionRelativeToOtherAgent],
-      'outside',
+      "outside",
       padding,
     );
     this.setPosition(newRectangle.center, force);

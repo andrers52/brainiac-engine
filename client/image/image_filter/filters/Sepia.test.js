@@ -289,7 +289,6 @@ describe('Sepia', function () {
 
       Sepia(brightImageData);
 
-      const avg = 200; // Gray input: avg = 200
       assert.strictEqual(brightImageData.data[0], clampedRound(300)); // 200 + 100 = 300 -> 255 (clamped)
       assert.strictEqual(brightImageData.data[1], clampedRound(250)); // 200 + 50 = 250
       assert.strictEqual(brightImageData.data[2], clampedRound(200)); // 200
@@ -304,7 +303,6 @@ describe('Sepia', function () {
 
       Sepia(veryBrightImageData);
 
-      const avg = 255;
       assert.strictEqual(veryBrightImageData.data[0], clampedRound(355)); // 255 + 100 = 355 -> 255 (clamped)
       assert.strictEqual(veryBrightImageData.data[1], clampedRound(305)); // 255 + 50 = 305 -> 255 (clamped)
       assert.strictEqual(veryBrightImageData.data[2], clampedRound(255)); // 255
@@ -332,9 +330,9 @@ describe('Sepia', function () {
     it('should maintain imageData structure', function () {
       const result = Sepia(mockImageData);
 
-      assert(result.hasOwnProperty('width'));
-      assert(result.hasOwnProperty('height'));
-      assert(result.hasOwnProperty('data'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'width'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'height'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'data'));
       assert(result.data instanceof Uint8ClampedArray);
     });
 

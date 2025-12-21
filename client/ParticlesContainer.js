@@ -44,7 +44,6 @@ function ParticlesContainer() {
    */
   this.DEFAULT_PARTICLE_TIME_TO_LIVE = 1000;
 
-  let particleImage;
   let colorToParticleImage;
 
   /**
@@ -77,7 +76,6 @@ function ParticlesContainer() {
     screen = screenInput;
     particles = {};
     emitters = [];
-    particleImage = resourceStore.retrieveResourceObject('whiteParticle.jpg');
     colorToParticleImage = {
       red: resourceStore.retrieveResourceObject('redParticle.jpg'),
       green: resourceStore.retrieveResourceObject('greenParticle.jpg'),

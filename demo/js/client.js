@@ -99,7 +99,7 @@ export function AdvancedInteractiveTestsClient() {
     ];
   };
 
-  this.showInitialScreenAndReturnUserName = function (beClientInstance) {
+  this.showInitialScreenAndReturnUserName = function () {
     console.log('showInitialScreenAndReturnUserName called');
     return Promise.resolve('Player');
   };

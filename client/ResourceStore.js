@@ -7,19 +7,10 @@
  * with a callback to be invoked when resource store has finished loading resources.
  */
 
-"use strict";
+'use strict';
 
-import { Assert, EArray, Random } from "arslib";
-
-// Attempt to import ImageUtil, but have a fallback for Node.js/test environments
-let ArslibImageUtil;
-try {
-  ({ ImageUtil: ArslibImageUtil } = await import("arslib"));
-} catch (e) {
-  // In test environment or if arslib doesn't export it as expected
-}
-
-import { Effect } from "./image/effect/Effect.js";
+import { Assert, EArray, ImageUtil as ArslibImageUtil, Random } from 'arslib';
+import { Effect } from './image/effect/Effect.js';
 
 /**
  * ResourceStore constructor - Manages loading, storing, and retrieving game resources.
@@ -29,9 +20,9 @@ import { Effect } from "./image/effect/Effect.js";
 function ResourceStore() {
   // Prioritize global ImageUtil if available (e.g., in tests), otherwise use imported.
   const ResolvedImageUtil =
-    (typeof window !== "undefined" && window.ImageUtil) ||
-    (typeof self !== "undefined" && self.ImageUtil) ||
-    (typeof global !== "undefined" && global.ImageUtil) ||
+    (typeof window !== 'undefined' && window.ImageUtil) ||
+    (typeof self !== 'undefined' && self.ImageUtil) ||
+    (typeof global !== 'undefined' && global.ImageUtil) ||
     ArslibImageUtil;
 
   //resource types
@@ -39,13 +30,13 @@ function ResourceStore() {
    * @type {string[]}
    * @description Supported audio file extensions.
    */
-  let SUPPORTED_AUDIO_SUFFIXES = ["mp3"];
+  let SUPPORTED_AUDIO_SUFFIXES = ['mp3'];
 
   /**
    * @type {string[]}
    * @description Supported image file extensions.
    */
-  let SUPPORTED_IMAGE_SUFFIXES = ["png", "jpg", "svg"];
+  let SUPPORTED_IMAGE_SUFFIXES = ['png', 'jpg', 'svg'];
 
   let effectsDescriptor;
 
@@ -55,7 +46,7 @@ function ResourceStore() {
    * @returns {string} File extension.
    */
   function getIdentifierSuffix(identifier) {
-    return EArray.last(identifier.split("."));
+    return EArray.last(identifier.split('.'));
   }
 
   /**
@@ -67,14 +58,14 @@ function ResourceStore() {
   function getMimeType(identifier) {
     let suffix = getIdentifierSuffix(identifier);
     let resourceTypesToMime = {
-      mp3: "audio/mpeg3",
-      png: "image/png",
-      jpg: "image/jpeg",
-      svg: "image/svg+xml",
-      json: "application/json",
+      mp3: 'audio/mpeg3',
+      png: 'image/png',
+      jpg: 'image/jpeg',
+      svg: 'image/svg+xml',
+      json: 'application/json',
     };
     Assert.assert(
-      resourceTypesToMime.hasOwnProperty(suffix),
+      Object.prototype.hasOwnProperty.call(resourceTypesToMime, suffix),
       `resourceStore#getMimeType suffix not found ${suffix}`,
     );
     return resourceTypesToMime[suffix];
@@ -176,7 +167,7 @@ function ResourceStore() {
   function decrease_resources_counter() {
     Assert.assert(
       resources_loading > 0,
-      "Error in resource loading counting in Resource Store...",
+      'Error in resource loading counting in Resource Store...',
     );
     resources_loading--;
   }
@@ -240,7 +231,7 @@ function ResourceStore() {
    * @returns {boolean} True if resource is JSON.
    */
   function isJSONFile(identifier) {
-    return isType(identifier, [".json"]);
+    return isType(identifier, ['.json']);
   }
 
   /**
@@ -260,24 +251,24 @@ function ResourceStore() {
   const storeAudioData = (identifier, audioDataSrc) => {
     let audio = new Audio();
 
-    const loadCallbackOk = (evt) => {
-      audio.removeEventListener("canplaythrough", loadCallbackOk, false);
-      audio.removeEventListener("load", loadCallbackOk, false);
+    const loadCallbackOk = () => {
+      audio.removeEventListener('canplaythrough', loadCallbackOk, false);
+      audio.removeEventListener('load', loadCallbackOk, false);
       this.resources[identifier] = audio;
       decrease_resources_counter();
     };
 
-    const loadCallbackError = (evt) => {
-      audio.removeEventListener("error", loadCallbackError, false);
-      throw "Audio loading Error: " + identifier;
+    const loadCallbackError = () => {
+      audio.removeEventListener('error', loadCallbackError, false);
+      throw 'Audio loading Error: ' + identifier;
     };
     audio.src =
-      typeof audioDataSrc === "string"
+      typeof audioDataSrc === 'string'
         ? audioDataSrc //file path
         : window.URL.createObjectURL(audioDataSrc); //file blob
-    audio.addEventListener("canplaythrough", loadCallbackOk, false);
-    audio.addEventListener("load", loadCallbackOk, false);
-    audio.addEventListener("error", loadCallbackError, false);
+    audio.addEventListener('canplaythrough', loadCallbackOk, false);
+    audio.addEventListener('load', loadCallbackOk, false);
+    audio.addEventListener('error', loadCallbackError, false);
     audio.load();
   };
 
@@ -303,21 +294,21 @@ function ResourceStore() {
   const loadImage = (identifier) => {
     Assert.assert(
       identifier,
-      "resourceStore#loadImage error: image not defined",
+      'resourceStore#loadImage error: image not defined',
     );
     try {
       let request = new XMLHttpRequest();
       request.onloadend = () => {
         storeImageData(identifier, request.response);
       };
-      request.open("GET", identifier, true);
-      request.responseType = "blob";
+      request.open('GET', identifier, true);
+      request.responseType = 'blob';
       request.send();
     } catch (err) {
       throw (
-        "resourceStore#loadImage error trying to load image " +
+        'resourceStore#loadImage error trying to load image ' +
         identifier +
-        "\n Details: \n " +
+        '\n Details: \n ' +
         err
       );
     }
@@ -330,7 +321,7 @@ function ResourceStore() {
   const loadAudio = (identifier) => {
     Assert.assert(
       identifier,
-      "resourceStore#loadAudio error: image not defined",
+      'resourceStore#loadAudio error: image not defined',
     );
     storeAudioData(identifier, identifier);
   };
@@ -345,20 +336,20 @@ function ResourceStore() {
       let request = new XMLHttpRequest();
       request.onloadend = () => {
         let jsonDescriptor = request.responseText;
-        if (EArray.last(identifier.split("/")) === "effects_descriptor.json")
+        if (EArray.last(identifier.split('/')) === 'effects_descriptor.json')
           this.createEffectsFromDescriptor(JSON.parse(jsonDescriptor));
         else this.resources[identifier] = JSON.parse(jsonDescriptor);
 
         decrease_resources_counter();
       };
-      request.open("GET", identifier, true);
-      request.responseType = "text";
+      request.open('GET', identifier, true);
+      request.responseType = 'text';
       request.send();
     } catch (err) {
       throw (
-        "resourceStore#loadJSON error trying to read JSON file " +
+        'resourceStore#loadJSON error trying to read JSON file ' +
         identifier +
-        "\n Details: \n " +
+        '\n Details: \n ' +
         err
       );
     }
@@ -377,14 +368,14 @@ function ResourceStore() {
 
     Assert.assert(
       isSupportedResource(identifier),
-      "resourceStore: resource type not recognized",
+      'resourceStore: resource type not recognized',
     );
 
     let loadFunc = isImage(identifier)
       ? loadImage
       : isAudio(identifier)
-      ? loadAudio
-      : loadJSON;
+        ? loadAudio
+        : loadJSON;
     loadFunc(identifier);
 
     return this;
@@ -413,7 +404,7 @@ function ResourceStore() {
     let newName;
 
     do {
-      newName = `${permanent ? "" : "temp_"}image_${Random.randomInt(
+      newName = `${permanent ? '' : 'temp_'}image_${Random.randomInt(
         100000000,
       ).toString()}.jpg`;
     } while (this.resources[newName]);
@@ -427,7 +418,7 @@ function ResourceStore() {
    * @param {string} resourceName - Name of resource to check and potentially remove.
    */
   this.removeResourceIfTemporary = function (resourceName) {
-    if (resourceName.includes("temp_")) this.removeResource(resourceName);
+    if (resourceName.includes('temp_')) this.removeResource(resourceName);
   };
 
   /**
@@ -436,7 +427,7 @@ function ResourceStore() {
    */
   this.removeTemporaryResources = function () {
     Object.keys(this.resources).forEach((resource) => {
-      if (resource.includes("temp_")) this.removeResource(resource);
+      if (resource.includes('temp_')) this.removeResource(resource);
     });
   };
 
@@ -469,7 +460,7 @@ function ResourceStore() {
       originalImage.width,
       originalImage.height,
     );
-    newCanvas.getContext("2d").drawImage(originalImage, 0, 0);
+    newCanvas.getContext('2d').drawImage(originalImage, 0, 0);
     let newImageName = this.createNewImageName(false); // cloned images are temporary by default
     this.addLocalResource(newImageName, newCanvas);
     return newImageName;
@@ -484,7 +475,7 @@ function ResourceStore() {
   this.getImageData = function (imageName) {
     let canvas = this.retrieveResourceObject(imageName);
     return canvas
-      .getContext("2d")
+      .getContext('2d')
       .getImageData(0, 0, canvas.width, canvas.height);
   };
 
@@ -496,7 +487,7 @@ function ResourceStore() {
    */
   this.setImageData = function (imageName, imageData) {
     let canvas = this.retrieveResourceObject(imageName);
-    canvas.getContext("2d").putImageData(imageData, 0, 0);
+    canvas.getContext('2d').putImageData(imageData, 0, 0);
   };
 
   /**
@@ -519,13 +510,13 @@ function ResourceStore() {
     if (!this.checkResourceObjectExists(identifier)) {
       //have not found found a way to detect images are loaded...
       console.log(
-        "Resource Store error: trying to retrieve unknown resource: " +
+        'Resource Store error: trying to retrieve unknown resource: ' +
           identifier,
       );
 
       if (isImage(identifier)) {
         //returning blank canvas while image finish loading... :(
-        return ImageUtil.createCanvas(10, 10);
+        return ResolvedImageUtil.createCanvas(10, 10);
       } else {
         return new Audio();
       }
@@ -553,7 +544,7 @@ function ResourceStore() {
    */
   this.hasResource = function (resourceToCheck) {
     return (
-      this.resources.hasOwnProperty(resourceToCheck) &&
+      Object.prototype.hasOwnProperty.call(this.resources, resourceToCheck) &&
       this.resources[resourceToCheck]
     );
   };

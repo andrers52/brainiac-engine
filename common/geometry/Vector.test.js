@@ -80,8 +80,6 @@ describe('Vector', function () {
 
   it('should clone a vector', function () {
     let origin = new Vector();
-    let oneOne = origin.add(new Vector(1, 1));
-    let twoOne = origin.add(new Vector(2, 0));
     let otherOrigin = origin.clone();
     assert.strictEqual(origin.toString(), otherOrigin.toString());
 
@@ -161,7 +159,6 @@ describe('Vector', function () {
   });
 
   it('should calculate the parallelogram area', function () {
-    let oneZero = new Vector(1, 0, 0);
     it('should calculate the parallelogram area', function () {
       let oneZero = new Vector(1, 0);
       let oneOne = new Vector(1, 1);

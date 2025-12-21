@@ -1,7 +1,7 @@
 'use strict';
 
-import { Assert } from 'arslib';
-import { Vector } from './Vector.js';
+import { Assert, Random } from 'arslib';
+import { Vector, vect } from './Vector.js';
 
 /**
  * Creates a Rectangle with a center point and size.
@@ -141,7 +141,6 @@ Rectangle.prototype.setPosition = function (position, pointOfInterest) {
  * @returns {Rectangle} This rectangle for chaining
  */
 Rectangle.prototype.setPosition2D = function (position) {
-  let origCenter = this.center;
   this.center = position;
   return this;
 };

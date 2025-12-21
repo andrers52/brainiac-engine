@@ -33,7 +33,6 @@ function UserEvents() {
   let mouseCanvasPosition = null;
   let mousePositionChanged = false;
   let lastPropagatedPosition = null; // Track last position we sent to avoid duplicate events
-  let isMouseDown = false; // Track if mouse is currently down
 
   /**
    * Gets the current mouse position in world coordinates
@@ -82,14 +81,14 @@ function UserEvents() {
    * @param {KeyboardEvent} event - The keyboard event
    */
   function onKeyDown(event) {
-    propagate('onKeyDown', event.key.replace(/\"/g, '')); //remove starting and trailling '"'
+    propagate('onKeyDown', event.key.replace(/"/g, '')); //remove starting and trailling '"'
   }
 
   /**
    * Handles canvas resize events
    * @param {Event} event - The resize event
    */
-  function onResizeCanvas(event) {
+  function onResizeCanvas() {
     if (!screen.getCanvas()) return;
     propagate(
       'onResizeCanvas',
@@ -105,7 +104,6 @@ function UserEvents() {
     //if (navigator.userAgent.match(/Android/i)) {
     //event.preventDefault();
     //}
-    isMouseDown = true; // Track that mouse is down
     propagate('onMouseDown', self.mouseWorldPosition());
     event.stopPropagation();
   }
@@ -116,7 +114,6 @@ function UserEvents() {
    */
   function onMouseUp(event) {
     mouseCanvasPosition = getMouseCanvasPosition(event);
-    isMouseDown = false; // Track that mouse is up
     mousePositionChanged = false; // Stop any pending mouse moves
     propagate('onMouseUp', self.mouseWorldPosition());
   }
@@ -144,6 +141,14 @@ function UserEvents() {
   /* enable/disable events */
 
   //map handlers to native events
+  const handlerFunctions = {
+    onKeyDown,
+    onResizeCanvas,
+    onMouseDown,
+    onMouseMove,
+    onMouseUp,
+  };
+
   let eventsMapping = {
     // *** TODO: ADD EVENT SUBSCRIPTION PARAMETERS IN APP AND UNCOMMENT BELOW ***
     //"onKeyDown": ["window.onkeydown"],
@@ -166,7 +171,12 @@ function UserEvents() {
     );
 
     eventsMapping[handler].forEach((event) => {
-      eval(event + ' = ' + handler + ';');
+      const [targetName, propertyName] = event.split('.');
+      const target =
+        targetName === 'window' ? window : globalThis[targetName];
+      if (target) {
+        target[propertyName] = handlerFunctions[handler];
+      }
     });
   };
 
@@ -182,7 +192,14 @@ function UserEvents() {
       'Non valid event handler',
     );
 
-    eventsMapping[handler].forEach((event) => eval(event + ' = null;'));
+    eventsMapping[handler].forEach((event) => {
+      const [targetName, propertyName] = event.split('.');
+      const target =
+        targetName === 'window' ? window : globalThis[targetName];
+      if (target) {
+        target[propertyName] = null;
+      }
+    });
   };
 
   /**

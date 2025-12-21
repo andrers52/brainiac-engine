@@ -245,6 +245,9 @@ function BEClient() {
     this.socket.on('connect', () => {});
 
     this.socket.on('disconnect', (reason) => {
+      if (reason) {
+        console.log(`Socket disconnected: ${reason}`);
+      }
       userEvents.stop();
       location.reload();
     });
@@ -256,7 +259,12 @@ function BEClient() {
       Sound.playSound(soundName);
     });
     this.socket.on('playDescr', (soundObjName) => {
-      var s = new SoundEffect(
+      const SoundEffectCtor = globalThis.SoundEffect;
+      if (!SoundEffectCtor) {
+        console.warn('SoundEffect is not available in this environment.');
+        return;
+      }
+      const s = new SoundEffectCtor(
         this.app.getSoundEffectDescription(soundObjName),
       ).generate();
       s.getAudio().play();

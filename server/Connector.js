@@ -14,8 +14,6 @@
 
 import { BECommonDefinitions } from '../common/BECommonDefinitions.js';
 import { Vector } from '../common/geometry/Vector.js';
-import { BEServer } from './BEServer.js';
-
 import { Camera } from './agent/Camera.js';
 import { FollowsAgent } from './agent/mixin/behavior_component/FollowsAgent.js';
 import { User } from './User.js';

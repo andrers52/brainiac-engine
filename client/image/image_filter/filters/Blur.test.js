@@ -176,9 +176,9 @@ describe('Blur', function () {
     it('should maintain imageData structure', function () {
       const result = Blur(mockImageData);
 
-      assert(result.hasOwnProperty('width'));
-      assert(result.hasOwnProperty('height'));
-      assert(result.hasOwnProperty('data'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'width'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'height'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'data'));
     });
   });
 

@@ -258,9 +258,6 @@ describe('EvoImg', function () {
       EvoImg(mockContext, code);
 
       // Should translate first, then rotate
-      const calls = mockContext.translate
-        .getCalls()
-        .concat(mockContext.rotate.getCalls());
       assert(mockContext.translate.calledBefore(mockContext.rotate));
       assert(mockContext.translate.calledWith(100, 75));
       assert(mockContext.rotate.calledWith(-Math.PI / 3)); // Note: negative orientation

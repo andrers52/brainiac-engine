@@ -612,11 +612,13 @@ describe('ImageFilter', function () {
 
     it('should work with multiple filter chain', function () {
       const brightenFilter = (imageData, amount) => {
+        void amount;
         // Simple brighten simulation
         return imageData;
       };
 
       const contrastFilter = (imageData, factor) => {
+        void factor;
         // Simple contrast simulation
         return imageData;
       };

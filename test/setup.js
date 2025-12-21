@@ -134,6 +134,12 @@ if (dom.window.HTMLCanvasElement && dom.window.HTMLCanvasElement.prototype) {
   const originalGetContext = dom.window.HTMLCanvasElement.prototype.getContext;
 
   dom.window.HTMLCanvasElement.prototype.getContext = function (type) {
+    if (type !== '2d') {
+      return typeof originalGetContext === 'function'
+        ? originalGetContext.call(this, type)
+        : null;
+    }
+
     if (type === '2d') {
       return {
         canvas: this,
@@ -151,6 +157,8 @@ if (dom.window.HTMLCanvasElement && dom.window.HTMLCanvasElement.prototype) {
           return { width: 0 };
         },
         getImageData: function (x, y, width, height) {
+          void x;
+          void y;
           return {
             data: new Uint8ClampedArray(width * height * 4),
             width: width,
@@ -158,6 +166,9 @@ if (dom.window.HTMLCanvasElement && dom.window.HTMLCanvasElement.prototype) {
           };
         },
         putImageData: function (imageData, x, y) {
+          void imageData;
+          void x;
+          void y;
           // Mock implementation - just return
         },
         createImageData: function (width, height) {

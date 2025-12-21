@@ -132,13 +132,10 @@ ImageFilter.convolute = function (pixels, weights, opaque) {
 };
 
 /** Fallback for browsers without Float32Array support */
-if (typeof globalThis !== 'undefined' && globalThis.Float32Array) {
-  var Float32Array = globalThis.Float32Array;
-} else if (typeof window !== 'undefined' && window.Float32Array) {
-  var Float32Array = window.Float32Array;
-} else {
-  var Float32Array = Array;
-}
+const Float32ArrayCtor =
+  (typeof globalThis !== 'undefined' && globalThis.Float32Array) ||
+  (typeof window !== 'undefined' && window.Float32Array) ||
+  Array;
 
 /**
  * Applies convolution filter to image data using Float32Array for extended range
@@ -161,7 +158,7 @@ ImageFilter.convoluteFloat32 = function (pixels, weights, opaque) {
   var output = {
     width: w,
     height: h,
-    data: new Float32Array(w * h * 4),
+    data: new Float32ArrayCtor(w * h * 4),
   };
   var dst = output.data;
 

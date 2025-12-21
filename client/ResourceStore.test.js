@@ -40,6 +40,8 @@ describe('ResourceStore', function () {
               return {
                 canvas: this,
                 getImageData: function (x, y, width, height) {
+                  void x;
+                  void y;
                   return {
                     data: new Uint8ClampedArray(width * height * 4),
                     width: width,
@@ -47,6 +49,9 @@ describe('ResourceStore', function () {
                   };
                 },
                 putImageData: function (imageData, x, y) {
+                  void imageData;
+                  void x;
+                  void y;
                   // Mock implementation
                 },
                 fillRect: function () {},

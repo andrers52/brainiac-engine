@@ -293,9 +293,9 @@ describe('Colorize', function () {
       const color = { red: 10, green: 20, blue: 30 };
       const result = Colorize(mockImageData, color);
 
-      assert(result.hasOwnProperty('width'));
-      assert(result.hasOwnProperty('height'));
-      assert(result.hasOwnProperty('data'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'width'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'height'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'data'));
       assert(result.data instanceof Uint8ClampedArray);
     });
 

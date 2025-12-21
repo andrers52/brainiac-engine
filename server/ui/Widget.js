@@ -1,7 +1,5 @@
 'use strict';
 
-import { Assert } from 'arslib';
-import { Vector } from '../../common/geometry/Vector.js';
 // import {BECommonDefinitions} from '../../common/BECommonDefinitions.js'
 import { createAgent, createAgentWithRectangle } from '../agent/Agent.js';
 
@@ -23,39 +21,6 @@ function widgetInitialize() {
   /** @type {boolean} Widgets are non-solid by default (don't block movement) */
   this.isSolid = false;
   return this;
-}
-
-/**
- * Adds camera visibility testing to a widget's checkMove method.
- * Prevents widgets from moving outside the camera's visible area.
- * @private
- * @param {Camera} camera - The camera to test visibility against
- */
-function addVisibilityTestToCheckMove(camera) {
-  /** @type {Function} Original checkMove method */
-  let oldCheckMove = this.checkMove;
-
-  /**
-   * Enhanced checkMove that includes camera visibility testing.
-   * @param {Vector} distance - Distance vector to test
-   * @returns {boolean|Vector} False if move is blocked, or allowed distance vector
-   */
-  this.checkMove = (distance) => {
-    Assert.assert(
-      distance instanceof Vector,
-      'BEClient.Widget#checkMove: distance is not a Vector',
-    );
-    let testRectangle = this.rectangle.clone();
-    testRectangle.move(distance);
-
-    //hiting camera border or out of camera view?
-    if (!camera.canBeSeen(testRectangle)) {
-      return false;
-    }
-
-    //widget is visible, run default agent check
-    return oldCheckMove.call(this, distance);
-  };
 }
 
 /**

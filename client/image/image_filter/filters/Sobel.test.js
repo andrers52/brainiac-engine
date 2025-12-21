@@ -107,9 +107,9 @@ describe('Sobel', function () {
     it('should maintain data structure integrity', function () {
       const result = Sobel(mockImageData);
 
-      assert(result.hasOwnProperty('width'));
-      assert(result.hasOwnProperty('height'));
-      assert(result.hasOwnProperty('data'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'width'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'height'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'data'));
       assert(result.data instanceof Uint8ClampedArray);
     });
   });

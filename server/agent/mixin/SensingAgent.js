@@ -3,8 +3,6 @@
 import { Assert } from 'arslib';
 import { rect } from '../../../common/geometry/Rectangle.js';
 import { Vector } from '../../../common/geometry/Vector.js';
-import { BEServer } from '../../BEServer.js';
-
 /**
  * @fileoverview Agent sensing system for detecting nearby agents and user interactions.
  * Provides various sensing capabilities including forward detection, user agent detection, and general agent sensing.

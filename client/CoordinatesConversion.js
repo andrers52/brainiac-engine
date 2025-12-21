@@ -144,6 +144,7 @@ CoordinatesConversion.rectangleWorldToCanvas = function (
     canvasRectangle.center,
     cameraRectangle,
     screenSize,
+    noCamera,
   );
   return canvasRectangle;
 };

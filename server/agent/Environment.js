@@ -137,7 +137,7 @@ function Environment() {
    * @returns {boolean} True if agent exists
    */
   this.checkAgentExists = function (agent) {
-    return agents.hasOwnProperty(agent.id);
+    return Object.prototype.hasOwnProperty.call(agents, agent.id);
   };
 
   /**
@@ -270,9 +270,6 @@ function Environment() {
   this.getWorldRectangle = function () {
     return worldRectangle;
   };
-
-  /** @type {*} Stores the last argument for event propagation */
-  let lastArg;
 
   /*
    * Legacy event propagation method (commented out)

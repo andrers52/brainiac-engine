@@ -401,7 +401,7 @@ Vector.prototype.getAngleFromXAxisOfXYProjection = function () {
   const result = Math.acos(
     this.data[0] / this.clone().projectOverXY().distanceFromOrigin(),
   );
-  if (result === NaN) return 0;
+  return Number.isNaN(result) ? 0 : result;
 };
 
 /**

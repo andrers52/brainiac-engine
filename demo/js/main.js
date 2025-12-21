@@ -4,6 +4,44 @@ import { AdvancedInteractiveTestsServer } from './server.js';
 
 console.log('Starting advanced interactive tests...');
 
+const startClient = (clientInstance) => {
+  console.log('Starting client...');
+  try {
+    const beClient = new BEClient();
+    beClient.start(clientInstance);
+    console.log('Client started successfully');
+
+    // Add a direct mouse event listener to test if DOM events work
+    setTimeout(() => {
+      const canvas = document.querySelector('canvas');
+      if (canvas) {
+        console.log('Adding direct mousedown listener to canvas...');
+        canvas.addEventListener('mousedown', (e) => {
+          console.log('DIRECT CANVAS MOUSEDOWN EVENT DETECTED!', e);
+        });
+      }
+    }, 1000);
+
+    // Ensure client setup is called after the engine starts
+    setTimeout(() => {
+      console.log('Calling clientInstance.start()...');
+      clientInstance.start();
+    }, 500);
+  } catch (error) {
+    console.error('Error starting client:', error);
+  }
+};
+
+const waitForDOMAndStart = (clientInstance) => {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () =>
+      startClient(clientInstance),
+    );
+  } else {
+    startClient(clientInstance);
+  }
+};
+
 // Simple test function to verify JavaScript execution
 window.testFunction = function () {
   console.log('TEST BUTTON CLICKED!');
@@ -30,45 +68,7 @@ try {
 
   // Create and start client
   const clientInstance = new AdvancedInteractiveTestsClient();
-
-  function startClient() {
-    console.log('Starting client...');
-    try {
-      const beClient = new BEClient();
-      beClient.start(clientInstance);
-      console.log('Client started successfully');
-
-      // Add a direct mouse event listener to test if DOM events work
-      setTimeout(() => {
-        const canvas = document.querySelector('canvas');
-        if (canvas) {
-          console.log('Adding direct mousedown listener to canvas...');
-          canvas.addEventListener('mousedown', (e) => {
-            console.log('DIRECT CANVAS MOUSEDOWN EVENT DETECTED!', e);
-          });
-        }
-      }, 1000);
-
-      // Ensure client setup is called after the engine starts
-      setTimeout(() => {
-        console.log('Calling clientInstance.start()...');
-        clientInstance.start();
-      }, 500);
-    } catch (error) {
-      console.error('Error starting client:', error);
-    }
-  }
-
-  // Enhanced DOM ready check
-  function waitForDOMAndStart() {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', startClient);
-    } else {
-      startClient();
-    }
-  }
-
-  waitForDOMAndStart();
+  waitForDOMAndStart(clientInstance);
 } catch (error) {
   console.error('Error in main initialization:', error);
 }

@@ -381,9 +381,18 @@ describe('Noise', function () {
 
       const expectedNoise = (0.5 - 0.3) * 50; // 10
 
-      assert.strictEqual(singlePixelImageData.data[0], 110); // 100 + 10
-      assert.strictEqual(singlePixelImageData.data[1], 160); // 150 + 10
-      assert.strictEqual(singlePixelImageData.data[2], 210); // 200 + 10
+      assert.strictEqual(
+        singlePixelImageData.data[0],
+        100 + expectedNoise,
+      );
+      assert.strictEqual(
+        singlePixelImageData.data[1],
+        150 + expectedNoise,
+      );
+      assert.strictEqual(
+        singlePixelImageData.data[2],
+        200 + expectedNoise,
+      );
       assert.strictEqual(singlePixelImageData.data[3], 255); // Alpha unchanged
     });
 
@@ -469,9 +478,9 @@ describe('Noise', function () {
       const testImageData = createFreshImageData();
       const result = Noise(testImageData);
 
-      assert(result.hasOwnProperty('width'));
-      assert(result.hasOwnProperty('height'));
-      assert(result.hasOwnProperty('data'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'width'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'height'));
+      assert(Object.prototype.hasOwnProperty.call(result, 'data'));
       assert(result.data instanceof Uint8ClampedArray);
     });
 
