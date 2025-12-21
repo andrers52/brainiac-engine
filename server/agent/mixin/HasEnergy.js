@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * @fileoverview Energy management system for agents.
@@ -57,7 +57,7 @@ export function HasEnergy(initialEnergy = 100, maxEnergy = 100) {
    * @type {number}
    * @description Read-only property for accessing current energy level.
    */
-  Object.defineProperty(this, "energy", {
+  Object.defineProperty(this, 'energy', {
     get: function () {
       return energy;
     },

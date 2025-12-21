@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { Assert, EArray, EFunction } from "arslib";
+import { Assert, EArray, EFunction } from 'arslib';
 
 /**
  * @fileoverview Animation system for state-based sprite animations with audio support.
@@ -40,7 +40,7 @@ export function Animated(configurationObj, soundProvider) {
   let intervalId = null;
 
   let states = [];
-  let defaultState = "notInitialized";
+  let defaultState = 'notInitialized';
   //auto-reverse (forward, backwards, forward, ...) or cyclic animation (default -> forward, reaches end and starts again)
   let auto_reverse = false;
   let current_increment = 1; //forward -> 1, backwards -> -1
@@ -59,7 +59,7 @@ export function Animated(configurationObj, soundProvider) {
    * @type {string}
    * @description Current animation state name.
    */
-  this.currentState = "notInitialized"; //TODO: CHANGE TO READ ONLY PROPERTY
+  this.currentState = 'notInitialized'; //TODO: CHANGE TO READ ONLY PROPERTY
 
   let currentStateFrame = 0;
 
@@ -83,11 +83,11 @@ export function Animated(configurationObj, soundProvider) {
 
       updateImageAndAudio(defaultState);
     } catch (exception) {
-      throw "Animation resources descriptor reading error: " + exception;
+      throw 'Animation resources descriptor reading error: ' + exception;
     }
     Assert.assert(
       states.includes(defaultState),
-      "Animation resources integrity check failed",
+      'Animation resources integrity check failed',
     );
 
     self.changeState(defaultState);
@@ -207,11 +207,11 @@ export function Animated(configurationObj, soundProvider) {
   this.addActionToExecuteAtAnimationEnd = function (state, action) {
     Assert.assert(
       isValidState(state),
-      "Animated#addActionToAnimationEnd error -> given state is not valid",
+      'Animated#addActionToAnimationEnd error -> given state is not valid',
     );
     Assert.assertIsFunction(
       action,
-      "Animated#addActionToAnimationEnd error -> action expected to be a function",
+      'Animated#addActionToAnimationEnd error -> action expected to be a function',
     );
     actionsToExecuteAtAnimationEnd[state] = action;
     return this;

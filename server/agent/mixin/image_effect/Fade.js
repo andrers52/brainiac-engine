@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import { EFunction } from "arslib";
+import { EFunction } from 'arslib';
 
-import { TimeToLive } from "../TimeToLive.js";
+import { TimeToLive } from '../TimeToLive.js';
 
 /**
  * @fileoverview Fade effect that gradually decreases opacity until the agent dies.

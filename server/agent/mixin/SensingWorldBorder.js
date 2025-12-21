@@ -1,6 +1,6 @@
-"use strict";
-import { Assert } from "arslib";
-import { Vector } from "../../../common/geometry/Vector.js";
+'use strict';
+import { Assert } from 'arslib';
+import { Vector } from '../../../common/geometry/Vector.js';
 
 /**
  * @fileoverview World boundary sensing system for agents.
@@ -19,7 +19,7 @@ import { Vector } from "../../../common/geometry/Vector.js";
 export function SensingWorldBorder(beServer, sensingDistanceInput) {
   Assert.assert(
     this.onSensingWorldBorder,
-    "Error: added SensingWorldBorder to agent without implementing onSensingWorldBorder event handler",
+    'Error: added SensingWorldBorder to agent without implementing onSensingWorldBorder event handler',
   );
 
   let DEFAULT_SENSING_DISTANCE = 50;

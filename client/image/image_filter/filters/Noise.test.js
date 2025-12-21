@@ -1,6 +1,6 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Noise } from "./Noise.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Noise } from './Noise.js';
 
 // Helper function to simulate Uint8ClampedArray rounding (round half to even / banker's rounding)
 function clampedRound(value) {
@@ -14,7 +14,7 @@ function clampedRound(value) {
   return Math.max(0, Math.min(255, rounded));
 }
 
-describe("Noise", function () {
+describe('Noise', function () {
   let sandbox;
   let mathRandomStub;
 
@@ -22,7 +22,7 @@ describe("Noise", function () {
     sandbox = sinon.createSandbox();
 
     // Mock Math.random for predictable testing
-    mathRandomStub = sandbox.stub(Math, "random");
+    mathRandomStub = sandbox.stub(Math, 'random');
   });
 
   afterEach(function () {
@@ -47,8 +47,8 @@ describe("Noise", function () {
     };
   }
 
-  describe("Basic functionality", function () {
-    it("should add random noise to RGB channels based on Math.random", function () {
+  describe('Basic functionality', function () {
+    it('should add random noise to RGB channels based on Math.random', function () {
       // Set up predictable random values
       mathRandomStub.returns(0.5); // This will result in (0.5 - 0.5) * factor = 0
 
@@ -68,7 +68,7 @@ describe("Noise", function () {
       }
     });
 
-    it("should return the modified imageData object", function () {
+    it('should return the modified imageData object', function () {
       mathRandomStub.returns(0.5);
       const testImageData = createFreshImageData();
       const result = Noise(testImageData);
@@ -76,7 +76,7 @@ describe("Noise", function () {
       assert.strictEqual(result, testImageData);
     });
 
-    it("should not modify alpha channel", function () {
+    it('should not modify alpha channel', function () {
       mathRandomStub.returns(0.3);
       const testImageData = createFreshImageData();
       const originalAlpha = Array.from(testImageData.data).filter(
@@ -92,8 +92,8 @@ describe("Noise", function () {
     });
   });
 
-  describe("Default parameter handling", function () {
-    it("should use default factor of 55 when not provided", function () {
+  describe('Default parameter handling', function () {
+    it('should use default factor of 55 when not provided', function () {
       mathRandomStub.returns(0.0); // Will result in maximum positive noise
 
       const testImageData = createFreshImageData();
@@ -117,7 +117,7 @@ describe("Noise", function () {
       );
     });
 
-    it("should use provided factor when specified", function () {
+    it('should use provided factor when specified', function () {
       mathRandomStub.returns(0.0);
       const factor = 100;
 
@@ -143,8 +143,8 @@ describe("Noise", function () {
     });
   });
 
-  describe("Noise calculation", function () {
-    it("should add positive noise when Math.random < 0.5", function () {
+  describe('Noise calculation', function () {
+    it('should add positive noise when Math.random < 0.5', function () {
       mathRandomStub.returns(0.2); // (0.5 - 0.2) * factor = positive noise
 
       const testImageData = createFreshImageData();
@@ -169,7 +169,7 @@ describe("Noise", function () {
       );
     });
 
-    it("should add negative noise when Math.random > 0.5", function () {
+    it('should add negative noise when Math.random > 0.5', function () {
       mathRandomStub.returns(0.8); // (0.5 - 0.8) * factor = negative noise
 
       const testImageData = createFreshImageData();
@@ -194,7 +194,7 @@ describe("Noise", function () {
       );
     });
 
-    it("should add no noise when Math.random = 0.5", function () {
+    it('should add no noise when Math.random = 0.5', function () {
       mathRandomStub.returns(0.5); // (0.5 - 0.5) * factor = 0
 
       const testImageData = createFreshImageData();
@@ -211,8 +211,8 @@ describe("Noise", function () {
     });
   });
 
-  describe("Factor parameter effects", function () {
-    it("should produce more noise with higher factor", function () {
+  describe('Factor parameter effects', function () {
+    it('should produce more noise with higher factor', function () {
       mathRandomStub.returns(0.0);
 
       const imageData1 = {
@@ -236,7 +236,7 @@ describe("Noise", function () {
       assert(noise2 > noise1);
     });
 
-    it("should handle zero factor", function () {
+    it('should handle zero factor', function () {
       mathRandomStub.returns(0.2);
 
       // Create fresh imageData for this test
@@ -259,7 +259,7 @@ describe("Noise", function () {
       }
     });
 
-    it("should handle negative factor", function () {
+    it('should handle negative factor', function () {
       mathRandomStub.returns(0.2); // This would normally add positive noise
 
       const testImageData = createFreshImageData();
@@ -278,8 +278,8 @@ describe("Noise", function () {
     });
   });
 
-  describe("Random distribution", function () {
-    it("should call Math.random for each pixel", function () {
+  describe('Random distribution', function () {
+    it('should call Math.random for each pixel', function () {
       const testImageData = createFreshImageData();
       const pixelCount = testImageData.width * testImageData.height;
       mathRandomStub.returns(0.5);
@@ -290,7 +290,7 @@ describe("Noise", function () {
       assert.strictEqual(mathRandomStub.callCount, pixelCount);
     });
 
-    it("should apply different noise to each pixel when random values differ", function () {
+    it('should apply different noise to each pixel when random values differ', function () {
       // Set up different random values for each pixel
       mathRandomStub.onCall(0).returns(0.2); // Positive noise
       mathRandomStub.onCall(1).returns(0.8); // Negative noise
@@ -353,8 +353,8 @@ describe("Noise", function () {
     });
   });
 
-  describe("Edge cases", function () {
-    it("should handle empty imageData", function () {
+  describe('Edge cases', function () {
+    it('should handle empty imageData', function () {
       const emptyImageData = {
         width: 0,
         height: 0,
@@ -368,7 +368,7 @@ describe("Noise", function () {
       assert.strictEqual(mathRandomStub.callCount, 0); // No pixels to process
     });
 
-    it("should handle single pixel image", function () {
+    it('should handle single pixel image', function () {
       mathRandomStub.returns(0.3);
 
       const singlePixelImageData = {
@@ -387,7 +387,7 @@ describe("Noise", function () {
       assert.strictEqual(singlePixelImageData.data[3], 255); // Alpha unchanged
     });
 
-    it("should handle large factor values", function () {
+    it('should handle large factor values', function () {
       mathRandomStub.returns(0.0); // Maximum positive noise
 
       const imageData = {
@@ -407,8 +407,8 @@ describe("Noise", function () {
     });
   });
 
-  describe("Value overflow/underflow", function () {
-    it("should clamp values that exceed 255", function () {
+  describe('Value overflow/underflow', function () {
+    it('should clamp values that exceed 255', function () {
       mathRandomStub.returns(0.0);
 
       const highValueImageData = {
@@ -435,7 +435,7 @@ describe("Noise", function () {
       ); // 240 + 60 = 300 -> 255
     });
 
-    it("should clamp values that go below 0", function () {
+    it('should clamp values that go below 0', function () {
       mathRandomStub.returns(1.0);
 
       const lowValueImageData = {
@@ -463,19 +463,19 @@ describe("Noise", function () {
     });
   });
 
-  describe("Data integrity", function () {
-    it("should maintain imageData structure", function () {
+  describe('Data integrity', function () {
+    it('should maintain imageData structure', function () {
       mathRandomStub.returns(0.5);
       const testImageData = createFreshImageData();
       const result = Noise(testImageData);
 
-      assert(result.hasOwnProperty("width"));
-      assert(result.hasOwnProperty("height"));
-      assert(result.hasOwnProperty("data"));
+      assert(result.hasOwnProperty('width'));
+      assert(result.hasOwnProperty('height'));
+      assert(result.hasOwnProperty('data'));
       assert(result.data instanceof Uint8ClampedArray);
     });
 
-    it("should not change imageData dimensions", function () {
+    it('should not change imageData dimensions', function () {
       mathRandomStub.returns(0.5);
       const testImageData = createFreshImageData();
       const originalWidth = testImageData.width;
@@ -489,7 +489,7 @@ describe("Noise", function () {
       assert.strictEqual(testImageData.data.length, originalLength);
     });
 
-    it("should process all pixels", function () {
+    it('should process all pixels', function () {
       mathRandomStub.returns(0.4);
       const testImageData = createFreshImageData();
       const pixelCount = testImageData.width * testImageData.height;
@@ -498,10 +498,10 @@ describe("Noise", function () {
 
       // Verify all pixels were processed
       for (let i = 0; i < pixelCount * 4; i += 4) {
-        assert(typeof testImageData.data[i] === "number"); // Red
-        assert(typeof testImageData.data[i + 1] === "number"); // Green
-        assert(typeof testImageData.data[i + 2] === "number"); // Blue
-        assert(typeof testImageData.data[i + 3] === "number"); // Alpha
+        assert(typeof testImageData.data[i] === 'number'); // Red
+        assert(typeof testImageData.data[i + 1] === 'number'); // Green
+        assert(typeof testImageData.data[i + 2] === 'number'); // Blue
+        assert(typeof testImageData.data[i + 3] === 'number'); // Alpha
       }
     });
   });

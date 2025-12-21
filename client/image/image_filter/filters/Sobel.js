@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import { ImageFilter } from "../ImageFilter.js";
-import { GrayScale } from "./GrayScale.js";
+import { ImageFilter } from '../ImageFilter.js';
+import { GrayScale } from './GrayScale.js';
 
 /**
  * Applies a Sobel edge detection filter to image data

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * @file Mixin that provides rotation and orientation capabilities to agents.

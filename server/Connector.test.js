@@ -1,11 +1,11 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { BECommonDefinitions } from "../common/BECommonDefinitions.js";
-import { getSharedLocalSocket } from "../common/fakeSocket.js";
-import { BEServer } from "./BEServer.js";
-import { Connector } from "./Connector.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { BECommonDefinitions } from '../common/BECommonDefinitions.js';
+import { getSharedLocalSocket } from '../common/fakeSocket.js';
+import { BEServer } from './BEServer.js';
+import { Connector } from './Connector.js';
 
-describe("Connector", function () {
+describe('Connector', function () {
   let connector, socket, user, clock, beServer;
   beforeEach(function () {
     beServer = new BEServer(); // Instantiate BEServer
@@ -19,7 +19,7 @@ describe("Connector", function () {
     };
     user = {
       id: 1,
-      name: "testUser",
+      name: 'testUser',
       socket,
       agent: {
         id: 1,
@@ -45,9 +45,9 @@ describe("Connector", function () {
     };
 
     sinon
-      .stub(beServer.getEnvironment(), "getNearbyAgentsByRectangle")
+      .stub(beServer.getEnvironment(), 'getNearbyAgentsByRectangle')
       .returns([user.agent]);
-    sinon.stub(beServer.getEnvironment(), "propagateUserEvent");
+    sinon.stub(beServer.getEnvironment(), 'propagateUserEvent');
     clock = sinon.useFakeTimers();
   });
 
@@ -63,36 +63,36 @@ describe("Connector", function () {
     beServer.stop(); // Stop the server to clean up timers
   });
 
-  it("should get user IDs", function () {
+  it('should get user IDs', function () {
     // Since idToUsers is private, we need to simulate adding a user through the connector's interface
     // For now, let's test that the method returns an array (empty by default for a new instance)
     assert(Array.isArray(connector.getUserIds()));
   });
 
-  it("should get users", function () {
+  it('should get users', function () {
     // Test that the method returns an array (empty by default for a new instance)
     assert(Array.isArray(connector.getUsers()));
   });
 
-  it("should get user by ID", function () {
+  it('should get user by ID', function () {
     connector.getUserById.returns(user);
     assert.deepStrictEqual(connector.getUserById(user.id), user);
   });
 
-  it("should play sound in client", function () {
+  it('should play sound in client', function () {
     // Test that the method can be called without error even with no connected users
     assert.doesNotThrow(() => {
-      connector.playSoundInClient("testSound");
+      connector.playSoundInClient('testSound');
     });
   });
 
-  it("should play procedural sound in client", function () {
+  it('should play procedural sound in client', function () {
     // Set up the config object if it doesn't exist
     if (!BECommonDefinitions.config) {
       BECommonDefinitions.config = {};
     }
     BECommonDefinitions.config.playProceduralSoundInClient = true;
-    const soundDescObj = { sound: "testSound" };
+    const soundDescObj = { sound: 'testSound' };
     const generatingEventPosition = { x: 0, y: 0 };
 
     // Test that the method can be called without error even with no connected users
@@ -104,21 +104,21 @@ describe("Connector", function () {
     });
   });
 
-  it("should play sound in client loop", function () {
+  it('should play sound in client loop', function () {
     // Test that the method can be called without error even with no connected users
     assert.doesNotThrow(() => {
-      connector.playSoundInClientLoop("testSound");
+      connector.playSoundInClientLoop('testSound');
     });
   });
 
-  it("should set visible agents", function () {
+  it('should set visible agents', function () {
     // Test that the method can be called without error even with no connected users
     assert.doesNotThrow(() => {
       connector.setVisibleAgents();
     });
   });
 
-  it("should set camera", function () {
+  it('should set camera', function () {
     // Set up the config object if it doesn't exist
     if (!BECommonDefinitions.config) {
       BECommonDefinitions.config = {};
@@ -131,30 +131,30 @@ describe("Connector", function () {
     });
   });
 
-  it("should send message to game client", function () {
+  it('should send message to game client', function () {
     // Test that the method can be called without error even with no connected users
     assert.doesNotThrow(() => {
-      connector.messageToGameClient("testMessage", { content: "testContent" });
+      connector.messageToGameClient('testMessage', { content: 'testContent' });
     });
   });
 
-  it("should send message to single game client", function () {
+  it('should send message to single game client', function () {
     // Test that the method can be called without error even with no connected users
     assert.doesNotThrow(() => {
-      connector.messageToSingleGameClient(user.id, "testMessage", {
-        content: "testContent",
+      connector.messageToSingleGameClient(user.id, 'testMessage', {
+        content: 'testContent',
       });
     });
   });
 
-  it("should remove user by owning agent ID", function () {
+  it('should remove user by owning agent ID', function () {
     // Test that the method can be called without error even with no connected users
     assert.doesNotThrow(() => {
       connector.removeUserByOwningAgentId(user.agent.id);
     });
   });
 
-  it("should start the connector with a local app", async function () {
+  it('should start the connector with a local app', async function () {
     // Create a fake socket for local app testing
     const fakeSocket = getSharedLocalSocket();
 
@@ -168,11 +168,11 @@ describe("Connector", function () {
     assert(connector.getUserIds().length === 0); // Should start with no users
   });
 
-  it("should handle socket connection and events", async function () {
+  it('should handle socket connection and events', async function () {
     // This test would require setting up a full socket.io server
     // For testing purposes, we'll just test that the start method exists and can be called
     // without causing the test suite to hang by starting an actual server
-    assert(typeof connector.start === "function", "start method should exist");
+    assert(typeof connector.start === 'function', 'start method should exist');
 
     // Test with local app mode to avoid creating real server infrastructure
     const fakeSocket = getSharedLocalSocket();

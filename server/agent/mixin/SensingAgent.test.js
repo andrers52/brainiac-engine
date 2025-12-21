@@ -1,11 +1,11 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { rect } from "../../../common/geometry/Rectangle.js";
-import { Vector } from "../../../common/geometry/Vector.js";
-import { BEServer } from "../../BEServer.js";
-import { SensingAgent } from "./SensingAgent.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { rect } from '../../../common/geometry/Rectangle.js';
+import { Vector } from '../../../common/geometry/Vector.js';
+import { BEServer } from '../../BEServer.js';
+import { SensingAgent } from './SensingAgent.js';
 
-describe("SensingAgent", function () {
+describe('SensingAgent', function () {
   let agent, nearbyAgentsStub, clock;
   let beServer; // Declare beServer instance
 
@@ -28,7 +28,7 @@ describe("SensingAgent", function () {
 
     // Stub on the instance
     nearbyAgentsStub = sinon
-      .stub(beServer.getEnvironment(), "getNearbyAgents")
+      .stub(beServer.getEnvironment(), 'getNearbyAgents')
       .returns([]);
   });
 
@@ -41,14 +41,14 @@ describe("SensingAgent", function () {
     beServer.stop(); // Stop the server to clean up timers
   });
 
-  it("should throw an error if required event handlers are not implemented", function () {
+  it('should throw an error if required event handlers are not implemented', function () {
     assert.throws(() => {
       // Pass beServer instance to SensingAgent call
       SensingAgent.call({}, beServer, () => false);
     }, /Error: added SensingAgent to agent without implementing/);
   });
 
-  it("should detect agents within sensing distance", function () {
+  it('should detect agents within sensing distance', function () {
     const detectedAgent = {
       id: 2,
       isCamera: false,
@@ -71,7 +71,7 @@ describe("SensingAgent", function () {
     );
   });
 
-  it("should not detect agents outside sensing distance", function () {
+  it('should not detect agents outside sensing distance', function () {
     const detectedAgent = {
       id: 2,
       isCamera: false,
@@ -90,7 +90,7 @@ describe("SensingAgent", function () {
     assert(agent.onSensingAgents.notCalled);
   });
 
-  it("should detect user agent", function () {
+  it('should detect user agent', function () {
     const detectedAgent = {
       id: 2,
       isCamera: false,
@@ -113,7 +113,7 @@ describe("SensingAgent", function () {
     );
   });
 
-  it("should detect forward agents", function () {
+  it('should detect forward agents', function () {
     agent.orientation = 0; // Facing right
     const forwardAgent = {
       id: 2,
@@ -145,7 +145,7 @@ describe("SensingAgent", function () {
     );
   });
 
-  it("should detect the most forward agent", function () {
+  it('should detect the most forward agent', function () {
     agent.orientation = 0; // Facing right
     const mostForwardAgent = {
       id: 2,
@@ -177,7 +177,7 @@ describe("SensingAgent", function () {
     );
   });
 
-  it("should call detector function for each nearby agent", function () {
+  it('should call detector function for each nearby agent', function () {
     const agentInDistance = {
       id: 4,
       getPosition: () => new Vector(10, 0),
@@ -195,7 +195,7 @@ describe("SensingAgent", function () {
     assert(detectorSpy.calledOnceWith(agentInDistance));
   });
 
-  it("should respect the delay between sensing checks", function () {
+  it('should respect the delay between sensing checks', function () {
     // Ensure an agent is returned by getNearbyAgents to trigger onSensingAgents
     const detectedAgent = {
       id: 2,

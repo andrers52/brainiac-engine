@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Applies a threshold effect to image data, converting to black and white

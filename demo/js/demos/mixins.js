@@ -1,9 +1,9 @@
-import { createAgent, Fade, Pulsate, Spin } from "brainiac-engine";
+import { createAgent, Fade, Pulsate, Spin } from 'brainiac-engine';
 
 export function startMixinsDemo(server) {
   server.clearCurrentDemo();
-  server.currentDemo = "mixins";
-  console.log("Starting Visual Effects Demo...");
+  server.currentDemo = 'mixins';
+  console.log('Starting Visual Effects Demo...');
 
   try {
     const beServer = server.getBEServer();
@@ -11,7 +11,7 @@ export function startMixinsDemo(server) {
     // Pulsating black square
     const pulsateAgent = createAgent(
       beServer,
-      "media/images/blue_square.png",
+      'media/images/blue_square.png',
       50,
       50,
       false,
@@ -25,7 +25,7 @@ export function startMixinsDemo(server) {
     // Spinning blue square
     const spinAgent = createAgent(
       beServer,
-      "media/images/blue_square.png",
+      'media/images/blue_square.png',
       50,
       50,
       false,
@@ -41,7 +41,7 @@ export function startMixinsDemo(server) {
       setTimeout(() => {
         const fadeAgent = createAgent(
           beServer,
-          "media/images/bubble.png",
+          'media/images/bubble.png',
           40,
           40,
           false,
@@ -55,9 +55,9 @@ export function startMixinsDemo(server) {
     }
 
     server.updateDemoInfo(
-      "Visual Effects: Pulsate, Spin, and Fade mixins in action",
+      'Visual Effects: Pulsate, Spin, and Fade mixins in action',
     );
   } catch (error) {
-    console.error("Error in mixins demo:", error);
+    console.error('Error in mixins demo:', error);
   }
 }

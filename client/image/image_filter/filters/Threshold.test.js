@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-import assert from "assert";
-import { Threshold } from "./Threshold.js";
+import assert from 'assert';
+import { Threshold } from './Threshold.js';
 
-describe("Threshold Filter", () => {
+describe('Threshold Filter', () => {
   let imageData;
 
   beforeEach(() => {
@@ -41,15 +41,15 @@ describe("Threshold Filter", () => {
     };
   });
 
-  describe("Basic functionality", () => {
-    it("should apply threshold effect to convert image to black and white", () => {
+  describe('Basic functionality', () => {
+    it('should apply threshold effect to convert image to black and white', () => {
       const threshold = 128;
       const result = Threshold(imageData, threshold);
 
       assert.strictEqual(
         result,
         imageData,
-        "Should return the same imageData object",
+        'Should return the same imageData object',
       );
 
       // Check that all pixels are either black (0) or white (255)
@@ -71,13 +71,13 @@ describe("Threshold Filter", () => {
           b === 0 || b === 255,
           `Blue channel should be 0 or 255, got ${b}`,
         );
-        assert.strictEqual(r, g, "Red and green channels should be equal");
-        assert.strictEqual(g, b, "Green and blue channels should be equal");
-        assert.strictEqual(alpha, 255, "Alpha channel should remain unchanged");
+        assert.strictEqual(r, g, 'Red and green channels should be equal');
+        assert.strictEqual(g, b, 'Green and blue channels should be equal');
+        assert.strictEqual(alpha, 255, 'Alpha channel should remain unchanged');
       }
     });
 
-    it("should use luminance formula for threshold calculation", () => {
+    it('should use luminance formula for threshold calculation', () => {
       const threshold = 128;
       const result = Threshold(imageData, threshold);
 
@@ -97,7 +97,7 @@ describe("Threshold Filter", () => {
       assert.strictEqual(result.data[10], 0);
     });
 
-    it("should handle color pixels correctly using luminance", () => {
+    it('should handle color pixels correctly using luminance', () => {
       const threshold = 100;
       const result = Threshold(imageData, threshold);
 
@@ -108,48 +108,48 @@ describe("Threshold Filter", () => {
     });
   });
 
-  describe("Threshold values", () => {
-    it("should handle threshold of 0 (all pixels become white)", () => {
+  describe('Threshold values', () => {
+    it('should handle threshold of 0 (all pixels become white)', () => {
       const result = Threshold(imageData, 0);
 
       for (let i = 0; i < result.data.length; i += 4) {
         assert.strictEqual(
           result.data[i],
           255,
-          "All red values should be white",
+          'All red values should be white',
         );
         assert.strictEqual(
           result.data[i + 1],
           255,
-          "All green values should be white",
+          'All green values should be white',
         );
         assert.strictEqual(
           result.data[i + 2],
           255,
-          "All blue values should be white",
+          'All blue values should be white',
         );
       }
     });
 
-    it("should handle threshold of 255 (all pixels become black)", () => {
+    it('should handle threshold of 255 (all pixels become black)', () => {
       const result = Threshold(imageData, 255);
 
       for (let i = 0; i < result.data.length; i += 4) {
-        assert.strictEqual(result.data[i], 0, "All red values should be black");
+        assert.strictEqual(result.data[i], 0, 'All red values should be black');
         assert.strictEqual(
           result.data[i + 1],
           0,
-          "All green values should be black",
+          'All green values should be black',
         );
         assert.strictEqual(
           result.data[i + 2],
           0,
-          "All blue values should be black",
+          'All blue values should be black',
         );
       }
     });
 
-    it("should handle mid-range threshold values correctly", () => {
+    it('should handle mid-range threshold values correctly', () => {
       const threshold = 127;
       const result = Threshold(imageData, threshold);
 
@@ -164,7 +164,7 @@ describe("Threshold Filter", () => {
       assert.strictEqual(result.data[18], 0);
     });
 
-    it("should handle exact threshold boundary conditions", () => {
+    it('should handle exact threshold boundary conditions', () => {
       // Create pixel with exact luminance matching threshold
       const testData = new Uint8ClampedArray([128, 128, 128, 255]);
       const testImageData = {
@@ -182,8 +182,8 @@ describe("Threshold Filter", () => {
     });
   });
 
-  describe("Edge cases", () => {
-    it("should handle single pixel image", () => {
+  describe('Edge cases', () => {
+    it('should handle single pixel image', () => {
       const singlePixelData = new Uint8ClampedArray([100, 150, 200, 255]);
       const singlePixel = {
         data: singlePixelData,
@@ -200,7 +200,7 @@ describe("Threshold Filter", () => {
       assert.strictEqual(result.data[3], 255);
     });
 
-    it("should handle empty image data", () => {
+    it('should handle empty image data', () => {
       const emptyData = new Uint8ClampedArray([]);
       const emptyImage = {
         data: emptyData,
@@ -212,7 +212,7 @@ describe("Threshold Filter", () => {
       assert.strictEqual(result.data.length, 0);
     });
 
-    it("should preserve alpha channel values", () => {
+    it('should preserve alpha channel values', () => {
       const dataWithVaryingAlpha = new Uint8ClampedArray([
         128,
         128,
@@ -243,24 +243,24 @@ describe("Threshold Filter", () => {
       assert.strictEqual(
         result.data[3],
         255,
-        "First alpha should be preserved",
+        'First alpha should be preserved',
       );
       assert.strictEqual(
         result.data[7],
         128,
-        "Second alpha should be preserved",
+        'Second alpha should be preserved',
       );
-      assert.strictEqual(result.data[11], 0, "Third alpha should be preserved");
+      assert.strictEqual(result.data[11], 0, 'Third alpha should be preserved');
       assert.strictEqual(
         result.data[15],
         64,
-        "Fourth alpha should be preserved",
+        'Fourth alpha should be preserved',
       );
     });
   });
 
-  describe("Luminance calculation verification", () => {
-    it("should use correct luminance coefficients (ITU-R BT.709)", () => {
+  describe('Luminance calculation verification', () => {
+    it('should use correct luminance coefficients (ITU-R BT.709)', () => {
       // Test with pure red
       let redData = new Uint8ClampedArray([255, 0, 0, 255]);
       let redImage = { data: redData, width: 1, height: 1 };
@@ -270,7 +270,7 @@ describe("Threshold Filter", () => {
       assert.strictEqual(
         redResult.data[0],
         0,
-        "Pure red should be below threshold 55",
+        'Pure red should be below threshold 55',
       );
 
       redData = new Uint8ClampedArray([255, 0, 0, 255]);
@@ -279,7 +279,7 @@ describe("Threshold Filter", () => {
       assert.strictEqual(
         redResult2.data[0],
         255,
-        "Pure red should be above or equal to threshold 54",
+        'Pure red should be above or equal to threshold 54',
       );
 
       // Test with pure green
@@ -291,7 +291,7 @@ describe("Threshold Filter", () => {
       assert.strictEqual(
         greenResult.data[0],
         0,
-        "Pure green should be below threshold 183",
+        'Pure green should be below threshold 183',
       );
 
       greenData = new Uint8ClampedArray([0, 255, 0, 255]);
@@ -300,7 +300,7 @@ describe("Threshold Filter", () => {
       assert.strictEqual(
         greenResult2.data[0],
         255,
-        "Pure green should be above or equal to threshold 182",
+        'Pure green should be above or equal to threshold 182',
       );
 
       // Test with pure blue
@@ -312,7 +312,7 @@ describe("Threshold Filter", () => {
       assert.strictEqual(
         blueResult.data[0],
         0,
-        "Pure blue should be below threshold 19",
+        'Pure blue should be below threshold 19',
       );
 
       blueData = new Uint8ClampedArray([0, 0, 255, 255]);
@@ -321,13 +321,13 @@ describe("Threshold Filter", () => {
       assert.strictEqual(
         blueResult2.data[0],
         255,
-        "Pure blue should be above or equal to threshold 18",
+        'Pure blue should be above or equal to threshold 18',
       );
     });
   });
 
-  describe("Parameter validation and edge cases", () => {
-    it("should handle negative threshold values", () => {
+  describe('Parameter validation and edge cases', () => {
+    it('should handle negative threshold values', () => {
       const result = Threshold(imageData, -10);
 
       // All pixels should become white since all luminance values >= -10
@@ -338,7 +338,7 @@ describe("Threshold Filter", () => {
       }
     });
 
-    it("should handle threshold values above 255", () => {
+    it('should handle threshold values above 255', () => {
       const result = Threshold(imageData, 300);
 
       // All pixels should become black since no luminance value >= 300
@@ -349,7 +349,7 @@ describe("Threshold Filter", () => {
       }
     });
 
-    it("should handle fractional threshold values", () => {
+    it('should handle fractional threshold values', () => {
       const result = Threshold(imageData, 127.5);
 
       // Gray pixel (128, 128, 128) - luminance = 128 >= 127.5 → white
@@ -359,8 +359,8 @@ describe("Threshold Filter", () => {
     });
   });
 
-  describe("Data integrity", () => {
-    it("should not modify the original image data structure", () => {
+  describe('Data integrity', () => {
+    it('should not modify the original image data structure', () => {
       const originalWidth = imageData.width;
       const originalHeight = imageData.height;
       const originalDataLength = imageData.data.length;
@@ -370,21 +370,21 @@ describe("Threshold Filter", () => {
       assert.strictEqual(
         imageData.width,
         originalWidth,
-        "Width should not change",
+        'Width should not change',
       );
       assert.strictEqual(
         imageData.height,
         originalHeight,
-        "Height should not change",
+        'Height should not change',
       );
       assert.strictEqual(
         imageData.data.length,
         originalDataLength,
-        "Data length should not change",
+        'Data length should not change',
       );
     });
 
-    it("should handle large images efficiently", () => {
+    it('should handle large images efficiently', () => {
       // Create a larger test image
       const largeData = new Uint8ClampedArray(4000); // 1000 pixels
       for (let i = 0; i < largeData.length; i += 4) {
@@ -407,12 +407,12 @@ describe("Threshold Filter", () => {
 
       assert(
         duration < 100,
-        "Large image processing should complete in reasonable time",
+        'Large image processing should complete in reasonable time',
       );
       assert.strictEqual(
         result.data.length,
         4000,
-        "Result should have same data length",
+        'Result should have same data length',
       );
 
       // Verify all pixels are properly thresholded
@@ -421,9 +421,9 @@ describe("Threshold Filter", () => {
         const g = result.data[i + 1];
         const b = result.data[i + 2];
 
-        assert(r === 0 || r === 255, "All red values should be 0 or 255");
-        assert.strictEqual(r, g, "R and G should be equal");
-        assert.strictEqual(g, b, "G and B should be equal");
+        assert(r === 0 || r === 255, 'All red values should be 0 or 255');
+        assert.strictEqual(r, g, 'R and G should be equal');
+        assert.strictEqual(g, b, 'G and B should be equal');
       }
     });
   });

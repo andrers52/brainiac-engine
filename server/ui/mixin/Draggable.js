@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import { Assert, EFunction } from "arslib";
-import { Vector } from "../../../common/geometry/Vector.js";
+import { Assert, EFunction } from 'arslib';
+import { Vector } from '../../../common/geometry/Vector.js';
 
 /**
  * @file Mixin that provides drag and drop functionality for agents.
@@ -33,7 +33,7 @@ import { Vector } from "../../../common/geometry/Vector.js";
 export function Draggable(canDragAlongX, canDragAlongY) {
   Assert.assert(
     canDragAlongX || canDragAlongY,
-    "Draggable error: you must select at least one axys for drag",
+    'Draggable error: you must select at least one axys for drag',
   );
 
   /** @type {boolean} Flag indicating this agent is draggable */

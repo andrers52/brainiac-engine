@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import { EFunction } from "arslib";
-import { ChangesImageWithState } from "../agent/mixin/ChangesImageWithState.js";
-import { createButton } from "./Button.js";
+import { EFunction } from 'arslib';
+import { ChangesImageWithState } from '../agent/mixin/ChangesImageWithState.js';
+import { createButton } from './Button.js';
 
 /**
  * @file Toggle button UI component with two-state functionality.
@@ -70,15 +70,15 @@ export function createToggleButton(
 
   /** @type {Object} Configuration for the toggle button's state system */
   let toggleButtonConfiguration = {
-    defaultState: checked ? "selected" : "deselected",
+    defaultState: checked ? 'selected' : 'deselected',
     states: [
       {
-        stateName: "selected",
+        stateName: 'selected',
         image: selectedImageName,
         audioName: selectedAudio ? selectedAudio : null,
       },
       {
-        stateName: "deselected",
+        stateName: 'deselected',
         image: deselectedImageName,
         audioName: deselectedAudio ? deselectedAudio : null,
       },
@@ -93,14 +93,14 @@ export function createToggleButton(
    * @private
    */
   function onMouseDownHitActionOnlyWhenStateIsDeselected() {
-    if (toggleButton.currentState === "deselected") {
+    if (toggleButton.currentState === 'deselected') {
       selectedAction && selectedAction.call(this);
-      toggleButton.changeState("selected");
+      toggleButton.changeState('selected');
       return toggleButton;
     }
 
     deselectedAction && deselectedAction.call(toggleButton);
-    toggleButton.changeState("deselected");
+    toggleButton.changeState('deselected');
     return toggleButton;
   }
 
@@ -118,7 +118,7 @@ export function createToggleButton(
    * @memberof ToggleButton
    */
   toggleButton.deselect = function () {
-    this.changeState("deselected");
+    this.changeState('deselected');
   };
 
   /**
@@ -126,7 +126,7 @@ export function createToggleButton(
    * @memberof ToggleButton
    */
   toggleButton.select = function () {
-    this.changeState("selected");
+    this.changeState('selected');
   };
 
   toggleButton.onMouseDownHit = EFunction.sequence(
@@ -142,7 +142,7 @@ export function createToggleButton(
    * @returns {boolean} True if the button is in selected state
    */
   toggleButton.isSelected = function () {
-    return this.currentState === "selected";
+    return this.currentState === 'selected';
   };
 
   return toggleButton;

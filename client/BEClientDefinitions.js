@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Client-side definitions and constants for the Brainiac Engine
@@ -8,12 +8,12 @@
 let BEClientDefinitions = {};
 
 /** @type {string} The ID for the main game canvas element */
-BEClientDefinitions.CANVAS_ID = "gameCanvas";
+BEClientDefinitions.CANVAS_ID = 'gameCanvas';
 
 /** @type {string} The ID for the loading animation element */
-BEClientDefinitions.LOADING_ANIMATION_ID = "loading_animation";
+BEClientDefinitions.LOADING_ANIMATION_ID = 'loading_animation';
 /** @type {string} The CSS class name for centered loading animation */
-BEClientDefinitions.LOADING_ANIMATION_CLASS_NAME = "centered";
+BEClientDefinitions.LOADING_ANIMATION_CLASS_NAME = 'centered';
 
 /** @type {number} Animation interval in milliseconds */
 BEClientDefinitions.ANIMATION_INTERVAL = 90;

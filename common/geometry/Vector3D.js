@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Represents a 3D vector.
@@ -324,7 +324,7 @@ Vector3D.prototype.abs = function () {
  * @returns {string} String representation in format "(x,y,z)"
  */
 Vector3D.prototype.toString = function () {
-  return "(" + this.x + "," + this.y + "," + this.z + ")";
+  return '(' + this.x + ',' + this.y + ',' + this.z + ')';
 };
 
 /**

@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { IncreaseTransparency } from "./IncreaseTransparency.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { IncreaseTransparency } from './IncreaseTransparency.js';
 
-describe("IncreaseTransparency", function () {
+describe('IncreaseTransparency', function () {
   let sandbox;
   let mockImageData;
 
@@ -30,8 +30,8 @@ describe("IncreaseTransparency", function () {
     sandbox.restore();
   });
 
-  describe("Basic functionality", function () {
-    it("should decrease alpha by 1 for non-transparent pixels", function () {
+  describe('Basic functionality', function () {
+    it('should decrease alpha by 1 for non-transparent pixels', function () {
       const originalData = new Uint8ClampedArray(mockImageData.data);
 
       const result = IncreaseTransparency(mockImageData);
@@ -54,13 +54,13 @@ describe("IncreaseTransparency", function () {
       }
     });
 
-    it("should return the modified imageData object", function () {
+    it('should return the modified imageData object', function () {
       const result = IncreaseTransparency(mockImageData);
 
       assert.strictEqual(result, mockImageData);
     });
 
-    it("should not modify RGB channels", function () {
+    it('should not modify RGB channels', function () {
       const originalRGB = [];
       for (let i = 0; i < mockImageData.data.length; i += 4) {
         originalRGB.push([
@@ -90,8 +90,8 @@ describe("IncreaseTransparency", function () {
     });
   });
 
-  describe("Alpha value handling", function () {
-    it("should not decrease alpha below 0", function () {
+  describe('Alpha value handling', function () {
+    it('should not decrease alpha below 0', function () {
       const zeroAlphaImageData = {
         width: 1,
         height: 1,
@@ -103,7 +103,7 @@ describe("IncreaseTransparency", function () {
       assert.strictEqual(zeroAlphaImageData.data[3], 0); // Should remain 0
     });
 
-    it("should handle alpha value of 1 correctly", function () {
+    it('should handle alpha value of 1 correctly', function () {
       const oneAlphaImageData = {
         width: 1,
         height: 1,
@@ -115,7 +115,7 @@ describe("IncreaseTransparency", function () {
       assert.strictEqual(oneAlphaImageData.data[3], 0); // Should become 0
     });
 
-    it("should handle maximum alpha value correctly", function () {
+    it('should handle maximum alpha value correctly', function () {
       const maxAlphaImageData = {
         width: 1,
         height: 1,
@@ -127,7 +127,7 @@ describe("IncreaseTransparency", function () {
       assert.strictEqual(maxAlphaImageData.data[3], 254); // Should become 254
     });
 
-    it("should handle mid-range alpha values", function () {
+    it('should handle mid-range alpha values', function () {
       const midAlphaImageData = {
         width: 1,
         height: 1,
@@ -140,8 +140,8 @@ describe("IncreaseTransparency", function () {
     });
   });
 
-  describe("Multiple applications", function () {
-    it("should gradually increase transparency with multiple calls", function () {
+  describe('Multiple applications', function () {
+    it('should gradually increase transparency with multiple calls', function () {
       const imageData = {
         width: 1,
         height: 1,
@@ -159,7 +159,7 @@ describe("IncreaseTransparency", function () {
       assert.strictEqual(imageData.data[3], 7);
     });
 
-    it("should stop decreasing at 0 even with multiple calls", function () {
+    it('should stop decreasing at 0 even with multiple calls', function () {
       const imageData = {
         width: 1,
         height: 1,
@@ -181,8 +181,8 @@ describe("IncreaseTransparency", function () {
     });
   });
 
-  describe("Mixed transparency scenarios", function () {
-    it("should handle image with mixed alpha values correctly", function () {
+  describe('Mixed transparency scenarios', function () {
+    it('should handle image with mixed alpha values correctly', function () {
       const mixedImageData = {
         width: 2,
         height: 2,
@@ -214,7 +214,7 @@ describe("IncreaseTransparency", function () {
       assert.strictEqual(mixedImageData.data[15], 0); // 0 -> 0 (unchanged)
     });
 
-    it("should preserve the relative transparency order", function () {
+    it('should preserve the relative transparency order', function () {
       const imageData = {
         width: 3,
         height: 1,
@@ -242,8 +242,8 @@ describe("IncreaseTransparency", function () {
     });
   });
 
-  describe("Edge cases", function () {
-    it("should handle empty imageData", function () {
+  describe('Edge cases', function () {
+    it('should handle empty imageData', function () {
       const emptyImageData = {
         width: 0,
         height: 0,
@@ -256,7 +256,7 @@ describe("IncreaseTransparency", function () {
       assert.strictEqual(result.data.length, 0);
     });
 
-    it("should handle single pixel image", function () {
+    it('should handle single pixel image', function () {
       const singlePixelImageData = {
         width: 1,
         height: 1,
@@ -271,7 +271,7 @@ describe("IncreaseTransparency", function () {
       assert.strictEqual(singlePixelImageData.data[3], 63); // Alpha decreased
     });
 
-    it("should handle large image data", function () {
+    it('should handle large image data', function () {
       const largeImageData = {
         width: 100,
         height: 100,
@@ -297,8 +297,8 @@ describe("IncreaseTransparency", function () {
     });
   });
 
-  describe("Boundary values", function () {
-    it("should handle all possible alpha values correctly", function () {
+  describe('Boundary values', function () {
+    it('should handle all possible alpha values correctly', function () {
       const testValues = [0, 1, 2, 127, 128, 254, 255];
 
       testValues.forEach((alphaValue) => {
@@ -320,17 +320,17 @@ describe("IncreaseTransparency", function () {
     });
   });
 
-  describe("Data integrity", function () {
-    it("should maintain imageData structure", function () {
+  describe('Data integrity', function () {
+    it('should maintain imageData structure', function () {
       const result = IncreaseTransparency(mockImageData);
 
-      assert(result.hasOwnProperty("width"));
-      assert(result.hasOwnProperty("height"));
-      assert(result.hasOwnProperty("data"));
+      assert(result.hasOwnProperty('width'));
+      assert(result.hasOwnProperty('height'));
+      assert(result.hasOwnProperty('data'));
       assert(result.data instanceof Uint8ClampedArray);
     });
 
-    it("should not change imageData dimensions", function () {
+    it('should not change imageData dimensions', function () {
       const originalWidth = mockImageData.width;
       const originalHeight = mockImageData.height;
       const originalLength = mockImageData.data.length;
@@ -342,17 +342,17 @@ describe("IncreaseTransparency", function () {
       assert.strictEqual(mockImageData.data.length, originalLength);
     });
 
-    it("should process all pixels", function () {
+    it('should process all pixels', function () {
       const pixelCount = mockImageData.width * mockImageData.height;
 
       IncreaseTransparency(mockImageData);
 
       // Verify all pixels were processed
       for (let i = 0; i < pixelCount * 4; i += 4) {
-        assert(typeof mockImageData.data[i] === "number"); // Red
-        assert(typeof mockImageData.data[i + 1] === "number"); // Green
-        assert(typeof mockImageData.data[i + 2] === "number"); // Blue
-        assert(typeof mockImageData.data[i + 3] === "number"); // Alpha
+        assert(typeof mockImageData.data[i] === 'number'); // Red
+        assert(typeof mockImageData.data[i + 1] === 'number'); // Green
+        assert(typeof mockImageData.data[i + 2] === 'number'); // Blue
+        assert(typeof mockImageData.data[i + 3] === 'number'); // Alpha
 
         // Alpha should be within valid range
         assert(mockImageData.data[i + 3] >= 0);

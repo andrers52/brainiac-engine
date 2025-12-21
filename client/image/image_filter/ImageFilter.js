@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 //http://www.html5rocks.com/en/tutorials/canvas/imagefilters/
 
@@ -53,8 +53,8 @@ ImageFilter.tmpCtx = null;
 function initTempCanvas() {
   if (ImageFilter.tmpCanvas) return;
 
-  ImageFilter.tmpCanvas = document.createElement("canvas");
-  ImageFilter.tmpCtx = ImageFilter.tmpCanvas.getContext("2d");
+  ImageFilter.tmpCanvas = document.createElement('canvas');
+  ImageFilter.tmpCtx = ImageFilter.tmpCanvas.getContext('2d');
 }
 
 /**
@@ -65,7 +65,7 @@ function initTempCanvas() {
  */
 ImageFilter.createImageData = function (w, h) {
   initTempCanvas();
-  if (!this.tmpCtx || typeof this.tmpCtx.createImageData !== "function") {
+  if (!this.tmpCtx || typeof this.tmpCtx.createImageData !== 'function') {
     // Fallback when createImageData is not available
     return {
       width: w,
@@ -132,9 +132,9 @@ ImageFilter.convolute = function (pixels, weights, opaque) {
 };
 
 /** Fallback for browsers without Float32Array support */
-if (typeof globalThis !== "undefined" && globalThis.Float32Array) {
+if (typeof globalThis !== 'undefined' && globalThis.Float32Array) {
   var Float32Array = globalThis.Float32Array;
-} else if (typeof window !== "undefined" && window.Float32Array) {
+} else if (typeof window !== 'undefined' && window.Float32Array) {
   var Float32Array = window.Float32Array;
 } else {
   var Float32Array = Array;

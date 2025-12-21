@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { Assert } from "arslib";
+import { Assert } from 'arslib';
 
 /**
  * @file Spatial indexing system for efficient agent collision detection and proximity queries.
@@ -98,8 +98,8 @@ export function SpaceSegments() {
       row >= this.NUM_SEGMENT_ROWS
         ? this.NUM_SEGMENT_ROWS - 1
         : row < 0
-        ? 0
-        : row;
+          ? 0
+          : row;
     let column = Math.trunc(
       (position.x + this.WORLD_WIDTH / 2) /
         (this.WORLD_WIDTH / this.NUM_SEGMENT_COLUMNS),
@@ -109,8 +109,8 @@ export function SpaceSegments() {
       column >= this.NUM_SEGMENT_COLUMNS
         ? this.NUM_SEGMENT_COLUMNS - 1
         : column < 0
-        ? 0
-        : column;
+          ? 0
+          : column;
     Assert.assert(segments[row][column]);
     return segments[row][column];
   };

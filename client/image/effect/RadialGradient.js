@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Creates a radial gradient effect on the canvas
@@ -43,7 +43,7 @@ export function RadialGradient(context, parameters) {
     );
     context.closePath();
     context.fillStyle = radgrad;
-    context.strokeStyle = "black";
+    context.strokeStyle = 'black';
     context.stroke();
     context.fill();
   }

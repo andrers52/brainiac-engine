@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * @file User representation for connected clients in the Brainiac Engine.
@@ -44,5 +44,5 @@ export function User(socket) {
   this.agent = null; //Agent representing the user. To be defined when connected.
 
   /** @type {string} Display name for the user */
-  this.name = "";
+  this.name = '';
 }

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * @file Camera system for the Brainiac Engine.
@@ -13,9 +13,9 @@
  * - owner: Reference to the agent that owns this camera
  */
 
-import { Rectangle } from "../../common/geometry/Rectangle.js";
-import { Vector } from "../../common/geometry/Vector.js";
-import { createAgent } from "./Agent.js";
+import { Rectangle } from '../../common/geometry/Rectangle.js';
+import { Vector } from '../../common/geometry/Vector.js';
+import { createAgent } from './Agent.js';
 
 /**
  * Creates a camera agent for viewing and tracking other agents.

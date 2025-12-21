@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Draws a dotted rectangle pattern on the canvas context
@@ -13,8 +13,8 @@ export function DottedRectangle(context) {
   context.beginPath();
   context.lineWidth = lineWidth;
   context.rect(0, 0, context.canvas.width, context.canvas.height);
-  context.fillStyle = "black";
-  context.strokeStyle = "grey";
+  context.fillStyle = 'black';
+  context.strokeStyle = 'grey';
 
   //draw dots
   context.lineWidth = 1;

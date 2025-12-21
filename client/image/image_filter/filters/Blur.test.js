@@ -1,9 +1,9 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { ImageFilter } from "../ImageFilter.js";
-import { Blur } from "./Blur.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { ImageFilter } from '../ImageFilter.js';
+import { Blur } from './Blur.js';
 
-describe("Blur", function () {
+describe('Blur', function () {
   let sandbox;
   let mockImageData;
   let convoluteSpy;
@@ -30,7 +30,7 @@ describe("Blur", function () {
 
     // Spy on ImageFilter.convolute
     convoluteSpy = sandbox
-      .stub(ImageFilter, "convolute")
+      .stub(ImageFilter, 'convolute')
       .returns(mockImageData);
   });
 
@@ -38,8 +38,8 @@ describe("Blur", function () {
     sandbox.restore();
   });
 
-  describe("Basic functionality", function () {
-    it("should call ImageFilter.convolute with correct blur kernel", function () {
+  describe('Basic functionality', function () {
+    it('should call ImageFilter.convolute with correct blur kernel', function () {
       const expectedKernel = [
         1 / 9,
         1 / 9,
@@ -58,13 +58,13 @@ describe("Blur", function () {
       assert(convoluteSpy.calledWith(mockImageData, expectedKernel));
     });
 
-    it("should return the result from ImageFilter.convolute", function () {
+    it('should return the result from ImageFilter.convolute', function () {
       const result = Blur(mockImageData);
 
       assert.strictEqual(result, mockImageData);
     });
 
-    it("should use 3x3 blur kernel with equal weights", function () {
+    it('should use 3x3 blur kernel with equal weights', function () {
       Blur(mockImageData);
 
       const calledKernel = convoluteSpy.firstCall.args[1];
@@ -77,8 +77,8 @@ describe("Blur", function () {
     });
   });
 
-  describe("Kernel properties", function () {
-    it("should use normalized kernel that sums to 1", function () {
+  describe('Kernel properties', function () {
+    it('should use normalized kernel that sums to 1', function () {
       Blur(mockImageData);
 
       const kernel = convoluteSpy.firstCall.args[1];
@@ -88,7 +88,7 @@ describe("Blur", function () {
       assert(Math.abs(sum - 1) < 0.0001);
     });
 
-    it("should use uniform kernel (all values equal)", function () {
+    it('should use uniform kernel (all values equal)', function () {
       Blur(mockImageData);
 
       const kernel = convoluteSpy.firstCall.args[1];
@@ -99,7 +99,7 @@ describe("Blur", function () {
       });
     });
 
-    it("should create a 3x3 kernel matrix", function () {
+    it('should create a 3x3 kernel matrix', function () {
       Blur(mockImageData);
 
       const kernel = convoluteSpy.firstCall.args[1];
@@ -112,20 +112,20 @@ describe("Blur", function () {
     });
   });
 
-  describe("Edge cases", function () {
-    it("should handle null imageData gracefully", function () {
+  describe('Edge cases', function () {
+    it('should handle null imageData gracefully', function () {
       Blur(null);
 
       assert(convoluteSpy.calledWith(null));
     });
 
-    it("should handle undefined imageData gracefully", function () {
+    it('should handle undefined imageData gracefully', function () {
       Blur(undefined);
 
       assert(convoluteSpy.calledWith(undefined));
     });
 
-    it("should handle empty imageData", function () {
+    it('should handle empty imageData', function () {
       const emptyImageData = {
         width: 0,
         height: 0,
@@ -137,7 +137,7 @@ describe("Blur", function () {
       assert(convoluteSpy.calledWith(emptyImageData));
     });
 
-    it("should handle single pixel image", function () {
+    it('should handle single pixel image', function () {
       const singlePixelImageData = {
         width: 1,
         height: 1,
@@ -150,8 +150,8 @@ describe("Blur", function () {
     });
   });
 
-  describe("Integration with ImageFilter", function () {
-    it("should pass through any additional parameters to convolute", function () {
+  describe('Integration with ImageFilter', function () {
+    it('should pass through any additional parameters to convolute', function () {
       // Restore the stub to test actual integration
       convoluteSpy.restore();
 
@@ -173,17 +173,17 @@ describe("Blur", function () {
       assert.strictEqual(result.height, mockImageData.height);
     });
 
-    it("should maintain imageData structure", function () {
+    it('should maintain imageData structure', function () {
       const result = Blur(mockImageData);
 
-      assert(result.hasOwnProperty("width"));
-      assert(result.hasOwnProperty("height"));
-      assert(result.hasOwnProperty("data"));
+      assert(result.hasOwnProperty('width'));
+      assert(result.hasOwnProperty('height'));
+      assert(result.hasOwnProperty('data'));
     });
   });
 
-  describe("Performance characteristics", function () {
-    it("should only call convolute once per blur operation", function () {
+  describe('Performance characteristics', function () {
+    it('should only call convolute once per blur operation', function () {
       Blur(mockImageData);
       Blur(mockImageData);
       Blur(mockImageData);
@@ -191,7 +191,7 @@ describe("Blur", function () {
       assert.strictEqual(convoluteSpy.callCount, 3);
     });
 
-    it("should pass the same imageData reference", function () {
+    it('should pass the same imageData reference', function () {
       Blur(mockImageData);
 
       const passedImageData = convoluteSpy.firstCall.args[0];

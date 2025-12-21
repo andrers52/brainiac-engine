@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import { BECommonDefinitions } from "../../common/BECommonDefinitions.js";
-import { Vector } from "../../common/geometry/Vector.js";
-import { createLabel } from "./Label.js";
+import { BECommonDefinitions } from '../../common/BECommonDefinitions.js';
+import { Vector } from '../../common/geometry/Vector.js';
+import { createLabel } from './Label.js';
 
 /**
  * @file Score UI component for displaying and managing numeric scores.
@@ -49,7 +49,7 @@ export function createScore(initial_value) {
   score.setPositionAccordingToText = function () {
     this.setPosition(
       new Vector(),
-      "topLeft",
+      'topLeft',
       BECommonDefinitions.FOREGROUND_AGENT_Z_POSITION,
     );
   };

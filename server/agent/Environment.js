@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-import { Rectangle } from "../../common/geometry/Rectangle.js";
-import { Vector } from "../../common/geometry/Vector.js";
-import { SpaceSegments } from "../SpaceSegments.js";
-import { AgentDefinitions } from "./AgentDefinitions.js";
+import { Rectangle } from '../../common/geometry/Rectangle.js';
+import { Vector } from '../../common/geometry/Vector.js';
+import { SpaceSegments } from '../SpaceSegments.js';
+import { AgentDefinitions } from './AgentDefinitions.js';
 
 /**
  * @file Environment that manages all agents in the world.
@@ -346,7 +346,7 @@ function Environment() {
     }
 
     // 2. For mouse events, include agents in interactive states (dragging, pressed, etc.)
-    if (["onMouseMove", "onMouseUp"].includes(event)) {
+    if (['onMouseMove', 'onMouseUp'].includes(event)) {
       interactiveAgents.forEach((agent) => {
         if (!targetAgents.includes(agent)) {
           targetAgents.push(agent);
@@ -383,25 +383,25 @@ function Environment() {
    */
   this.sendEventToAgent = function (agent, event, arg) {
     // Check if agent has any handler for this event
-    if (!agent[event] && !agent[event + "Hit"]) {
+    if (!agent[event] && !agent[event + 'Hit']) {
       return;
     }
 
     // Handle keyboard events directly
-    if (event === "onKeyDown") {
+    if (event === 'onKeyDown') {
       agent[event] && agent[event](arg);
       return;
     }
 
     // Handle resize events directly
-    if (event === "onResizeCanvas") {
+    if (event === 'onResizeCanvas') {
       agent[event] && agent[event](arg);
       return;
     }
 
     // Handle mouse events with hit detection
     if (
-      ["onMouseDown", "onMouseUp", "onMouseMove"].includes(event) &&
+      ['onMouseDown', 'onMouseUp', 'onMouseMove'].includes(event) &&
       agent.isVisible &&
       arg
     ) {
@@ -409,18 +409,18 @@ function Environment() {
 
       if (hitResult) {
         // Mouse is over this agent - call Hit version
-        let hitEventName = event + "Hit";
+        let hitEventName = event + 'Hit';
         if (agent[hitEventName]) {
           agent[hitEventName](arg);
 
           // Update interactive state for mouse down
-          if (event === "onMouseDown") {
+          if (event === 'onMouseDown') {
             this.setAgentInteractive(agent);
           }
         }
 
         // Remove from interactive state on mouse up (regardless of hit)
-        if (event === "onMouseUp") {
+        if (event === 'onMouseUp') {
           this.setAgentNonInteractive(agent);
         }
         return;
@@ -432,12 +432,12 @@ function Environment() {
       agent[event](arg);
 
       // Update interactive state for mouse events
-      if (event === "onMouseDown") {
+      if (event === 'onMouseDown') {
         this.setAgentInteractive(agent);
       }
 
       // Remove from interactive state on mouse up
-      if (event === "onMouseUp") {
+      if (event === 'onMouseUp') {
         this.setAgentNonInteractive(agent);
       }
     }

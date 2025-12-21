@@ -1,11 +1,11 @@
-import { JSDOM } from "jsdom";
+import { JSDOM } from 'jsdom';
 
-console.log("Setting up JSDOM and global variables for ES modules");
+console.log('Setting up JSDOM and global variables for ES modules');
 
-const dom = new JSDOM("<!DOCTYPE html><html><body></body></html>", {
-  url: "http://localhost",
+const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
+  url: 'http://localhost',
   pretendToBeVisual: true,
-  resources: "usable",
+  resources: 'usable',
 });
 
 // Set up globals properly with the real JSDOM window
@@ -88,10 +88,10 @@ global.cleanupAllTimers = function () {
 };
 
 // Set up process exit handler to ensure cleanup
-process.on("exit", () => {
+process.on('exit', () => {
   global.cleanupAllTimers();
   // Close JSDOM if possible
-  if (dom && typeof dom.window.close === "function") {
+  if (dom && typeof dom.window.close === 'function') {
     try {
       dom.window.close();
     } catch (e) {
@@ -101,9 +101,9 @@ process.on("exit", () => {
 });
 
 // Also handle other termination signals
-process.on("SIGINT", () => {
+process.on('SIGINT', () => {
   global.cleanupAllTimers();
-  if (dom && typeof dom.window.close === "function") {
+  if (dom && typeof dom.window.close === 'function') {
     try {
       dom.window.close();
     } catch (e) {
@@ -113,9 +113,9 @@ process.on("SIGINT", () => {
   process.exit(0);
 });
 
-process.on("SIGTERM", () => {
+process.on('SIGTERM', () => {
   global.cleanupAllTimers();
-  if (dom && typeof dom.window.close === "function") {
+  if (dom && typeof dom.window.close === 'function') {
     try {
       dom.window.close();
     } catch (e) {
@@ -134,7 +134,7 @@ if (dom.window.HTMLCanvasElement && dom.window.HTMLCanvasElement.prototype) {
   const originalGetContext = dom.window.HTMLCanvasElement.prototype.getContext;
 
   dom.window.HTMLCanvasElement.prototype.getContext = function (type) {
-    if (type === "2d") {
+    if (type === '2d') {
       return {
         canvas: this,
         fillRect: function () {},
@@ -181,15 +181,15 @@ if (dom.window.HTMLCanvasElement && dom.window.HTMLCanvasElement.prototype) {
           };
         },
         globalAlpha: 1,
-        fillStyle: "#000000",
-        strokeStyle: "#000000",
+        fillStyle: '#000000',
+        strokeStyle: '#000000',
         lineWidth: 1,
-        font: "10px sans-serif",
-        textAlign: "start",
-        textBaseline: "alphabetic",
+        font: '10px sans-serif',
+        textAlign: 'start',
+        textBaseline: 'alphabetic',
         shadowBlur: 0,
-        shadowColor: "",
-        globalCompositeOperation: "source-over",
+        shadowColor: '',
+        globalCompositeOperation: 'source-over',
       };
     }
     return null;
@@ -232,4 +232,4 @@ global.Uint8Array = Uint8Array;
 // Make JSDOM constructor available globally for tests
 global.JSDOM = JSDOM;
 
-console.log("✅ Test environment setup complete");
+console.log('✅ Test environment setup complete');

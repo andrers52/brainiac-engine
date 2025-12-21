@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Triangle } from "./Triangle.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Triangle } from './Triangle.js';
 
-describe("Triangle", function () {
+describe('Triangle', function () {
   let mockContext;
   let mockCanvas;
 
@@ -21,7 +21,7 @@ describe("Triangle", function () {
     };
   });
 
-  it("should draw a triangle path", function () {
+  it('should draw a triangle path', function () {
     Triangle(mockContext);
 
     assert(mockContext.beginPath.calledOnce);
@@ -29,12 +29,12 @@ describe("Triangle", function () {
     assert.strictEqual(mockContext.lineTo.callCount, 3);
   });
 
-  it("should set line width to 2", function () {
+  it('should set line width to 2', function () {
     Triangle(mockContext);
     assert.strictEqual(mockContext.lineWidth, 2);
   });
 
-  it("should create right-pointing triangle", function () {
+  it('should create right-pointing triangle', function () {
     Triangle(mockContext);
 
     // Check moveTo (top left)
@@ -57,7 +57,7 @@ describe("Triangle", function () {
     assert.strictEqual(lineToCalls[2].args[1], 0); // y = 0
   });
 
-  it("should adapt to different canvas sizes", function () {
+  it('should adapt to different canvas sizes', function () {
     mockContext.canvas.width = 200;
     mockContext.canvas.height = 150;
 
@@ -73,7 +73,7 @@ describe("Triangle", function () {
     assert.strictEqual(lineToCalls[1].args[1], 75); // y = height/2
   });
 
-  it("should create a proper triangle shape", function () {
+  it('should create a proper triangle shape', function () {
     Triangle(mockContext);
 
     const moveToCall = mockContext.moveTo.getCall(0);
@@ -96,7 +96,7 @@ describe("Triangle", function () {
     assert.strictEqual(backToStart[1], topLeft[1]);
   });
 
-  it("should handle square canvas", function () {
+  it('should handle square canvas', function () {
     mockContext.canvas.width = 100;
     mockContext.canvas.height = 100;
 

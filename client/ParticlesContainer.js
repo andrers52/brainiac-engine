@@ -1,12 +1,12 @@
-"use strict";
+'use strict';
 
-import { Assert, EFunction } from "arslib";
+import { Assert, EFunction } from 'arslib';
 
-import { Random, Time, Util } from "arslib";
+import { Random, Time, Util } from 'arslib';
 
-import { vect } from "../common/geometry/Vector.js";
+import { vect } from '../common/geometry/Vector.js';
 
-import { CoordinatesConversion } from "./CoordinatesConversion.js";
+import { CoordinatesConversion } from './CoordinatesConversion.js';
 
 /**
  * @fileoverview Particle system for creating and managing visual effects.
@@ -77,11 +77,11 @@ function ParticlesContainer() {
     screen = screenInput;
     particles = {};
     emitters = [];
-    particleImage = resourceStore.retrieveResourceObject("whiteParticle.jpg");
+    particleImage = resourceStore.retrieveResourceObject('whiteParticle.jpg');
     colorToParticleImage = {
-      red: resourceStore.retrieveResourceObject("redParticle.jpg"),
-      green: resourceStore.retrieveResourceObject("greenParticle.jpg"),
-      blue: resourceStore.retrieveResourceObject("blueParticle.jpg"),
+      red: resourceStore.retrieveResourceObject('redParticle.jpg'),
+      green: resourceStore.retrieveResourceObject('greenParticle.jpg'),
+      blue: resourceStore.retrieveResourceObject('blueParticle.jpg'),
     };
   };
 
@@ -123,14 +123,14 @@ function ParticlesContainer() {
     occurrenceProbability,
   }) {
     //set defaults
-    colorRed = typeof colorRed === "number" ? colorRed : 255;
-    colorGreen = typeof colorGreen === "number" ? colorGreen : 255;
-    colorBlue = typeof colorBlue === "number" ? colorBlue : 255;
+    colorRed = typeof colorRed === 'number' ? colorRed : 255;
+    colorGreen = typeof colorGreen === 'number' ? colorGreen : 255;
+    colorBlue = typeof colorBlue === 'number' ? colorBlue : 255;
 
     (timeToLive = timeToLive || this.DEFAULT_PARTICLE_TIME_TO_LIVE),
-      (radius = radius || this.DEFAULT_RADIUS),
-      (occurrenceProbability =
-        typeof occurrenceProbability === "number" ? occurrenceProbability : 1);
+    (radius = radius || this.DEFAULT_RADIUS),
+    (occurrenceProbability =
+        typeof occurrenceProbability === 'number' ? occurrenceProbability : 1);
 
     if (!Random.occurrenceProbability(occurrenceProbability)) return;
 
@@ -269,10 +269,10 @@ function ParticlesContainer() {
     let adjustedParticlePosition = particle.screenParticle
       ? vect(particle.positionX, particle.positionY)
       : CoordinatesConversion.worldToCanvas(
-          vect(particle.positionX, particle.positionY),
-          camera.rectangle,
-          screen.getSize(),
-        );
+        vect(particle.positionX, particle.positionY),
+        camera.rectangle,
+        screen.getSize(),
+      );
 
     for (let colorComponent in colorToParticleImage) {
       context.globalAlpha =
@@ -297,7 +297,7 @@ function ParticlesContainer() {
     for (let id in particles) {
       let particle = particles[id];
       context.save();
-      context.globalCompositeOperation = "lighter";
+      context.globalCompositeOperation = 'lighter';
       drawParticleComponents(particle, context);
       context.restore();
     }

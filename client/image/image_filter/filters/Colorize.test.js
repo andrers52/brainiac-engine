@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Colorize } from "./Colorize.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Colorize } from './Colorize.js';
 
-describe("Colorize", function () {
+describe('Colorize', function () {
   let sandbox;
   let mockImageData;
 
@@ -36,8 +36,8 @@ describe("Colorize", function () {
     delete global.Assert;
   });
 
-  describe("Basic functionality", function () {
-    it("should add color values to each RGB channel", function () {
+  describe('Basic functionality', function () {
+    it('should add color values to each RGB channel', function () {
       const color = { red: 50, green: 25, blue: 75 };
       const originalData = new Uint8ClampedArray(mockImageData.data);
 
@@ -58,14 +58,14 @@ describe("Colorize", function () {
       }
     });
 
-    it("should return the modified imageData object", function () {
+    it('should return the modified imageData object', function () {
       const color = { red: 10, green: 20, blue: 30 };
       const result = Colorize(mockImageData, color);
 
       assert.strictEqual(result, mockImageData);
     });
 
-    it("should not modify alpha channel", function () {
+    it('should not modify alpha channel', function () {
       const color = { red: 50, green: 50, blue: 50 };
       const originalAlpha = Array.from(mockImageData.data).filter(
         (_, i) => i % 4 === 3,
@@ -80,20 +80,20 @@ describe("Colorize", function () {
     });
   });
 
-  describe("Parameter validation", function () {
-    it("should throw error when color is not provided", function () {
+  describe('Parameter validation', function () {
+    it('should throw error when color is not provided', function () {
       assert.throws(() => {
         Colorize(mockImageData);
       }, /The colorize effect needs a color/);
     });
 
-    it("should throw error when color is null", function () {
+    it('should throw error when color is null', function () {
       assert.throws(() => {
         Colorize(mockImageData, null);
       }, /The colorize effect needs a color/);
     });
 
-    it("should not throw error when valid color is provided", function () {
+    it('should not throw error when valid color is provided', function () {
       const color = { red: 10, green: 20, blue: 30 };
       assert.doesNotThrow(() => {
         Colorize(mockImageData, color);
@@ -101,8 +101,8 @@ describe("Colorize", function () {
     });
   });
 
-  describe("Different color values", function () {
-    it("should handle positive color adjustments", function () {
+  describe('Different color values', function () {
+    it('should handle positive color adjustments', function () {
       const color = { red: 75, green: 50, blue: 25 };
       const originalData = new Uint8ClampedArray(mockImageData.data);
 
@@ -113,7 +113,7 @@ describe("Colorize", function () {
       assert.strictEqual(mockImageData.data[2], originalData[2] + 25); // Blue channel
     });
 
-    it("should handle negative color adjustments (with clamping)", function () {
+    it('should handle negative color adjustments (with clamping)', function () {
       const color = { red: -25, green: -10, blue: -30 };
       const originalData = new Uint8ClampedArray(mockImageData.data);
 
@@ -135,7 +135,7 @@ describe("Colorize", function () {
       ); // Blue: 200-30 = 170
     });
 
-    it("should handle zero color adjustments", function () {
+    it('should handle zero color adjustments', function () {
       const color = { red: 0, green: 0, blue: 0 };
       const originalData = new Uint8ClampedArray(mockImageData.data);
 
@@ -149,7 +149,7 @@ describe("Colorize", function () {
       }
     });
 
-    it("should handle mixed positive and negative values (with clamping)", function () {
+    it('should handle mixed positive and negative values (with clamping)', function () {
       const color = { red: 50, green: -25, blue: 100 };
       const originalData = new Uint8ClampedArray(mockImageData.data);
 
@@ -172,8 +172,8 @@ describe("Colorize", function () {
     });
   });
 
-  describe("Bug in original implementation (now fixed)", function () {
-    it("should correctly calculate blue channel after fix", function () {
+  describe('Bug in original implementation (now fixed)', function () {
+    it('should correctly calculate blue channel after fix', function () {
       // Note: The original code had a bug: pix[i + 2] = pix[i + 3] + color.blue;
       // It is now fixed to: pix[i + 2] = pix[i + 2] + color.blue;
       // This test verifies the correct behavior
@@ -187,7 +187,7 @@ describe("Colorize", function () {
       assert.strictEqual(mockImageData.data[2], originalData[2] + color.blue); // Fixed: using blue (i+2) correctly
     });
 
-    it("should process blue channel correctly for all pixels after fix", function () {
+    it('should process blue channel correctly for all pixels after fix', function () {
       const color = { red: 5, green: 10, blue: 15 };
       const originalData = new Uint8ClampedArray(mockImageData.data);
 
@@ -209,8 +209,8 @@ describe("Colorize", function () {
     });
   });
 
-  describe("Edge cases", function () {
-    it("should handle empty imageData", function () {
+  describe('Edge cases', function () {
+    it('should handle empty imageData', function () {
       const emptyImageData = {
         width: 0,
         height: 0,
@@ -224,7 +224,7 @@ describe("Colorize", function () {
       assert.strictEqual(result.data.length, 0);
     });
 
-    it("should handle single pixel image", function () {
+    it('should handle single pixel image', function () {
       const singlePixelImageData = {
         width: 1,
         height: 1,
@@ -240,7 +240,7 @@ describe("Colorize", function () {
       assert.strictEqual(singlePixelImageData.data[3], 255); // Alpha unchanged
     });
 
-    it("should handle color object with missing properties", function () {
+    it('should handle color object with missing properties', function () {
       const incompleteColor = { red: 50 }; // Missing green and blue
       const originalData = new Uint8ClampedArray(mockImageData.data);
 
@@ -254,8 +254,8 @@ describe("Colorize", function () {
     });
   });
 
-  describe("Color overflow/underflow (Uint8ClampedArray behavior)", function () {
-    it("should clamp values that exceed 255 to 255", function () {
+  describe('Color overflow/underflow (Uint8ClampedArray behavior)', function () {
+    it('should clamp values that exceed 255 to 255', function () {
       const highValueImageData = {
         width: 1,
         height: 1,
@@ -271,7 +271,7 @@ describe("Colorize", function () {
       assert.strictEqual(highValueImageData.data[2], 255); // 240 + 60 = 300, clamped to 255
     });
 
-    it("should clamp values that go below 0 to 0", function () {
+    it('should clamp values that go below 0 to 0', function () {
       const lowValueImageData = {
         width: 1,
         height: 1,
@@ -288,18 +288,18 @@ describe("Colorize", function () {
     });
   });
 
-  describe("Data integrity", function () {
-    it("should maintain imageData structure", function () {
+  describe('Data integrity', function () {
+    it('should maintain imageData structure', function () {
       const color = { red: 10, green: 20, blue: 30 };
       const result = Colorize(mockImageData, color);
 
-      assert(result.hasOwnProperty("width"));
-      assert(result.hasOwnProperty("height"));
-      assert(result.hasOwnProperty("data"));
+      assert(result.hasOwnProperty('width'));
+      assert(result.hasOwnProperty('height'));
+      assert(result.hasOwnProperty('data'));
       assert(result.data instanceof Uint8ClampedArray);
     });
 
-    it("should not change imageData dimensions", function () {
+    it('should not change imageData dimensions', function () {
       const color = { red: 25, green: 25, blue: 25 };
       const originalWidth = mockImageData.width;
       const originalHeight = mockImageData.height;
@@ -312,7 +312,7 @@ describe("Colorize", function () {
       assert.strictEqual(mockImageData.data.length, originalLength);
     });
 
-    it("should process all pixels", function () {
+    it('should process all pixels', function () {
       const color = { red: 15, green: 25, blue: 35 };
       const pixelCount = mockImageData.width * mockImageData.height;
 
@@ -320,10 +320,10 @@ describe("Colorize", function () {
 
       // Verify all pixels were processed
       for (let i = 0; i < pixelCount * 4; i += 4) {
-        assert(typeof mockImageData.data[i] === "number"); // Red
-        assert(typeof mockImageData.data[i + 1] === "number"); // Green
-        assert(typeof mockImageData.data[i + 2] === "number"); // Blue
-        assert(typeof mockImageData.data[i + 3] === "number"); // Alpha
+        assert(typeof mockImageData.data[i] === 'number'); // Red
+        assert(typeof mockImageData.data[i + 1] === 'number'); // Green
+        assert(typeof mockImageData.data[i + 2] === 'number'); // Blue
+        assert(typeof mockImageData.data[i + 3] === 'number'); // Alpha
       }
     });
   });

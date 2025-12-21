@@ -1,7 +1,7 @@
-import { strict as assert } from "assert";
-import { SpaceSegments } from "./SpaceSegments.js";
+import { strict as assert } from 'assert';
+import { SpaceSegments } from './SpaceSegments.js';
 
-describe("SpaceSegments", () => {
+describe('SpaceSegments', () => {
   const WORLD_WIDTH = 100;
   const WORLD_HEIGHT = 100;
   let spaceSegments;
@@ -11,35 +11,35 @@ describe("SpaceSegments", () => {
     spaceSegments.start(WORLD_WIDTH, WORLD_HEIGHT);
   });
 
-  it("should initialize segments correctly", () => {
+  it('should initialize segments correctly', () => {
     assert.equal(spaceSegments.NUM_SEGMENT_ROWS, 8);
     assert.equal(spaceSegments.NUM_SEGMENT_COLUMNS, 8);
   });
 
-  it("should add agent correctly", () => {
-    const agent = { id: "agent1", getPosition: () => ({ x: 0, y: 0 }) };
+  it('should add agent correctly', () => {
+    const agent = { id: 'agent1', getPosition: () => ({ x: 0, y: 0 }) };
     spaceSegments.addAgent(agent);
     assert.equal(spaceSegments.checkAgentExists(agent), true);
   });
 
-  it("should remove agent correctly", () => {
-    const agent = { id: "agent1", getPosition: () => ({ x: 0, y: 0 }) };
+  it('should remove agent correctly', () => {
+    const agent = { id: 'agent1', getPosition: () => ({ x: 0, y: 0 }) };
     spaceSegments.addAgent(agent);
     spaceSegments.removeAgent(agent);
     assert.equal(spaceSegments.checkAgentExists(agent), false);
   });
 
-  it("should update agent position correctly", () => {
-    const agent = { id: "agent1", getPosition: () => ({ x: 0, y: 0 }) };
+  it('should update agent position correctly', () => {
+    const agent = { id: 'agent1', getPosition: () => ({ x: 0, y: 0 }) };
     spaceSegments.addAgent(agent);
     agent.getPosition = () => ({ x: 10, y: 10 });
     spaceSegments.updateAgent(agent);
     assert.equal(spaceSegments.checkAgentExists(agent), true);
   });
 
-  it("should get nearby agents by position correctly", () => {
-    const agent1 = { id: "agent1", getPosition: () => ({ x: 0, y: 0 }) };
-    const agent2 = { id: "agent2", getPosition: () => ({ x: 0, y: 0 }) };
+  it('should get nearby agents by position correctly', () => {
+    const agent1 = { id: 'agent1', getPosition: () => ({ x: 0, y: 0 }) };
+    const agent2 = { id: 'agent2', getPosition: () => ({ x: 0, y: 0 }) };
     spaceSegments.addAgent(agent1);
     spaceSegments.addAgent(agent2);
     const nearbyAgents = spaceSegments.getNearbyAgentsByPosition({
@@ -50,9 +50,9 @@ describe("SpaceSegments", () => {
     assert(nearbyAgents.includes(agent2));
   });
 
-  it("should get nearby agents by rectangle correctly", () => {
-    const agent1 = { id: "agent1", getPosition: () => ({ x: 0, y: 0 }) };
-    const agent2 = { id: "agent2", getPosition: () => ({ x: 50, y: 50 }) };
+  it('should get nearby agents by rectangle correctly', () => {
+    const agent1 = { id: 'agent1', getPosition: () => ({ x: 0, y: 0 }) };
+    const agent2 = { id: 'agent2', getPosition: () => ({ x: 50, y: 50 }) };
     spaceSegments.addAgent(agent1);
     spaceSegments.addAgent(agent2);
     const encompassingRectangle = {
@@ -63,7 +63,7 @@ describe("SpaceSegments", () => {
       encompassingRectangle,
     );
     console.log(
-      "Nearby agents:",
+      'Nearby agents:',
       nearbyAgents.map((agent) => agent.id),
     );
     assert(nearbyAgents.includes(agent1));

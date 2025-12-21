@@ -1,9 +1,9 @@
-import { strict as assert } from "assert";
-import { Rectangle } from "../common/geometry/Rectangle.js";
-import { Vector } from "../common/geometry/Vector.js";
-import { CoordinatesConversion } from "./CoordinatesConversion.js";
+import { strict as assert } from 'assert';
+import { Rectangle } from '../common/geometry/Rectangle.js';
+import { Vector } from '../common/geometry/Vector.js';
+import { CoordinatesConversion } from './CoordinatesConversion.js';
 
-describe("CoordinatesConversion", () => {
+describe('CoordinatesConversion', () => {
   let canvasPosition, cameraRectangle, screenSize;
 
   beforeEach(() => {
@@ -12,8 +12,8 @@ describe("CoordinatesConversion", () => {
     screenSize = new Vector(800, 600);
   });
 
-  describe("canvasToWorld", () => {
-    it("should convert canvas coordinates to world coordinates", () => {
+  describe('canvasToWorld', () => {
+    it('should convert canvas coordinates to world coordinates', () => {
       const worldPosition = CoordinatesConversion.canvasToWorld(
         canvasPosition,
         cameraRectangle,
@@ -26,8 +26,8 @@ describe("CoordinatesConversion", () => {
     });
   });
 
-  describe("rectangleCanvasToWorld", () => {
-    it("should convert canvas rectangle to world rectangle", () => {
+  describe('rectangleCanvasToWorld', () => {
+    it('should convert canvas rectangle to world rectangle', () => {
       const rectangle = new Rectangle(
         new Vector(100, 100),
         new Vector(200, 200),
@@ -44,8 +44,8 @@ describe("CoordinatesConversion", () => {
     });
   });
 
-  describe("worldToCanvas", () => {
-    it("should convert world coordinates to canvas coordinates", () => {
+  describe('worldToCanvas', () => {
+    it('should convert world coordinates to canvas coordinates', () => {
       const worldPosition = new Vector(150, 150);
       const canvasPosition = CoordinatesConversion.worldToCanvas(
         worldPosition,
@@ -59,8 +59,8 @@ describe("CoordinatesConversion", () => {
     });
   });
 
-  describe("rectangleWorldToCanvas", () => {
-    it("should convert world rectangle to canvas rectangle", () => {
+  describe('rectangleWorldToCanvas', () => {
+    it('should convert world rectangle to canvas rectangle', () => {
       const rectangle = new Rectangle(
         new Vector(100, 100),
         new Vector(200, 200),

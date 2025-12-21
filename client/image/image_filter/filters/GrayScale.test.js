@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { GrayScale } from "./GrayScale.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { GrayScale } from './GrayScale.js';
 
-describe("GrayScale", function () {
+describe('GrayScale', function () {
   let sandbox;
   let mockImageData;
 
@@ -45,8 +45,8 @@ describe("GrayScale", function () {
     }
   }
 
-  describe("Basic functionality", function () {
-    it("should convert RGB values to grayscale using luminance formula", function () {
+  describe('Basic functionality', function () {
+    it('should convert RGB values to grayscale using luminance formula', function () {
       const originalData = new Uint8ClampedArray(mockImageData.data);
 
       const result = GrayScale(mockImageData);
@@ -70,13 +70,13 @@ describe("GrayScale", function () {
       }
     });
 
-    it("should return the modified imageData object", function () {
+    it('should return the modified imageData object', function () {
       const result = GrayScale(mockImageData);
 
       assert.strictEqual(result, mockImageData);
     });
 
-    it("should not modify alpha channel", function () {
+    it('should not modify alpha channel', function () {
       const originalAlpha = Array.from(mockImageData.data).filter(
         (_, i) => i % 4 === 3,
       );
@@ -90,8 +90,8 @@ describe("GrayScale", function () {
     });
   });
 
-  describe("Luminance formula accuracy", function () {
-    it("should use correct luminance weights (0.3, 0.59, 0.11)", function () {
+  describe('Luminance formula accuracy', function () {
+    it('should use correct luminance weights (0.3, 0.59, 0.11)', function () {
       // Pure red pixel
       const redImageData = {
         width: 1,
@@ -107,7 +107,7 @@ describe("GrayScale", function () {
       assert.strictEqual(redImageData.data[2], expectedRedGrayscale);
     });
 
-    it("should handle pure green correctly", function () {
+    it('should handle pure green correctly', function () {
       const greenImageData = {
         width: 1,
         height: 1,
@@ -122,7 +122,7 @@ describe("GrayScale", function () {
       assert.strictEqual(greenImageData.data[2], expectedGreenGrayscale);
     });
 
-    it("should handle pure blue correctly", function () {
+    it('should handle pure blue correctly', function () {
       const blueImageData = {
         width: 1,
         height: 1,
@@ -137,7 +137,7 @@ describe("GrayScale", function () {
       assert.strictEqual(blueImageData.data[2], expectedBlueGrayscale);
     });
 
-    it("should handle white correctly", function () {
+    it('should handle white correctly', function () {
       const whiteImageData = {
         width: 1,
         height: 1,
@@ -152,7 +152,7 @@ describe("GrayScale", function () {
       assert.strictEqual(whiteImageData.data[2], expectedWhiteGrayscale);
     });
 
-    it("should handle black correctly", function () {
+    it('should handle black correctly', function () {
       const blackImageData = {
         width: 1,
         height: 1,
@@ -168,8 +168,8 @@ describe("GrayScale", function () {
     });
   });
 
-  describe("Grayscale calculation properties", function () {
-    it("should make all RGB channels equal for each pixel", function () {
+  describe('Grayscale calculation properties', function () {
+    it('should make all RGB channels equal for each pixel', function () {
       GrayScale(mockImageData);
 
       for (let i = 0; i < mockImageData.data.length; i += 4) {
@@ -183,7 +183,7 @@ describe("GrayScale", function () {
       }
     });
 
-    it("should preserve the luminance perception of the original image", function () {
+    it('should preserve the luminance perception of the original image', function () {
       // Test with a known color combination
       const colorImageData = {
         width: 1,
@@ -199,7 +199,7 @@ describe("GrayScale", function () {
       assert.strictEqual(colorImageData.data[2], expectedGrayscale);
     });
 
-    it("should handle mid-range values correctly", function () {
+    it('should handle mid-range values correctly', function () {
       const midRangeImageData = {
         width: 1,
         height: 1,
@@ -215,8 +215,8 @@ describe("GrayScale", function () {
     });
   });
 
-  describe("Edge cases", function () {
-    it("should handle empty imageData", function () {
+  describe('Edge cases', function () {
+    it('should handle empty imageData', function () {
       const emptyImageData = {
         width: 0,
         height: 0,
@@ -229,7 +229,7 @@ describe("GrayScale", function () {
       assert.strictEqual(result.data.length, 0);
     });
 
-    it("should handle single pixel image", function () {
+    it('should handle single pixel image', function () {
       const singlePixelImageData = {
         width: 1,
         height: 1,
@@ -247,7 +247,7 @@ describe("GrayScale", function () {
       assert.strictEqual(singlePixelImageData.data[3], 255);
     });
 
-    it("should handle large image data", function () {
+    it('should handle large image data', function () {
       const largeImageData = {
         width: 100,
         height: 100,
@@ -275,8 +275,8 @@ describe("GrayScale", function () {
     });
   });
 
-  describe("Floating point precision", function () {
-    it("should handle fractional grayscale values", function () {
+  describe('Floating point precision', function () {
+    it('should handle fractional grayscale values', function () {
       const imageData = {
         width: 1,
         height: 1,
@@ -291,7 +291,7 @@ describe("GrayScale", function () {
       assert.strictEqual(imageData.data[2], expectedGrayscale);
     });
 
-    it("should maintain precision for complex calculations", function () {
+    it('should maintain precision for complex calculations', function () {
       const imageData = {
         width: 1,
         height: 1,
@@ -309,17 +309,17 @@ describe("GrayScale", function () {
     });
   });
 
-  describe("Data integrity", function () {
-    it("should maintain imageData structure", function () {
+  describe('Data integrity', function () {
+    it('should maintain imageData structure', function () {
       const result = GrayScale(mockImageData);
 
-      assert(result.hasOwnProperty("width"));
-      assert(result.hasOwnProperty("height"));
-      assert(result.hasOwnProperty("data"));
+      assert(result.hasOwnProperty('width'));
+      assert(result.hasOwnProperty('height'));
+      assert(result.hasOwnProperty('data'));
       assert(result.data instanceof Uint8ClampedArray);
     });
 
-    it("should not change imageData dimensions", function () {
+    it('should not change imageData dimensions', function () {
       const originalWidth = mockImageData.width;
       const originalHeight = mockImageData.height;
       const originalLength = mockImageData.data.length;
@@ -331,17 +331,17 @@ describe("GrayScale", function () {
       assert.strictEqual(mockImageData.data.length, originalLength);
     });
 
-    it("should process all pixels", function () {
+    it('should process all pixels', function () {
       const pixelCount = mockImageData.width * mockImageData.height;
 
       GrayScale(mockImageData);
 
       // Verify all pixels were processed and are now grayscale
       for (let i = 0; i < pixelCount * 4; i += 4) {
-        assert(typeof mockImageData.data[i] === "number"); // Red
-        assert(typeof mockImageData.data[i + 1] === "number"); // Green
-        assert(typeof mockImageData.data[i + 2] === "number"); // Blue
-        assert(typeof mockImageData.data[i + 3] === "number"); // Alpha
+        assert(typeof mockImageData.data[i] === 'number'); // Red
+        assert(typeof mockImageData.data[i + 1] === 'number'); // Green
+        assert(typeof mockImageData.data[i + 2] === 'number'); // Blue
+        assert(typeof mockImageData.data[i + 3] === 'number'); // Alpha
 
         // All RGB values should be equal (grayscale)
         assert.strictEqual(mockImageData.data[i], mockImageData.data[i + 1]);

@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import { Assert } from "arslib";
-import { Vector, vect } from "../common/geometry/Vector.js";
-import { CoordinatesConversion } from "./CoordinatesConversion.js";
+import { Assert } from 'arslib';
+import { Vector, vect } from '../common/geometry/Vector.js';
+import { CoordinatesConversion } from './CoordinatesConversion.js';
 
 //generated events to be called on agents:
 // Note: Hit events will be created by the
@@ -82,7 +82,7 @@ function UserEvents() {
    * @param {KeyboardEvent} event - The keyboard event
    */
   function onKeyDown(event) {
-    propagate("onKeyDown", event.key.replace(/\"/g, "")); //remove starting and trailling '"'
+    propagate('onKeyDown', event.key.replace(/\"/g, '')); //remove starting and trailling '"'
   }
 
   /**
@@ -92,7 +92,7 @@ function UserEvents() {
   function onResizeCanvas(event) {
     if (!screen.getCanvas()) return;
     propagate(
-      "onResizeCanvas",
+      'onResizeCanvas',
       vect(screen.getCanvas().width, screen.getCanvas().height),
     );
   }
@@ -106,7 +106,7 @@ function UserEvents() {
     //event.preventDefault();
     //}
     isMouseDown = true; // Track that mouse is down
-    propagate("onMouseDown", self.mouseWorldPosition());
+    propagate('onMouseDown', self.mouseWorldPosition());
     event.stopPropagation();
   }
 
@@ -118,7 +118,7 @@ function UserEvents() {
     mouseCanvasPosition = getMouseCanvasPosition(event);
     isMouseDown = false; // Track that mouse is up
     mousePositionChanged = false; // Stop any pending mouse moves
-    propagate("onMouseUp", self.mouseWorldPosition());
+    propagate('onMouseUp', self.mouseWorldPosition());
   }
 
   /**
@@ -147,10 +147,10 @@ function UserEvents() {
   let eventsMapping = {
     // *** TODO: ADD EVENT SUBSCRIPTION PARAMETERS IN APP AND UNCOMMENT BELOW ***
     //"onKeyDown": ["window.onkeydown"],
-    onResizeCanvas: ["window.onresize", "window.onresize"],
-    onMouseDown: ["window.onmousedown"], // Temporarily removed touchstart
-    onMouseMove: ["window.onmousemove"], // Temporarily removed touchmove
-    onMouseUp: ["window.onmouseup"], // Temporarily removed touchend and touchleave
+    onResizeCanvas: ['window.onresize', 'window.onresize'],
+    onMouseDown: ['window.onmousedown'], // Temporarily removed touchstart
+    onMouseMove: ['window.onmousemove'], // Temporarily removed touchmove
+    onMouseUp: ['window.onmouseup'], // Temporarily removed touchend and touchleave
   };
 
   /**
@@ -162,11 +162,11 @@ function UserEvents() {
     Assert.assertIsValidString(
       handler,
       Object.keys(eventsMapping),
-      "Non valid event handler",
+      'Non valid event handler',
     );
 
     eventsMapping[handler].forEach((event) => {
-      eval(event + " = " + handler + ";");
+      eval(event + ' = ' + handler + ';');
     });
   };
 
@@ -179,10 +179,10 @@ function UserEvents() {
     Assert.assertIsValidString(
       handler,
       Object.keys(eventsMapping),
-      "Non valid event handler",
+      'Non valid event handler',
     );
 
-    eventsMapping[handler].forEach((event) => eval(event + " = null;"));
+    eventsMapping[handler].forEach((event) => eval(event + ' = null;'));
   };
 
   /**
@@ -197,7 +197,7 @@ function UserEvents() {
         !lastPropagatedPosition ||
         !currentPosition.equal(lastPropagatedPosition)
       ) {
-        propagate("onMouseMove", currentPosition);
+        propagate('onMouseMove', currentPosition);
         lastPropagatedPosition = currentPosition.clone();
       }
 
@@ -233,8 +233,8 @@ function UserEvents() {
   };
 
   // *** MOBILE SUPPORT ***
-  window.addEventListener("scroll", preventMotion, false);
-  window.addEventListener("touchmove", treatTouchMove, false);
+  window.addEventListener('scroll', preventMotion, false);
+  window.addEventListener('touchmove', treatTouchMove, false);
 
   /**
    * Handles touch move events for mobile support
@@ -243,7 +243,7 @@ function UserEvents() {
   function treatTouchMove(event) {
     event.preventDefault();
     mouseCanvasPosition = getMouseCanvasPosition(event);
-    propagate("onMouseMove", self.mouseWorldPosition());
+    propagate('onMouseMove', self.mouseWorldPosition());
     preventMotion(event);
   }
 

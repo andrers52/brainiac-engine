@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { vect } from "../../../../../common/geometry/Vector.js";
+import { vect } from '../../../../../common/geometry/Vector.js';
 
 /**
  * Draws a ship shape on the canvas context
@@ -29,7 +29,7 @@ export function Ship(context) {
   //context.shadowBlur = padding/4;
   //context.shadowColor = 'yellow';//'rgb(0, 0, 0)';
   //context.strokeStyle = context.strokeStyle || 'yellow';
-  context.strokeStyle = "yellow";
+  context.strokeStyle = 'yellow';
 
   context.moveTo(canvasTopLeft.x, canvasTopLeft.y);
   context.lineTo(canvasRightCenter.x, canvasRightCenter.y);

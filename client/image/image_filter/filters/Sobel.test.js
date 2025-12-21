@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Sobel } from "./Sobel.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Sobel } from './Sobel.js';
 
-describe("Sobel", function () {
+describe('Sobel', function () {
   let sandbox;
   let mockImageData;
 
@@ -33,8 +33,8 @@ describe("Sobel", function () {
     sandbox.restore();
   });
 
-  describe("Integration tests", function () {
-    it("should apply Sobel edge detection and return imageData", function () {
+  describe('Integration tests', function () {
+    it('should apply Sobel edge detection and return imageData', function () {
       const result = Sobel(mockImageData);
 
       // Basic structure tests
@@ -45,7 +45,7 @@ describe("Sobel", function () {
       assert.strictEqual(result.data.length, mockImageData.data.length);
     });
 
-    it("should process all pixels", function () {
+    it('should process all pixels', function () {
       const result = Sobel(mockImageData);
 
       // Check that alpha channels are preserved
@@ -54,7 +54,7 @@ describe("Sobel", function () {
       }
     });
 
-    it("should handle empty imageData", function () {
+    it('should handle empty imageData', function () {
       const emptyImageData = {
         width: 0,
         height: 0,
@@ -68,7 +68,7 @@ describe("Sobel", function () {
       assert.strictEqual(result.data.length, 0);
     });
 
-    it("should handle single pixel image", function () {
+    it('should handle single pixel image', function () {
       const singlePixelData = {
         width: 1,
         height: 1,
@@ -83,7 +83,7 @@ describe("Sobel", function () {
       assert.strictEqual(result.data[3], 255); // Alpha preserved
     });
 
-    it("should detect edges in gradient patterns", function () {
+    it('should detect edges in gradient patterns', function () {
       const result = Sobel(mockImageData);
 
       // Check that the filter produces non-zero values for gradient input
@@ -100,16 +100,16 @@ describe("Sobel", function () {
       }
       assert(
         hasNonZeroValues,
-        "Sobel filter should detect edges in gradient pattern",
+        'Sobel filter should detect edges in gradient pattern',
       );
     });
 
-    it("should maintain data structure integrity", function () {
+    it('should maintain data structure integrity', function () {
       const result = Sobel(mockImageData);
 
-      assert(result.hasOwnProperty("width"));
-      assert(result.hasOwnProperty("height"));
-      assert(result.hasOwnProperty("data"));
+      assert(result.hasOwnProperty('width'));
+      assert(result.hasOwnProperty('height'));
+      assert(result.hasOwnProperty('data'));
       assert(result.data instanceof Uint8ClampedArray);
     });
   });

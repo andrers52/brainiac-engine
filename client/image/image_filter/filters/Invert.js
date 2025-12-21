@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Inverts the colors of image data by subtracting each RGB value from 255

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * @fileoverview 2D Vector implementation with mathematical operations.
@@ -33,7 +33,7 @@ function Vector(x = 0, y = 0) {
  * Gets/Sets the x component of the vector.
  * @returns {number} The x component of the vector.
  */
-Object.defineProperty(Vector.prototype, "x", {
+Object.defineProperty(Vector.prototype, 'x', {
   get: function () {
     return this.data[0];
   },
@@ -46,7 +46,7 @@ Object.defineProperty(Vector.prototype, "x", {
  * Gets/Sets the y component of the vector.
  * @returns {number} The y component of the vector.
  */
-Object.defineProperty(Vector.prototype, "y", {
+Object.defineProperty(Vector.prototype, 'y', {
   get: function () {
     return this.data[1];
   },
@@ -327,7 +327,7 @@ Vector.prototype.abs = function () {
  * @returns {string} The string representation of the vector.
  */
 Vector.prototype.toString = function () {
-  return "(" + this.data[0] + "," + this.data[1] + ")";
+  return '(' + this.data[0] + ',' + this.data[1] + ')';
 };
 
 /**

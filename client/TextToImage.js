@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import { Assert } from "arslib";
-import { Rectangle, rect } from "../common/geometry/Rectangle.js";
-import { Vector } from "../common/geometry/Vector.js";
+import { Assert } from 'arslib';
+import { Rectangle, rect } from '../common/geometry/Rectangle.js';
+import { Vector } from '../common/geometry/Vector.js';
 
 /** @type {Object} Cache for storing created text images to avoid recreation */
 var textImageCache = {};
@@ -45,8 +45,8 @@ function getFontToFitTextOnRectangle(text, fontface, rectangle, context) {
  * @param {string} [font="14px GoodDog"] - The complete font string
  * @returns {string} The font face portion of the font string
  */
-TextToImage.fontToFontFace = function (font = "14px GoodDog") {
-  return font.substring(font.indexOf(" "), font.lenght);
+TextToImage.fontToFontFace = function (font = '14px GoodDog') {
+  return font.substring(font.indexOf(' '), font.lenght);
 };
 
 /**
@@ -66,11 +66,11 @@ TextToImage.drawText = function (
   backgroundColor,
   textColor,
 ) {
-  if (text === "") backgroundColor = "rgba(125, 125, 125, 0)";
+  if (text === '') backgroundColor = 'rgba(125, 125, 125, 0)';
 
   let context = resourceStore
     .retrieveResourceObject(imageName)
-    .getContext("2d");
+    .getContext('2d');
   //clear canvas
   context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
@@ -83,8 +83,8 @@ TextToImage.drawText = function (
   //draw from center (canvas translation)
   context.fillStyle = textColor;
   context.font = font;
-  context.textBaseline = "bottom";
-  context.textAlign = "center";
+  context.textBaseline = 'bottom';
+  context.textAlign = 'center';
   context.fillText(text, context.canvas.width / 2, context.canvas.height);
 };
 
@@ -100,11 +100,11 @@ TextToImage.createRectangleFromTextAndFont = function (font, text, context) {
   //text size area measuring (returns rectangle)
   Assert.assert(
     font,
-    "TextToImage#createRectangleFromTextAndFont Error: expecting font parameter to measure",
+    'TextToImage#createRectangleFromTextAndFont Error: expecting font parameter to measure',
   );
   Assert.assertIsLiteralString(
     font,
-    "TextToImage#createRectangleFromTextAndFont Error: font is not a string literal",
+    'TextToImage#createRectangleFromTextAndFont Error: font is not a string literal',
   );
   context.font = font;
   //look for number inside font string. since the world and canvas have the same resolution we should be fine.
@@ -131,18 +131,18 @@ TextToImage.createRectangleFromTextAndFont = function (font, text, context) {
 TextToImage.createImageFromText = function (
   resourceStore,
   rectangle = rect(0, 0, 100, 100),
-  text = "",
-  fontface = "GoodDog",
-  backgroundColor = "rgba(125, 125, 125, 0)",
-  textColor = "black",
+  text = '',
+  fontface = 'GoodDog',
+  backgroundColor = 'rgba(125, 125, 125, 0)',
+  textColor = 'black',
   context,
 ) {
   Assert.assertIsLiteralString(
     text,
-    "BEClient.textToImagel Error: text is not a string literal",
+    'BEClient.textToImagel Error: text is not a string literal',
   );
 
-  if (text === "") return { imageName: null, font: null };
+  if (text === '') return { imageName: null, font: null };
 
   //return cached image and font
   if (textImageCache[text]) return textImageCache[text];

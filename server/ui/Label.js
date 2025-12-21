@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-import { EObject } from "arslib";
-import { rect } from "../../common/geometry/Rectangle.js";
+import { EObject } from 'arslib';
+import { rect } from '../../common/geometry/Rectangle.js';
 
-import { createWidget } from "./Widget.js";
+import { createWidget } from './Widget.js';
 
 /**
  * @file Label UI component for displaying text in the Brainiac Engine.
@@ -74,10 +74,10 @@ let protoLabel = {
 export function createLabel(
   beServer,
   rectangle,
-  text = "",
-  fontFace = "GoodDog",
-  backgroundColor = "rgba(125, 125, 125, 0)",
-  textColor = "black",
+  text = '',
+  fontFace = 'GoodDog',
+  backgroundColor = 'rgba(125, 125, 125, 0)',
+  textColor = 'black',
 ) {
   rectangle = rectangle || rect(0, 0, text.length * 5, 15);
   let label = createWidget(beServer, null, rectangle);

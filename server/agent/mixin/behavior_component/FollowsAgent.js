@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import { Assert, EFunction } from "arslib";
+import { Assert, EFunction } from 'arslib';
 
-import { HasBehavior } from "../HasBehavior.js";
+import { HasBehavior } from '../HasBehavior.js';
 
 /**
  * @fileoverview Mixin that provides agent following behavior.
@@ -23,7 +23,7 @@ export function FollowsAgent(
   speed = 1,
   forceMove = false,
 ) {
-  Assert.assert(agentToFollow, "FollowsAgent mixin needs an agent To Follow");
+  Assert.assert(agentToFollow, 'FollowsAgent mixin needs an agent To Follow');
 
   /**
    * The main following behavior function executed each behavior cycle.

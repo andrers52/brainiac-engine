@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Square } from "./Square.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Square } from './Square.js';
 
-describe("Square", function () {
+describe('Square', function () {
   let mockContext;
   let mockCanvas;
 
@@ -20,19 +20,19 @@ describe("Square", function () {
     };
   });
 
-  it("should draw a square", function () {
+  it('should draw a square', function () {
     Square(mockContext);
 
     assert(mockContext.beginPath.calledOnce);
     assert(mockContext.rect.calledOnce);
   });
 
-  it("should set line width to 2", function () {
+  it('should set line width to 2', function () {
     Square(mockContext);
     assert.strictEqual(mockContext.lineWidth, 2);
   });
 
-  it("should draw square with correct dimensions", function () {
+  it('should draw square with correct dimensions', function () {
     Square(mockContext);
 
     const rectCall = mockContext.rect.getCall(0);
@@ -45,7 +45,7 @@ describe("Square", function () {
     assert.strictEqual(rectCall.args[3], size - lineWidth * 2); // height = 96
   });
 
-  it("should calculate size as average of canvas dimensions", function () {
+  it('should calculate size as average of canvas dimensions', function () {
     mockContext.canvas.width = 120;
     mockContext.canvas.height = 80;
 
@@ -59,7 +59,7 @@ describe("Square", function () {
     assert.strictEqual(rectCall.args[3], size - lineWidth * 2); // height = 96
   });
 
-  it("should account for line width in positioning", function () {
+  it('should account for line width in positioning', function () {
     Square(mockContext);
 
     const rectCall = mockContext.rect.getCall(0);
@@ -70,7 +70,7 @@ describe("Square", function () {
     assert.strictEqual(rectCall.args[1], lineWidth);
   });
 
-  it("should handle very small canvas", function () {
+  it('should handle very small canvas', function () {
     mockContext.canvas.width = 10;
     mockContext.canvas.height = 10;
 

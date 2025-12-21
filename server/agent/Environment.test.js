@@ -1,9 +1,9 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Vector } from "../../common/geometry/Vector.js";
-import { Environment } from "./Environment.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Vector } from '../../common/geometry/Vector.js';
+import { Environment } from './Environment.js';
 
-describe("Environment", function () {
+describe('Environment', function () {
   let environment, agent, nearbyAgent, clock;
 
   beforeEach(function () {
@@ -33,20 +33,20 @@ describe("Environment", function () {
       },
     };
 
-    sinon.stub(environment.spaceSegments, "addAgent");
+    sinon.stub(environment.spaceSegments, 'addAgent');
     sinon
-      .stub(environment.spaceSegments, "getNearbyAgents")
+      .stub(environment.spaceSegments, 'getNearbyAgents')
       .returns([nearbyAgent]);
     sinon
-      .stub(environment.spaceSegments, "getNearbyAgentsByRectangle")
+      .stub(environment.spaceSegments, 'getNearbyAgentsByRectangle')
       .returns([nearbyAgent]);
-    sinon.stub(environment.spaceSegments, "removeAgent");
-    sinon.stub(environment.spaceSegments, "updateAgent");
+    sinon.stub(environment.spaceSegments, 'removeAgent');
+    sinon.stub(environment.spaceSegments, 'updateAgent');
     sinon
-      .stub(environment.spaceSegments, "getNearbyAgentsByPosition")
+      .stub(environment.spaceSegments, 'getNearbyAgentsByPosition')
       .returns([nearbyAgent]);
-    sinon.stub(environment.spaceSegments, "clear");
-    sinon.stub(environment.spaceSegments, "start"); // Add spy for start method
+    sinon.stub(environment.spaceSegments, 'clear');
+    sinon.stub(environment.spaceSegments, 'start'); // Add spy for start method
     clock = sinon.useFakeTimers();
   });
 
@@ -62,27 +62,27 @@ describe("Environment", function () {
     clock.restore();
   });
 
-  it("should add an agent", function () {
+  it('should add an agent', function () {
     environment.addAgent(agent);
     assert.strictEqual(environment.getAgents()[agent.id], agent);
     assert(environment.spaceSegments.addAgent.calledOnce);
   });
 
-  it("should remove an agent", function () {
+  it('should remove an agent', function () {
     environment.addAgent(agent);
     environment.removeAgent(agent);
     assert.strictEqual(environment.getAgents()[agent.id], undefined);
     assert(environment.spaceSegments.removeAgent.calledOnce);
   });
 
-  it("should get nearby agents", function () {
+  it('should get nearby agents', function () {
     environment.addAgent(agent);
     const nearbyAgents = environment.getNearbyAgents(agent);
     assert.strictEqual(nearbyAgents.length, 1);
     assert(environment.spaceSegments.getNearbyAgents.calledOnce);
   });
 
-  it("should get nearby user agents", function () {
+  it('should get nearby user agents', function () {
     environment.addAgent(agent);
     nearbyAgent.isUserAgent = sinon.stub().returns(true); // Make nearbyAgent a user agent
     const nearbyUserAgents = environment.getNearbyUserAgents(agent);
@@ -90,19 +90,19 @@ describe("Environment", function () {
     assert(environment.spaceSegments.getNearbyAgents.calledOnce);
   });
 
-  it("should update an agent", function () {
+  it('should update an agent', function () {
     environment.addAgent(agent);
     environment.updateAgent(agent);
     assert(environment.spaceSegments.updateAgent.calledOnce);
   });
 
-  it("should check if agent exists", function () {
+  it('should check if agent exists', function () {
     environment.addAgent(agent);
     const exists = environment.checkAgentExists(agent);
     assert.strictEqual(exists, true);
   });
 
-  it("should return null if no overlapping agent is found", function () {
+  it('should return null if no overlapping agent is found', function () {
     environment.addAgent(agent);
     const overlappingAgent =
       environment.otherAgentOverlappingWithProposedRectangle(
@@ -112,23 +112,23 @@ describe("Environment", function () {
     assert.strictEqual(overlappingAgent, nearbyAgent);
   });
 
-  it("should kill all agents", function () {
+  it('should kill all agents', function () {
     environment.addAgent(agent);
     environment.killAllAgents();
     assert(agent.die.calledOnce);
     assert(environment.spaceSegments.clear.calledOnce);
   });
 
-  it("should propagate user event", function () {
-    const event = "onMouseDown";
+  it('should propagate user event', function () {
+    const event = 'onMouseDown';
     const arg = new Vector(0, 0);
-    agent[event + "Hit"] = sinon.spy(); // Add the expected event handler spy
+    agent[event + 'Hit'] = sinon.spy(); // Add the expected event handler spy
     environment.addAgent(agent);
     environment.propagateUserEvent(event, arg, agent);
-    assert(agent[event + "Hit"].calledOnce);
+    assert(agent[event + 'Hit'].calledOnce);
   });
 
-  it("should start the environment", function () {
+  it('should start the environment', function () {
     environment.start(100, 100);
     assert.strictEqual(environment.getWorldRectangle().size.x, 100);
     assert.strictEqual(environment.getWorldRectangle().size.y, 100);

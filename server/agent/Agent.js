@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
-import { Assert } from "arslib";
-import { Rectangle, rect } from "../../common/geometry/Rectangle.js";
-import { Vector } from "../../common/geometry/Vector.js";
+import { Assert } from 'arslib';
+import { Rectangle, rect } from '../../common/geometry/Rectangle.js';
+import { Vector } from '../../common/geometry/Vector.js';
 
-import { BEServer } from "../BEServer.js"; // Corrected import path
+import { BEServer } from '../BEServer.js'; // Corrected import path
 
 /**
  * @file Core agent system for the Brainiac Engine.
@@ -246,7 +246,7 @@ let proto = {
    */
   forceMove(distance) {
     Assert.assert(
-      typeof distance.x === "number" && typeof distance.y === "number",
+      typeof distance.x === 'number' && typeof distance.y === 'number',
     );
     Assert.assert(!isNaN(distance.x) && !isNaN(distance.y));
 
@@ -504,7 +504,7 @@ let proto = {
   setPositionRelativeToAgent(
     otherAgent,
     relativePosition,
-    insideOutside = "inside",
+    insideOutside = 'inside',
     offset = 0,
     force = false,
   ) {
@@ -536,19 +536,19 @@ let proto = {
     force,
   ) {
     let agentToRectangleTranslations = {
-      above: "topCenter",
-      below: "bottomCenter",
-      left: "leftCenter",
-      right: "rightCenter",
-      aboveRight: "topRight",
-      aboveLeft: "topleft",
-      belowRight: "bottomRight",
-      belowLeft: "bottomLeft",
+      above: 'topCenter',
+      below: 'bottomCenter',
+      left: 'leftCenter',
+      right: 'rightCenter',
+      aboveRight: 'topRight',
+      aboveLeft: 'topleft',
+      belowRight: 'bottomRight',
+      belowLeft: 'bottomLeft',
     };
     Assert.assertIsValidString(
       positionRelativeToOtherAgent,
       Object.keys(agentToRectangleTranslations),
-      "Invalid agent relative position",
+      'Invalid agent relative position',
     );
     padding = padding || 1; //minimum padding to avoid collision
     let newRectangle = this.rectangle.clone();
@@ -556,7 +556,7 @@ let proto = {
     newRectangle.setPositionRelativeToRectangle(
       otherAgent.rectangle,
       agentToRectangleTranslations[positionRelativeToOtherAgent],
-      "outside",
+      'outside',
       padding,
     );
     this.setPosition(newRectangle.center, force);

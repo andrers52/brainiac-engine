@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * @file Connection management system for client-server communication.
@@ -12,13 +12,13 @@
  * - onUserDisconnected: Called when a user disconnects or dies
  */
 
-import { BECommonDefinitions } from "../common/BECommonDefinitions.js";
-import { Vector } from "../common/geometry/Vector.js";
-import { BEServer } from "./BEServer.js";
+import { BECommonDefinitions } from '../common/BECommonDefinitions.js';
+import { Vector } from '../common/geometry/Vector.js';
+import { BEServer } from './BEServer.js';
 
-import { Camera } from "./agent/Camera.js";
-import { FollowsAgent } from "./agent/mixin/behavior_component/FollowsAgent.js";
-import { User } from "./User.js";
+import { Camera } from './agent/Camera.js';
+import { FollowsAgent } from './agent/mixin/behavior_component/FollowsAgent.js';
+import { User } from './User.js';
 
 /** @type {Object.<string, User>} Map of user IDs to User objects */
 var idToUsers = {};
@@ -76,7 +76,7 @@ function Connector(beServer) {
     //TODO: CHECK DISTANCE BEFORE SENDING
     for (var id in idToUsers) {
       let user = idToUsers[id];
-      user.socket.emit("Sound.playSound", soundName);
+      user.socket.emit('Sound.playSound', soundName);
     }
 
     //TODO: CHECK DISTANCE BEFORE SENDING
@@ -106,7 +106,7 @@ function Connector(beServer) {
       ) {
         continue;
       }
-      user.socket.emit("playDescr", soundDescObj);
+      user.socket.emit('playDescr', soundDescObj);
     }
   };
 
@@ -120,7 +120,7 @@ function Connector(beServer) {
     //TODO: CHECK DISTANCE BEFORE SENDING
     for (var id in idToUsers) {
       let user = idToUsers[id];
-      user.socket.emit("Sound.playSoundLoop", soundName);
+      user.socket.emit('Sound.playSoundLoop', soundName);
     }
   };
 
@@ -148,36 +148,36 @@ function Connector(beServer) {
         imageName: agent.imageName,
         rectangle: agent.rectangle
           ? {
-              x: agent.rectangle.x,
-              y: agent.rectangle.y,
-              width: agent.rectangle.width,
-              height: agent.rectangle.height,
-              center: agent.rectangle.center
-                ? {
-                    x: agent.rectangle.center.x,
-                    y: agent.rectangle.center.y,
-                    data: [agent.rectangle.center.x, agent.rectangle.center.y],
-                  }
-                : {
-                    x: agent.rectangle.x + agent.rectangle.width / 2,
-                    y: agent.rectangle.y + agent.rectangle.height / 2,
-                    data: [
-                      agent.rectangle.x + agent.rectangle.width / 2,
-                      agent.rectangle.y + agent.rectangle.height / 2,
-                    ],
-                  },
-              size: agent.rectangle.size
-                ? {
-                    x: agent.rectangle.size.x,
-                    y: agent.rectangle.size.y,
-                    data: [agent.rectangle.size.x, agent.rectangle.size.y],
-                  }
-                : {
-                    x: agent.rectangle.width,
-                    y: agent.rectangle.height,
-                    data: [agent.rectangle.width, agent.rectangle.height],
-                  },
-            }
+            x: agent.rectangle.x,
+            y: agent.rectangle.y,
+            width: agent.rectangle.width,
+            height: agent.rectangle.height,
+            center: agent.rectangle.center
+              ? {
+                x: agent.rectangle.center.x,
+                y: agent.rectangle.center.y,
+                data: [agent.rectangle.center.x, agent.rectangle.center.y],
+              }
+              : {
+                x: agent.rectangle.x + agent.rectangle.width / 2,
+                y: agent.rectangle.y + agent.rectangle.height / 2,
+                data: [
+                  agent.rectangle.x + agent.rectangle.width / 2,
+                  agent.rectangle.y + agent.rectangle.height / 2,
+                ],
+              },
+            size: agent.rectangle.size
+              ? {
+                x: agent.rectangle.size.x,
+                y: agent.rectangle.size.y,
+                data: [agent.rectangle.size.x, agent.rectangle.size.y],
+              }
+              : {
+                x: agent.rectangle.width,
+                y: agent.rectangle.height,
+                data: [agent.rectangle.width, agent.rectangle.height],
+              },
+          }
           : null,
         position: agent.getPosition ? agent.getPosition() : null,
         orientation: agent.orientation,
@@ -192,6 +192,11 @@ function Connector(beServer) {
         currentWeapon: agent.currentWeapon,
         alternateWeaponTimeLeft: agent.alternateWeaponTimeLeft,
         userId: agent.userId,
+        text: agent.text,
+        fontFace: agent.fontFace,
+        backgroundColor: agent.backgroundColor,
+        textColor: agent.textColor,
+        font: agent.font,
         // Add any other necessary properties that are safe to serialize
       }));
 
@@ -199,7 +204,7 @@ function Connector(beServer) {
       //console.log('userVisibleAgents:' + JSON.stringify(sanitizedAgents))
       //console.log('Num userVisibleAgents:' + sanitizedAgents.length)
 
-      user.socket.emit("update", sanitizedAgents);
+      user.socket.emit('update', sanitizedAgents);
     }
   };
 
@@ -222,42 +227,42 @@ function Connector(beServer) {
       id: camera.id,
       rectangle: camera.rectangle
         ? {
-            x: camera.rectangle.x,
-            y: camera.rectangle.y,
-            width: camera.rectangle.width,
-            height: camera.rectangle.height,
-            center: camera.rectangle.center
-              ? {
-                  x: camera.rectangle.center.x,
-                  y: camera.rectangle.center.y,
-                  data: [camera.rectangle.center.x, camera.rectangle.center.y],
-                }
-              : {
-                  x: camera.rectangle.x + camera.rectangle.width / 2,
-                  y: camera.rectangle.y + camera.rectangle.height / 2,
-                  data: [
-                    camera.rectangle.x + camera.rectangle.width / 2,
-                    camera.rectangle.y + camera.rectangle.height / 2,
-                  ],
-                },
-            size: camera.rectangle.size
-              ? {
-                  x: camera.rectangle.size.x,
-                  y: camera.rectangle.size.y,
-                  data: [camera.rectangle.size.x, camera.rectangle.size.y],
-                }
-              : {
-                  x: camera.rectangle.width,
-                  y: camera.rectangle.height,
-                  data: [camera.rectangle.width, camera.rectangle.height],
-                },
-          }
+          x: camera.rectangle.x,
+          y: camera.rectangle.y,
+          width: camera.rectangle.width,
+          height: camera.rectangle.height,
+          center: camera.rectangle.center
+            ? {
+              x: camera.rectangle.center.x,
+              y: camera.rectangle.center.y,
+              data: [camera.rectangle.center.x, camera.rectangle.center.y],
+            }
+            : {
+              x: camera.rectangle.x + camera.rectangle.width / 2,
+              y: camera.rectangle.y + camera.rectangle.height / 2,
+              data: [
+                camera.rectangle.x + camera.rectangle.width / 2,
+                camera.rectangle.y + camera.rectangle.height / 2,
+              ],
+            },
+          size: camera.rectangle.size
+            ? {
+              x: camera.rectangle.size.x,
+              y: camera.rectangle.size.y,
+              data: [camera.rectangle.size.x, camera.rectangle.size.y],
+            }
+            : {
+              x: camera.rectangle.width,
+              y: camera.rectangle.height,
+              data: [camera.rectangle.width, camera.rectangle.height],
+            },
+        }
         : null,
       position: camera.getPosition ? camera.getPosition() : null,
       // Add any other necessary camera properties that are safe to serialize
     };
 
-    idToUsers[camera.owner.id].socket.emit("camera", sanitizedCamera);
+    idToUsers[camera.owner.id].socket.emit('camera', sanitizedCamera);
   };
 
   /**
@@ -268,7 +273,7 @@ function Connector(beServer) {
    */
   this.messageToGameClient = function (message, contentObject) {
     if (Object.keys(idToUsers).length === 0) return;
-    io.emit("messageToGameClient", {
+    io.emit('messageToGameClient', {
       message: message,
       contentObject: contentObject,
     });
@@ -294,7 +299,7 @@ function Connector(beServer) {
       return; //user has disconnected before death
     }
     try {
-      idToUsers[userId].socket.emit("messageToGameClient", {
+      idToUsers[userId].socket.emit('messageToGameClient', {
         message: message,
         contentObject: contentObject,
       });
@@ -302,10 +307,10 @@ function Connector(beServer) {
       console.log(
         `data encoding error. Message is: ${message}, Error: ${e.message}`,
       );
-      console.log("ContentObject type:", typeof contentObject);
+      console.log('ContentObject type:', typeof contentObject);
       console.log(
-        "ContentObject keys:",
-        contentObject ? Object.keys(contentObject) : "null",
+        'ContentObject keys:',
+        contentObject ? Object.keys(contentObject) : 'null',
       );
     }
   };
@@ -344,15 +349,15 @@ function Connector(beServer) {
 
     if (!localApp) {
       // Dynamic imports for server dependencies (only when running in server mode)
-      const { createServer } = await import("http");
-      const { Server: SocketIOServer } = await import("socket.io");
+      const { createServer } = await import('http');
+      const { Server: SocketIOServer } = await import('socket.io');
 
       // Use the Express app created by BEServer
       const expressApp = beServer.getExpressApp();
 
       if (!expressApp) {
         throw new Error(
-          "Express app not available from BEServer. Make sure BEServer.start() was called first.",
+          'Express app not available from BEServer. Make sure BEServer.start() was called first.',
         );
       }
 
@@ -374,7 +379,7 @@ function Connector(beServer) {
      * Handles user connection, disconnection, and various game events.
      * @private
      */
-    io.on("connection", function (socketInput) {
+    io.on('connection', function (socketInput) {
       if (localApp) socketInput = io; // Use the same shared FakeSocket instance
 
       /** @type {Object} The client socket connection */
@@ -392,10 +397,10 @@ function Connector(beServer) {
       }
 
       //sockets.add(socket);
-      socket.on("LOG_MESSAGE", function (msg) {
+      socket.on('LOG_MESSAGE', function (msg) {
         console.log(msg);
       });
-      socket.on("disconnect", function () {
+      socket.on('disconnect', function () {
         removeUser();
       });
 
@@ -406,7 +411,7 @@ function Connector(beServer) {
        * @param {string} startAppArgs.userName - Name of the user
        * @param {Vector} startAppArgs.cameraSize - Size of the user's camera viewport
        */
-      socket.on("BEServer.clientStart", function (startAppArgs) {
+      socket.on('BEServer.clientStart', function (startAppArgs) {
         //removeUser();
         user.name = startAppArgs.userName;
 
@@ -416,8 +421,8 @@ function Connector(beServer) {
         // Fallback if cameraSize is invalid, and create proper Vector object
         if (
           !cameraSize ||
-          typeof cameraSize.x !== "number" ||
-          typeof cameraSize.y !== "number"
+          typeof cameraSize.x !== 'number' ||
+          typeof cameraSize.y !== 'number'
         ) {
           cameraSize = new Vector(900, 900); // Create proper Vector with fallback values
         } else {
@@ -440,7 +445,7 @@ function Connector(beServer) {
         } else user.camera.start(cameraSize, new Vector(0, 0));
 
         //tell the client we are ready
-        socket.emit("BEServer.clientStartReady", {
+        socket.emit('BEServer.clientStartReady', {
           userAgentId: user.agent ? user.agent.id : 0,
           backgroundImagename: beServer.getBackgroundImageName(),
         });
@@ -455,7 +460,7 @@ function Connector(beServer) {
          * @param {*} eventAndVectorArg.arg - Event argument
          * @param {Object} [eventAndVectorArg.clientCamera] - Client camera for viewport filtering
          */
-        socket.on("userEvent", function (eventAndVectorArg) {
+        socket.on('userEvent', function (eventAndVectorArg) {
           //if(!user.agent) return // user not logged
           if (
             eventAndVectorArg &&
@@ -463,7 +468,7 @@ function Connector(beServer) {
             eventAndVectorArg.arg
           ) {
             // For mouse events, don't pass user agent to allow spatial search for widgets
-            const targetAgent = eventAndVectorArg.event.includes("Mouse")
+            const targetAgent = eventAndVectorArg.event.includes('Mouse')
               ? null
               : user.agent;
 
@@ -480,8 +485,8 @@ function Connector(beServer) {
       /**
        * Handles request for initial page information like high scores.
        */
-      socket.on("requestInitialPageInfo", () => {
-        socket.emit("requestInitialPageInfoReady", {
+      socket.on('requestInitialPageInfo', () => {
+        socket.emit('requestInitialPageInfoReady', {
           highScores: beServer.currentApp.getHighScores(),
         });
       });

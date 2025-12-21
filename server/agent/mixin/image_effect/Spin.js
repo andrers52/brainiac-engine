@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import { EFunction } from "arslib";
-import { Turnable } from "../Turnable.js";
+import { EFunction } from 'arslib';
+import { Turnable } from '../Turnable.js';
 
 /**
  * @fileoverview Spinning effect that rotates an agent continuously.

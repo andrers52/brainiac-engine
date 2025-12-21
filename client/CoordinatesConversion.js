@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 //TODO: THE WORLD, CAMERA AND CANVAS ARE THE SAME SIZE IN THIS VERSION.
 //      FOR GAMES WHERE THE CAMERA MOVES IN THE WORLD WE NEED TO CHANGE THIS BY
 //      CREATING THE WORLD SIZE, THE CAMERA SIZE AND APROPRIATE CONVERSIONS
@@ -6,9 +6,9 @@
 //      http://www.html5rocks.com/en/tutorials/casestudies/gopherwoord-studios-resizing-html5-games/
 //      http://www.binarytides.com/make-html5-game-box2d-javascript-tutorial/
 
-import { EObject } from "arslib";
-import { Rectangle } from "../common/geometry/Rectangle.js";
-import { Vector } from "../common/geometry/Vector.js";
+import { EObject } from 'arslib';
+import { Rectangle } from '../common/geometry/Rectangle.js';
+import { Vector } from '../common/geometry/Vector.js';
 
 // *** TODO *** REMOVE THIS DEPENDENCY AND ADD SCREENSIZE AS A "setScreenSize(screenSize)"
 

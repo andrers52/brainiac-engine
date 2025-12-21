@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { ShadowBlur } from "./ShadowBlur.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { ShadowBlur } from './ShadowBlur.js';
 
-describe("ShadowBlur", function () {
+describe('ShadowBlur', function () {
   let mockContext;
   let mockCanvas;
   let mockTmpCanvas;
@@ -29,7 +29,7 @@ describe("ShadowBlur", function () {
     mockContext = {
       canvas: mockCanvas,
       shadowBlur: 0,
-      shadowColor: "",
+      shadowColor: '',
       clearRect: sinon.spy(),
       drawImage: sinon.spy(),
     };
@@ -49,64 +49,64 @@ describe("ShadowBlur", function () {
     }
   });
 
-  describe("Canvas creation and setup", function () {
-    it("should create temporary canvas with correct dimensions", function () {
+  describe('Canvas creation and setup', function () {
+    it('should create temporary canvas with correct dimensions', function () {
       const parameters = {
         thickness: 10,
-        color: "#ff0000",
+        color: '#ff0000',
       };
 
       ShadowBlur(mockContext, parameters);
 
-      assert(global.document.createElement.calledWith("canvas"));
+      assert(global.document.createElement.calledWith('canvas'));
       assert.strictEqual(mockTmpCanvas.width, 200);
       assert.strictEqual(mockTmpCanvas.height, 150);
-      assert(mockTmpCanvas.getContext.calledWith("2d"));
+      assert(mockTmpCanvas.getContext.calledWith('2d'));
     });
   });
 
-  describe("Shadow configuration", function () {
-    it("should set shadow properties correctly", function () {
+  describe('Shadow configuration', function () {
+    it('should set shadow properties correctly', function () {
       const parameters = {
         thickness: 15,
-        color: "#0000ff",
+        color: '#0000ff',
       };
 
       ShadowBlur(mockContext, parameters);
 
       assert.strictEqual(mockContext.shadowBlur, 15);
-      assert.strictEqual(mockContext.shadowColor, "#0000ff");
+      assert.strictEqual(mockContext.shadowColor, '#0000ff');
     });
 
-    it("should handle zero thickness", function () {
+    it('should handle zero thickness', function () {
       const parameters = {
         thickness: 0,
-        color: "#ff0000",
+        color: '#ff0000',
       };
 
       ShadowBlur(mockContext, parameters);
 
       assert.strictEqual(mockContext.shadowBlur, 0);
-      assert.strictEqual(mockContext.shadowColor, "#ff0000");
+      assert.strictEqual(mockContext.shadowColor, '#ff0000');
     });
 
-    it("should handle different color formats", function () {
+    it('should handle different color formats', function () {
       const parameters = {
         thickness: 5,
-        color: "rgba(255, 0, 0, 0.5)",
+        color: 'rgba(255, 0, 0, 0.5)',
       };
 
       ShadowBlur(mockContext, parameters);
 
-      assert.strictEqual(mockContext.shadowColor, "rgba(255, 0, 0, 0.5)");
+      assert.strictEqual(mockContext.shadowColor, 'rgba(255, 0, 0, 0.5)');
     });
   });
 
-  describe("Image scaling and positioning", function () {
-    it("should scale temporary context by 0.9", function () {
+  describe('Image scaling and positioning', function () {
+    it('should scale temporary context by 0.9', function () {
       const parameters = {
         thickness: 10,
-        color: "#ff0000",
+        color: '#ff0000',
       };
 
       ShadowBlur(mockContext, parameters);
@@ -115,10 +115,10 @@ describe("ShadowBlur", function () {
       assert(mockTmpContext.scale.calledWith(0.9, 0.9));
     });
 
-    it("should draw image with correct offset", function () {
+    it('should draw image with correct offset', function () {
       const parameters = {
         thickness: 10,
-        color: "#ff0000",
+        color: '#ff0000',
       };
 
       ShadowBlur(mockContext, parameters);
@@ -138,11 +138,11 @@ describe("ShadowBlur", function () {
     });
   });
 
-  describe("Canvas clearing and final drawing", function () {
-    it("should clear the original canvas", function () {
+  describe('Canvas clearing and final drawing', function () {
+    it('should clear the original canvas', function () {
       const parameters = {
         thickness: 10,
-        color: "#ff0000",
+        color: '#ff0000',
       };
 
       ShadowBlur(mockContext, parameters);
@@ -151,10 +151,10 @@ describe("ShadowBlur", function () {
       assert(mockContext.clearRect.calledWith(0, 0, 200, 150));
     });
 
-    it("should draw the shadowed image back to original canvas", function () {
+    it('should draw the shadowed image back to original canvas', function () {
       const parameters = {
         thickness: 10,
-        color: "#ff0000",
+        color: '#ff0000',
       };
 
       ShadowBlur(mockContext, parameters);
@@ -163,10 +163,10 @@ describe("ShadowBlur", function () {
       assert(mockContext.drawImage.calledWith(mockTmpCanvas, 0, 0));
     });
 
-    it("should perform operations in correct order", function () {
+    it('should perform operations in correct order', function () {
       const parameters = {
         thickness: 10,
-        color: "#ff0000",
+        color: '#ff0000',
       };
 
       ShadowBlur(mockContext, parameters);
@@ -181,14 +181,14 @@ describe("ShadowBlur", function () {
     });
   });
 
-  describe("Edge cases", function () {
-    it("should handle very small canvas", function () {
+  describe('Edge cases', function () {
+    it('should handle very small canvas', function () {
       mockCanvas.width = 10;
       mockCanvas.height = 8;
 
       const parameters = {
         thickness: 2,
-        color: "#ff0000",
+        color: '#ff0000',
       };
 
       ShadowBlur(mockContext, parameters);
@@ -208,13 +208,13 @@ describe("ShadowBlur", function () {
       );
     });
 
-    it("should handle square canvas", function () {
+    it('should handle square canvas', function () {
       mockCanvas.width = 100;
       mockCanvas.height = 100;
 
       const parameters = {
         thickness: 5,
-        color: "#00ff00",
+        color: '#00ff00',
       };
 
       ShadowBlur(mockContext, parameters);
@@ -230,7 +230,7 @@ describe("ShadowBlur", function () {
       );
     });
 
-    it("should handle missing parameters gracefully", function () {
+    it('should handle missing parameters gracefully', function () {
       const parameters = {};
 
       // Should not throw
@@ -242,7 +242,7 @@ describe("ShadowBlur", function () {
       assert.strictEqual(mockContext.shadowColor, undefined);
     });
 
-    it("should handle null parameters", function () {
+    it('should handle null parameters', function () {
       assert.doesNotThrow(() => {
         ShadowBlur(mockContext, null);
       });
@@ -250,18 +250,18 @@ describe("ShadowBlur", function () {
       // Should return early without creating canvas or setting properties
       assert(global.document.createElement.notCalled);
       assert.strictEqual(mockContext.shadowBlur, 0); // unchanged
-      assert.strictEqual(mockContext.shadowColor, ""); // unchanged
+      assert.strictEqual(mockContext.shadowColor, ''); // unchanged
     });
   });
 
-  describe("Different canvas dimensions", function () {
-    it("should handle wide canvas correctly", function () {
+  describe('Different canvas dimensions', function () {
+    it('should handle wide canvas correctly', function () {
       mockCanvas.width = 400;
       mockCanvas.height = 100;
 
       const parameters = {
         thickness: 8,
-        color: "#ff00ff",
+        color: '#ff00ff',
       };
 
       ShadowBlur(mockContext, parameters);
@@ -281,13 +281,13 @@ describe("ShadowBlur", function () {
       );
     });
 
-    it("should handle tall canvas correctly", function () {
+    it('should handle tall canvas correctly', function () {
       mockCanvas.width = 100;
       mockCanvas.height = 400;
 
       const parameters = {
         thickness: 12,
-        color: "#00ffff",
+        color: '#00ffff',
       };
 
       ShadowBlur(mockContext, parameters);
@@ -308,11 +308,11 @@ describe("ShadowBlur", function () {
     });
   });
 
-  describe("Scale factor validation", function () {
-    it("should always use 0.9 scale factor", function () {
+  describe('Scale factor validation', function () {
+    it('should always use 0.9 scale factor', function () {
       const parameters = {
         thickness: 20,
-        color: "#000000",
+        color: '#000000',
       };
 
       ShadowBlur(mockContext, parameters);
@@ -321,13 +321,13 @@ describe("ShadowBlur", function () {
       assert(mockTmpContext.scale.calledWith(0.9, 0.9));
     });
 
-    it("should calculate offsets based on 0.9 scale", function () {
+    it('should calculate offsets based on 0.9 scale', function () {
       mockCanvas.width = 50;
       mockCanvas.height = 30;
 
       const parameters = {
         thickness: 3,
-        color: "#ffffff",
+        color: '#ffffff',
       };
 
       ShadowBlur(mockContext, parameters);

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Increases transparency of image data by gradually reducing alpha values

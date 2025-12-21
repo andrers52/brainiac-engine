@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
-import { Assert, Platform } from "arslib";
-import { BECommonDefinitions } from "../common/BECommonDefinitions.js";
-import { getSharedLocalSocket } from "../common/fakeSocket.js";
-import { AgentDefinitions } from "./agent/AgentDefinitions.js";
-import { Environment } from "./agent/Environment.js";
-import { Connector } from "./Connector.js";
+import { Assert, Platform } from 'arslib';
+import { BECommonDefinitions } from '../common/BECommonDefinitions.js';
+import { getSharedLocalSocket } from '../common/fakeSocket.js';
+import { AgentDefinitions } from './agent/AgentDefinitions.js';
+import { Environment } from './agent/Environment.js';
+import { Connector } from './Connector.js';
 
 /**
  * @file Main server for the Brainiac Engine.
@@ -80,9 +80,9 @@ function BEServerConstructor() {
     if (!Platform.isNode()) {
       return await fetchAsync(BECommonDefinitions.CONFIG_JSON);
     } else {
-      const { readFile } = await import("fs/promises");
+      const { readFile } = await import('fs/promises');
       const resultStr = await readFile(BECommonDefinitions.CONFIG_JSON, {
-        encoding: "utf8",
+        encoding: 'utf8',
       });
       return JSON.parse(resultStr);
     }
@@ -123,42 +123,42 @@ function BEServerConstructor() {
    */
   const _validateApp = (appName, app, config) => {
     // Validate parameters using Assert
-    Assert.assertIsString(appName, "App name must be a string");
-    Assert.assertIsObject(app, "App must be an object");
+    Assert.assertIsString(appName, 'App name must be a string');
+    Assert.assertIsObject(app, 'App must be an object');
 
     // Validate required methods
-    Assert.assertIsFunction(app.start, "App must have a start() method");
+    Assert.assertIsFunction(app.start, 'App must have a start() method');
     Assert.assertIsFunction(
       app.onUserConnected,
-      "App must have an onUserConnected() method",
+      'App must have an onUserConnected() method',
     );
     Assert.assertIsFunction(
       app.onUserDisconnected,
-      "App must have an onUserDisconnected() method",
+      'App must have an onUserDisconnected() method',
     );
 
     // Validate optional methods (if they exist)
     Assert.assertIsOptionalFunction(
       app.sendInitialData,
-      "App.sendInitialData must be a function if provided",
+      'App.sendInitialData must be a function if provided',
     );
     Assert.assertIsOptionalFunction(
       app.getHighScores,
-      "App.getHighScores must be a function if provided",
+      'App.getHighScores must be a function if provided',
     );
 
     // Validate optional config parameter and its fields
     if (config !== undefined) {
-      Assert.assertIsObject(config, "Config must be an object if provided");
+      Assert.assertIsObject(config, 'Config must be an object if provided');
 
       // Validate config fields based on config.json structure
       if (config.buildType !== undefined) {
         Assert.assertIsString(
           config.buildType,
-          "Config.buildType must be a string",
+          'Config.buildType must be a string',
         );
         Assert.assertIsTrue(
-          ["dev", "deploy", "test"].includes(config.buildType),
+          ['dev', 'deploy', 'test'].includes(config.buildType),
           "Config.buildType must be one of: 'dev', 'deploy', 'test'",
         );
       }
@@ -166,42 +166,42 @@ function BEServerConstructor() {
       if (config.version !== undefined) {
         Assert.assertIsString(
           config.version,
-          "Config.version must be a string",
+          'Config.version must be a string',
         );
       }
 
       if (config.playProceduralSoundInClient !== undefined) {
         Assert.assertIsBoolean(
           config.playProceduralSoundInClient,
-          "Config.playProceduralSoundInClient must be a boolean",
+          'Config.playProceduralSoundInClient must be a boolean',
         );
       }
 
       if (config.userAlwaysAtCenterOfCamera !== undefined) {
         Assert.assertIsBoolean(
           config.userAlwaysAtCenterOfCamera,
-          "Config.userAlwaysAtCenterOfCamera must be a boolean",
+          'Config.userAlwaysAtCenterOfCamera must be a boolean',
         );
       }
 
       if (config.localApp !== undefined) {
         Assert.assertIsBoolean(
           config.localApp,
-          "Config.localApp must be a boolean",
+          'Config.localApp must be a boolean',
         );
       }
 
       if (config.cameraFollowUser !== undefined) {
         Assert.assertIsBoolean(
           config.cameraFollowUser,
-          "Config.cameraFollowUser must be a boolean",
+          'Config.cameraFollowUser must be a boolean',
         );
       }
 
       if (config.worldToCameraSize !== undefined) {
         Assert.assertIsBoolean(
           config.worldToCameraSize,
-          "Config.worldToCameraSize must be a boolean",
+          'Config.worldToCameraSize must be a boolean',
         );
       }
     }
@@ -220,7 +220,7 @@ function BEServerConstructor() {
     // If only two arguments and second is a function but not a typical callback, treat as routeConfigurer
     if (
       arguments.length === 2 &&
-      typeof onReady === "function" &&
+      typeof onReady === 'function' &&
       onReady.length === 1
     ) {
       routeConfigurer = onReady;
@@ -229,7 +229,7 @@ function BEServerConstructor() {
 
     // Support multiple call patterns for backward compatibility
     if (this.stopped === false && this.config) {
-      console.log("⚠️ BEServer already started, skipping duplicate start");
+      console.log('⚠️ BEServer already started, skipping duplicate start');
       if (onReady) onReady();
       return Promise.resolve();
     }
@@ -244,7 +244,7 @@ function BEServerConstructor() {
       /** @type {Object|null} Reference to the currently executing application */
       this.currentApp = null; //provides global access to the currently executing Game
       /** @type {string} Name of the currently executing application */
-      this.currentAppName = "";
+      this.currentAppName = '';
 
       _readConfig()
         .then(async (config) => {
@@ -256,12 +256,12 @@ function BEServerConstructor() {
             if (!Platform.isNode() && this.config.localApp === undefined) {
               this.config.localApp = true;
               console.log(
-                "🌐 Browser environment detected - setting localApp: true",
+                '🌐 Browser environment detected - setting localApp: true',
               );
             }
 
             BECommonDefinitions.start(this.config); //adjust to config
-            if (BECommonDefinitions.config.buildType === "deploy")
+            if (BECommonDefinitions.config.buildType === 'deploy')
               Assert.disableAllVerifications = true;
 
             // Create fake socket for local apps
@@ -271,8 +271,8 @@ function BEServerConstructor() {
 
             // Create Express app before starting connector (if not in local app mode AND in Node.js environment)
             if (!this.config.localApp && Platform.isNode()) {
-              const { default: express } = await import("express");
-              const { default: cors } = await import("cors");
+              const { default: express } = await import('express');
+              const { default: cors } = await import('cors');
 
               this.expressApp = express();
 
@@ -281,10 +281,10 @@ function BEServerConstructor() {
               };
 
               this.expressApp.use(cors(corsOptions));
-              this.expressApp.use(express.static("."));
+              this.expressApp.use(express.static('.'));
 
               // Configure custom routes if provided
-              if (routeConfigurer && typeof routeConfigurer === "function") {
+              if (routeConfigurer && typeof routeConfigurer === 'function') {
                 routeConfigurer(this.expressApp);
               }
             }
@@ -315,10 +315,10 @@ function BEServerConstructor() {
       BECommonDefinitions.WORLD_HEIGHT,
     );
     this.currentApp = null;
-    this.currentAppName = "";
+    this.currentAppName = '';
 
     // Set up a minimal config for tests
-    this.config = { buildType: "test", localApp: false };
+    this.config = { buildType: 'test', localApp: false };
     BECommonDefinitions.start(this.config);
   };
 
@@ -339,7 +339,7 @@ function BEServerConstructor() {
       this.connector.stop();
     }
     this.currentApp = null;
-    this.currentAppName = "";
+    this.currentAppName = '';
   };
 
   /**
@@ -371,7 +371,7 @@ function BEServerConstructor() {
 
     // Always use start() method, which is now idempotent
     return this.start(config).then(() => {
-      console.log("🎮 Setting up application on server");
+      console.log('🎮 Setting up application on server');
       self.currentApp = app;
       self.currentAppName = appName;
       self.currentApp.start();

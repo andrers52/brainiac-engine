@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import { Assert } from "arslib";
-import { Vector } from "./Vector.js";
+import { Assert } from 'arslib';
+import { Vector } from './Vector.js';
 
 /**
  * Creates a Rectangle with a center point and size.
@@ -156,49 +156,49 @@ Rectangle.prototype.setPointOfInterestAtPosition = function (
   pointOfInterest,
   position,
 ) {
-  if (!pointOfInterest || pointOfInterest === "center")
+  if (!pointOfInterest || pointOfInterest === 'center')
     return this.setCenter(position);
   Assert.assertIsValidString(
     pointOfInterest,
     [
-      "topLeft",
-      "topRight",
-      "bottomLeft",
-      "bottomRight",
-      "bottomCenter",
-      "topCenter",
-      "leftCenter",
-      "rightCenter",
+      'topLeft',
+      'topRight',
+      'bottomLeft',
+      'bottomRight',
+      'bottomCenter',
+      'topCenter',
+      'leftCenter',
+      'rightCenter',
     ],
-    "Non valid rectangle point of interest",
+    'Non valid rectangle point of interest',
   );
   let vectToAdd;
   let halfSize = this.halfSize();
   switch (pointOfInterest) {
-    case "topLeft":
-      vectToAdd = new Vector(halfSize.x, -halfSize.y);
-      break;
-    case "topRight":
-      vectToAdd = new Vector(-halfSize.x, -halfSize.y);
-      break;
-    case "bottomLeft":
-      vectToAdd = new Vector(halfSize.x, halfSize.y);
-      break;
-    case "bottomRight":
-      vectToAdd = new Vector(-halfSize.x, halfSize.y);
-      break;
-    case "bottomCenter":
-      vectToAdd = new Vector(0, halfSize.y);
-      break;
-    case "topCenter":
-      vectToAdd = new Vector(0, -halfSize.y);
-      break;
-    case "leftCenter":
-      vectToAdd = new Vector(halfSize.x, 0);
-      break;
-    case "rightCenter":
-      vectToAdd = new Vector(-halfSize.x, 0);
-      break;
+  case 'topLeft':
+    vectToAdd = new Vector(halfSize.x, -halfSize.y);
+    break;
+  case 'topRight':
+    vectToAdd = new Vector(-halfSize.x, -halfSize.y);
+    break;
+  case 'bottomLeft':
+    vectToAdd = new Vector(halfSize.x, halfSize.y);
+    break;
+  case 'bottomRight':
+    vectToAdd = new Vector(-halfSize.x, halfSize.y);
+    break;
+  case 'bottomCenter':
+    vectToAdd = new Vector(0, halfSize.y);
+    break;
+  case 'topCenter':
+    vectToAdd = new Vector(0, -halfSize.y);
+    break;
+  case 'leftCenter':
+    vectToAdd = new Vector(halfSize.x, 0);
+    break;
+  case 'rightCenter':
+    vectToAdd = new Vector(-halfSize.x, 0);
+    break;
   }
   this.setCenter(position.add(vectToAdd));
   return this;
@@ -213,23 +213,23 @@ Rectangle.prototype.setPointOfInterestAtPosition = function (
 Rectangle.prototype.allignToRectangle = function (otherRect, alligment) {
   Assert.assertIsValidString(
     alligment,
-    ["top", "bottom", "left", "right"],
+    ['top', 'bottom', 'left', 'right'],
     `Invalid option ${alligment} for "alligment" parameter.`,
   );
 
   switch (alligment) {
-    case "top":
-      this.center.y = otherRect.topLeft().y - this.size.y / 2;
-      break;
-    case "bottom":
-      this.center.y = otherRect.bottomLeft().y + this.size.y / 2;
-      break;
-    case "left":
-      this.center.x = otherRect.bottomLeft().x + this.size.x / 2;
-      break;
-    case "right":
-      this.center.x = otherRect.bottomRight().x - this.size.x / 2;
-      break;
+  case 'top':
+    this.center.y = otherRect.topLeft().y - this.size.y / 2;
+    break;
+  case 'bottom':
+    this.center.y = otherRect.bottomLeft().y + this.size.y / 2;
+    break;
+  case 'left':
+    this.center.x = otherRect.bottomLeft().x + this.size.x / 2;
+    break;
+  case 'right':
+    this.center.x = otherRect.bottomRight().x - this.size.x / 2;
+    break;
   }
 };
 
@@ -245,138 +245,138 @@ Rectangle.prototype.allignToRectangle = function (otherRect, alligment) {
 Rectangle.prototype.setPositionRelativeToRectangle = function (
   otherRect,
   relativePosition,
-  insideOutside = "inside",
+  insideOutside = 'inside',
   offset = 0,
 ) {
   Assert.assertIsValidString(
     insideOutside,
-    ["inside", "outside"],
+    ['inside', 'outside'],
     `Invalid option ${insideOutside} for "insideOutside" parameter.`,
   );
   Assert.assertIsValidString(
     relativePosition,
     [
-      "topLeft",
-      "topRight",
-      "randomTop",
-      "bottomLeft",
-      "bottomRight",
-      "randomBottom",
-      "center",
-      "bottomCenter",
-      "topCenter",
-      "leftCenter",
-      "randomLeft",
-      "rightCenter",
-      "randomRight",
+      'topLeft',
+      'topRight',
+      'randomTop',
+      'bottomLeft',
+      'bottomRight',
+      'randomBottom',
+      'center',
+      'bottomCenter',
+      'topCenter',
+      'leftCenter',
+      'randomLeft',
+      'rightCenter',
+      'randomRight',
     ],
-    "Invalid Rectangle relative position",
+    'Invalid Rectangle relative position',
   );
 
   switch (relativePosition) {
-    case "topLeft":
-      this.setPointOfInterestAtPosition(
-        insideOutside == "inside" ? "topLeft" : "bottomRight",
-        otherRect.topLeft(),
-      );
-      break;
-    case "topRight":
-      this.setPointOfInterestAtPosition(
-        insideOutside == "inside" ? "topRight" : "bottomLeft",
-        otherRect.topRight(),
-      );
-      break;
-    case "randomTop":
-      this.setPointOfInterestAtPosition(
-        insideOutside == "inside" ? "topLeft" : "bottomLeft",
-        otherRect.topLeft(),
-      );
-      this.move(
-        vect(
-          Random.randomFromIntervalInclusive(0, otherRect.size.x - this.size.x),
-          0,
-        ),
-      );
-      break;
-    case "bottomLeft":
-      this.setPointOfInterestAtPosition(
-        insideOutside == "inside" ? "bottomLeft" : "topRight",
-        otherRect.bottomLeft(),
-      );
-      break;
-    case "bottomRight":
-      this.setPointOfInterestAtPosition(
-        insideOutside == "inside" ? "bottomRight" : "topleft",
-        otherRect.bottomRight(),
-      );
-      break;
-    case "randomBottom":
-      this.setPointOfInterestAtPosition(
-        insideOutside == "inside" ? "bottomLeft" : "topleft",
-        otherRect.bottomLeft(),
-      );
-      this.move(
-        vect(
-          Random.randomFromIntervalInclusive(0, otherRect.size.x - this.size.x),
-          0,
-        ),
-      );
-      break;
-    case "center":
-      Assert.assert(
-        insideOutside == "inside",
-        "Error: cannot position at center and outside at same time.",
-      );
-      this.setPointOfInterestAtPosition("center", otherRect.center);
-      break;
-    case "bottomCenter":
-      this.setPointOfInterestAtPosition(
-        insideOutside == "inside" ? "bottomCenter" : "topCenter",
-        otherRect.bottomCenter(),
-      );
-      break;
-    case "topCenter":
-      this.setPointOfInterestAtPosition(
-        insideOutside == "inside" ? "topCenter" : "bottomCenter",
-        otherRect.topCenter(),
-      );
-      break;
-    case "leftCenter":
-      this.setPointOfInterestAtPosition(
-        insideOutside == "inside" ? "leftCenter" : "rightCenter",
-        otherRect.leftCenter(),
-      );
-      break;
-    case "randomLeft":
-      this.setPointOfInterestAtPosition(
-        insideOutside == "inside" ? "bottomLeft" : "topLeft",
-        otherRect.bottomLeft(),
-      );
-      this.move(
-        vect(
-          0,
-          Random.randomFromIntervalInclusive(0, otherRect.size.y - this.size.y),
-        ),
-      );
-      break;
-    case "rightCenter":
-      this.setPointOfInterestAtPosition(
-        insideOutside == "inside" ? "rightCenter" : "leftCenter",
-        otherRect.rightCenter(),
-      );
-      break;
-    case "randomRight":
-      this.setPointOfInterestAtPosition(
-        insideOutside == "inside" ? "bottomRight" : "topRight",
-        otherRect.bottomRight(),
-      );
-      this.move(
-        vect(
-          0,
-          Random.randomFromIntervalInclusive(0, otherRect.size.y - this.size.y),
-        ),
-      );
-      break;
+  case 'topLeft':
+    this.setPointOfInterestAtPosition(
+      insideOutside == 'inside' ? 'topLeft' : 'bottomRight',
+      otherRect.topLeft(),
+    );
+    break;
+  case 'topRight':
+    this.setPointOfInterestAtPosition(
+      insideOutside == 'inside' ? 'topRight' : 'bottomLeft',
+      otherRect.topRight(),
+    );
+    break;
+  case 'randomTop':
+    this.setPointOfInterestAtPosition(
+      insideOutside == 'inside' ? 'topLeft' : 'bottomLeft',
+      otherRect.topLeft(),
+    );
+    this.move(
+      vect(
+        Random.randomFromIntervalInclusive(0, otherRect.size.x - this.size.x),
+        0,
+      ),
+    );
+    break;
+  case 'bottomLeft':
+    this.setPointOfInterestAtPosition(
+      insideOutside == 'inside' ? 'bottomLeft' : 'topRight',
+      otherRect.bottomLeft(),
+    );
+    break;
+  case 'bottomRight':
+    this.setPointOfInterestAtPosition(
+      insideOutside == 'inside' ? 'bottomRight' : 'topleft',
+      otherRect.bottomRight(),
+    );
+    break;
+  case 'randomBottom':
+    this.setPointOfInterestAtPosition(
+      insideOutside == 'inside' ? 'bottomLeft' : 'topleft',
+      otherRect.bottomLeft(),
+    );
+    this.move(
+      vect(
+        Random.randomFromIntervalInclusive(0, otherRect.size.x - this.size.x),
+        0,
+      ),
+    );
+    break;
+  case 'center':
+    Assert.assert(
+      insideOutside == 'inside',
+      'Error: cannot position at center and outside at same time.',
+    );
+    this.setPointOfInterestAtPosition('center', otherRect.center);
+    break;
+  case 'bottomCenter':
+    this.setPointOfInterestAtPosition(
+      insideOutside == 'inside' ? 'bottomCenter' : 'topCenter',
+      otherRect.bottomCenter(),
+    );
+    break;
+  case 'topCenter':
+    this.setPointOfInterestAtPosition(
+      insideOutside == 'inside' ? 'topCenter' : 'bottomCenter',
+      otherRect.topCenter(),
+    );
+    break;
+  case 'leftCenter':
+    this.setPointOfInterestAtPosition(
+      insideOutside == 'inside' ? 'leftCenter' : 'rightCenter',
+      otherRect.leftCenter(),
+    );
+    break;
+  case 'randomLeft':
+    this.setPointOfInterestAtPosition(
+      insideOutside == 'inside' ? 'bottomLeft' : 'topLeft',
+      otherRect.bottomLeft(),
+    );
+    this.move(
+      vect(
+        0,
+        Random.randomFromIntervalInclusive(0, otherRect.size.y - this.size.y),
+      ),
+    );
+    break;
+  case 'rightCenter':
+    this.setPointOfInterestAtPosition(
+      insideOutside == 'inside' ? 'rightCenter' : 'leftCenter',
+      otherRect.rightCenter(),
+    );
+    break;
+  case 'randomRight':
+    this.setPointOfInterestAtPosition(
+      insideOutside == 'inside' ? 'bottomRight' : 'topRight',
+      otherRect.bottomRight(),
+    );
+    this.move(
+      vect(
+        0,
+        Random.randomFromIntervalInclusive(0, otherRect.size.y - this.size.y),
+      ),
+    );
+    break;
   }
 
   //apply offset
@@ -764,7 +764,7 @@ Rectangle.makeFromCorners = function (corner1, corner2) {
 Rectangle.makeFromCollectionOfRectangles = function (rectangles) {
   Assert.assert(
     rectangles.length >= 1,
-    "Rectangle.makeFromCollectionOfRectanglesToBeEnclosed error: less than two rectangles given",
+    'Rectangle.makeFromCollectionOfRectanglesToBeEnclosed error: less than two rectangles given',
   );
 
   if (rectangles.length === 1) return rectangles[0].clone();

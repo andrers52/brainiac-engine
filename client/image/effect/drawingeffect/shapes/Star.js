@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { vect } from "../../../../../common/geometry/Vector.js";
+import { vect } from '../../../../../common/geometry/Vector.js';
 
 /**
  * Creates a star shape effect on the canvas

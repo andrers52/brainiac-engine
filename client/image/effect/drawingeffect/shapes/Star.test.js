@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Star } from "./Star.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Star } from './Star.js';
 
-describe("Star", function () {
+describe('Star', function () {
   let mockContext;
   let mockCanvas;
 
@@ -25,21 +25,21 @@ describe("Star", function () {
     };
   });
 
-  it("should save and restore context", function () {
+  it('should save and restore context', function () {
     Star(mockContext);
 
     assert(mockContext.save.calledOnce);
     assert(mockContext.restore.calledOnce);
   });
 
-  it("should begin path and set line width", function () {
+  it('should begin path and set line width', function () {
     Star(mockContext);
 
     assert(mockContext.beginPath.calledOnce);
     assert.strictEqual(mockContext.lineWidth, 2);
   });
 
-  it("should translate to center of canvas", function () {
+  it('should translate to center of canvas', function () {
     Star(mockContext);
 
     assert(mockContext.translate.calledOnce);
@@ -48,7 +48,7 @@ describe("Star", function () {
     assert.strictEqual(translateCall.args[1], 50); // height/2
   });
 
-  it("should create a 5-pointed star", function () {
+  it('should create a 5-pointed star', function () {
     Star(mockContext);
 
     // Should have 1 moveTo + 10 lineTo calls (2 per point for 5 points)
@@ -59,7 +59,7 @@ describe("Star", function () {
     assert.strictEqual(mockContext.rotate.callCount, 10);
   });
 
-  it("should start at top point", function () {
+  it('should start at top point', function () {
     Star(mockContext);
 
     const moveToCall = mockContext.moveTo.getCall(0);
@@ -67,7 +67,7 @@ describe("Star", function () {
     assert.strictEqual(moveToCall.args[1], -48); // y = -(radius - lineWidth) = -(50-2)
   });
 
-  it("should rotate by PI/5 for each step", function () {
+  it('should rotate by PI/5 for each step', function () {
     Star(mockContext);
 
     const rotateCalls = mockContext.rotate.getCalls();
@@ -76,7 +76,7 @@ describe("Star", function () {
     });
   });
 
-  it("should draw inward and outward points alternately", function () {
+  it('should draw inward and outward points alternately', function () {
     Star(mockContext);
 
     const lineToCalls = mockContext.lineTo.getCalls();
@@ -95,7 +95,7 @@ describe("Star", function () {
     }
   });
 
-  it("should adapt to different canvas sizes", function () {
+  it('should adapt to different canvas sizes', function () {
     mockContext.canvas.width = 200;
     mockContext.canvas.height = 150;
 
@@ -112,7 +112,7 @@ describe("Star", function () {
     assert.strictEqual(moveToCall.args[1], -radius);
   });
 
-  it("should handle square canvas", function () {
+  it('should handle square canvas', function () {
     mockContext.canvas.width = 80;
     mockContext.canvas.height = 80;
 

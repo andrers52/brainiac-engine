@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { Assert } from "arslib";
+import { Assert } from 'arslib';
 
 /**
  * @fileoverview Action class for defining executable actions with completion conditions.
@@ -16,8 +16,8 @@ import { Assert } from "arslib";
  * @throws {Error} If whatToDo or conditionToMeet are not functions.
  */
 export function Action(whatToDo, conditionToMeet) {
-  Assert.assertIsFunction(whatToDo, "Action expecting a function to execute");
-  Assert.assertIsFunction(conditionToMeet, "Action expecting a test function");
+  Assert.assertIsFunction(whatToDo, 'Action expecting a function to execute');
+  Assert.assertIsFunction(conditionToMeet, 'Action expecting a test function');
 
   /**
    * Executes the action's function.

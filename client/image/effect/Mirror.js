@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { Assert } from "arslib";
+import { Assert } from 'arslib';
 
 /**
  * Flips an image horizontally and/or vertically on the canvas
@@ -16,10 +16,10 @@ function flipImage(ctx, image, flipH, flipV) {
     posY = flipV ? image.height * -1 : 0; // Set y position to -100% if flip vertical
 
   // flip image and save to tmpCanvas
-  let tmpCanvas = document.createElement("CANVAS");
+  let tmpCanvas = document.createElement('CANVAS');
   tmpCanvas.width = image.width;
   tmpCanvas.height = image.height;
-  let tmpContext = tmpCanvas.getContext("2d");
+  let tmpContext = tmpCanvas.getContext('2d');
   tmpContext.save(); // Save the current state
   tmpContext.scale(scaleH, scaleV); // Set scale to flip the image
   tmpContext.drawImage(image, posX, posY, image.width, image.height); // draw the image
@@ -43,7 +43,7 @@ export function Mirror(context, parameters) {
     parameters &&
       (parameters.horizontal !== undefined ||
         parameters.vertical !== undefined),
-    "Mirror Effect error: invalid parameters configuration.",
+    'Mirror Effect error: invalid parameters configuration.',
   );
 
   flipImage(

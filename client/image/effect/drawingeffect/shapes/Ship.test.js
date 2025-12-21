@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Ship } from "./Ship.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Ship } from './Ship.js';
 
-describe("Ship", function () {
+describe('Ship', function () {
   let mockContext;
   let mockCanvas;
 
@@ -20,11 +20,11 @@ describe("Ship", function () {
       fill: sinon.spy(),
       stroke: sinon.spy(),
       lineWidth: 0,
-      strokeStyle: "",
+      strokeStyle: '',
     };
   });
 
-  it("should draw a ship shape with correct path", function () {
+  it('should draw a ship shape with correct path', function () {
     Ship(mockContext);
 
     assert(mockContext.beginPath.calledOnce);
@@ -34,17 +34,17 @@ describe("Ship", function () {
     assert(mockContext.stroke.calledOnce);
   });
 
-  it("should set line width to 2", function () {
+  it('should set line width to 2', function () {
     Ship(mockContext);
     assert.strictEqual(mockContext.lineWidth, 2);
   });
 
-  it("should set stroke style to yellow", function () {
+  it('should set stroke style to yellow', function () {
     Ship(mockContext);
-    assert.strictEqual(mockContext.strokeStyle, "yellow");
+    assert.strictEqual(mockContext.strokeStyle, 'yellow');
   });
 
-  it("should create ship shape with correct coordinates", function () {
+  it('should create ship shape with correct coordinates', function () {
     Ship(mockContext);
 
     const padding = 30;
@@ -74,7 +74,7 @@ describe("Ship", function () {
     assert.strictEqual(lineToCalls[3].args[1], padding); // y = 30
   });
 
-  it("should adapt to different canvas sizes", function () {
+  it('should adapt to different canvas sizes', function () {
     mockContext.canvas.width = 400;
     mockContext.canvas.height = 200;
 

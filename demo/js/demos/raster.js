@@ -1,15 +1,15 @@
-import { createAgent, Draggable, Raster } from "brainiac-engine";
+import { createAgent, Draggable, Raster } from 'brainiac-engine';
 
 export function startRasterDemo(server) {
   server.clearCurrentDemo();
-  server.currentDemo = "raster";
-  console.log("Starting Grid Movement Demo...");
+  server.currentDemo = 'raster';
+  console.log('Starting Grid Movement Demo...');
 
   try {
     // Create a raster-based agent
     const rasterAgent = createAgent(
       server.beServer,
-      "media/images/blue_square.png",
+      'media/images/blue_square.png',
       50,
       50,
       false,
@@ -26,7 +26,7 @@ export function startRasterDemo(server) {
       for (let y = 0; y < 3; y++) {
         const gridAgent = createAgent(
           server.beServer,
-          "media/images/blue_square.png",
+          'media/images/blue_square.png',
           30,
           30,
           false,
@@ -40,9 +40,9 @@ export function startRasterDemo(server) {
     }
 
     server.updateDemoInfo(
-      "Grid Movement: Raster mixin constrains movement to grid positions",
+      'Grid Movement: Raster mixin constrains movement to grid positions',
     );
   } catch (error) {
-    console.error("Error in raster demo:", error);
+    console.error('Error in raster demo:', error);
   }
 }

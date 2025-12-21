@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { Assert } from "arslib";
+import { Assert } from 'arslib';
 
 /**
  * Evolutionary image generator that draws shapes based on encoded instructions
@@ -13,27 +13,27 @@ export function EvoImg(context, code) {
   let lineWidth = 1;
 
   //index is code
-  let drawingCodeToType = ["rectangle", "circle", "triangle"];
+  let drawingCodeToType = ['rectangle', 'circle', 'triangle'];
   let globalCompositeOperationCodeToType = [
-    "source-over",
-    "lighter",
-    "copy",
-    "xor",
-    "multiply",
-    "screen",
-    "overlay",
-    "darken",
-    "lighten",
-    "color-dodge",
-    "color-burn",
-    "hard-light",
-    "soft-light",
-    "difference",
-    "exclusion",
-    "hue",
-    "saturation",
-    "color",
-    "luminosity",
+    'source-over',
+    'lighter',
+    'copy',
+    'xor',
+    'multiply',
+    'screen',
+    'overlay',
+    'darken',
+    'lighten',
+    'color-dodge',
+    'color-burn',
+    'hard-light',
+    'soft-light',
+    'difference',
+    'exclusion',
+    'hue',
+    'saturation',
+    'color',
+    'luminosity',
   ];
 
   /**
@@ -63,48 +63,48 @@ export function EvoImg(context, code) {
     context.lineWidth = lineWidth;
     let operation = drawingCodeToType[instructionParameters[0]];
     switch (operation) {
-      case "rectangle":
-        if (fill) {
-          context.fillRect(
-            positionX - sizeX / 2,
-            positionY - sizeY / 2,
-            sizeX,
-            sizeY,
-          );
-        } else {
-          context.rect(
-            positionX - sizeX / 2,
-            positionY - sizeY / 2,
-            sizeX,
-            sizeY,
-          );
-          context.stroke();
-        }
-        break;
-
-      case "circle":
-        context.beginPath();
-        context.arc(
-          positionX,
-          positionY,
-          (sizeX + sizeY) / 4, // radius,
-          0,
-          2 * Math.PI,
+    case 'rectangle':
+      if (fill) {
+        context.fillRect(
+          positionX - sizeX / 2,
+          positionY - sizeY / 2,
+          sizeX,
+          sizeY,
         );
-        if (fill) context.fill();
-        else context.stroke();
-        break;
+      } else {
+        context.rect(
+          positionX - sizeX / 2,
+          positionY - sizeY / 2,
+          sizeX,
+          sizeY,
+        );
+        context.stroke();
+      }
+      break;
 
-      case "triangle":
-        context.beginPath();
-        context.moveTo(positionX, positionY - sizeY / 2); // top
-        context.lineTo(positionX - sizeX / 2, positionY + sizeY / 2); // bottom left
-        context.lineTo(positionX + sizeX / 2, positionY + sizeY / 2); // bottom right
-        if (fill) context.fill();
-        else context.stroke();
-        break;
-      default:
-        Assert.assert(false, "Instruction is flawed");
+    case 'circle':
+      context.beginPath();
+      context.arc(
+        positionX,
+        positionY,
+        (sizeX + sizeY) / 4, // radius,
+        0,
+        2 * Math.PI,
+      );
+      if (fill) context.fill();
+      else context.stroke();
+      break;
+
+    case 'triangle':
+      context.beginPath();
+      context.moveTo(positionX, positionY - sizeY / 2); // top
+      context.lineTo(positionX - sizeX / 2, positionY + sizeY / 2); // bottom left
+      context.lineTo(positionX + sizeX / 2, positionY + sizeY / 2); // bottom right
+      if (fill) context.fill();
+      else context.stroke();
+      break;
+    default:
+      Assert.assert(false, 'Instruction is flawed');
     }
     context.restore();
   }

@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
-import { Assert } from "arslib";
-import { rect } from "../common/geometry/Rectangle.js";
-import { Vector, vect } from "../common/geometry/Vector.js";
-import { BEClientDefinitions } from "./BEClientDefinitions.js";
-import { CoordinatesConversion } from "./CoordinatesConversion.js";
-import { TextToImage } from "./TextToImage.js";
+import { Assert } from 'arslib';
+import { rect } from '../common/geometry/Rectangle.js';
+import { Vector, vect } from '../common/geometry/Vector.js';
+import { BEClientDefinitions } from './BEClientDefinitions.js';
+import { CoordinatesConversion } from './CoordinatesConversion.js';
+import { TextToImage } from './TextToImage.js';
 
 /**
  * @fileoverview Screen management system for canvas rendering and game presentation.
@@ -49,12 +49,12 @@ function Screen() {
     if (document.getElementById(canvasId)) return;
 
     // Try to detect if we're in a test environment (JSDOM)
-    const isTestEnvironment = typeof global !== "undefined" && global.JSDOM;
+    const isTestEnvironment = typeof global !== 'undefined' && global.JSDOM;
 
     if (isTestEnvironment) {
       // In test environment, use insertAdjacentHTML which works better with JSDOM
       document.body.insertAdjacentHTML(
-        "beforeend",
+        'beforeend',
         '<div id="' + canvasId + '"></div>',
       );
       canvas = document.getElementById(canvasId);
@@ -63,8 +63,8 @@ function Screen() {
 
       // Add canvas-like properties for tests
       canvas.getContext = function (type) {
-        if (type === "2d") {
-          return global.HTMLCanvasElement.prototype.getContext.call(this, "2d");
+        if (type === '2d') {
+          return global.HTMLCanvasElement.prototype.getContext.call(this, '2d');
         }
         return null;
       };
@@ -77,8 +77,8 @@ function Screen() {
       if (!canvas.style) {
         canvas.style = {};
       }
-      let visibilityValue = "visible";
-      Object.defineProperty(canvas.style, "visibility", {
+      let visibilityValue = 'visible';
+      Object.defineProperty(canvas.style, 'visibility', {
         get: function () {
           return visibilityValue;
         },
@@ -90,7 +90,7 @@ function Screen() {
       });
     } else {
       // In real browser environment, use normal canvas creation
-      canvas = document.createElement("canvas");
+      canvas = document.createElement('canvas');
       canvas.id = canvasId;
     }
 
@@ -103,7 +103,7 @@ function Screen() {
    * @memberof Screen
    */
   this.hideCanvas = function () {
-    canvas.style.visibility = "hidden";
+    canvas.style.visibility = 'hidden';
   };
 
   /**
@@ -111,7 +111,7 @@ function Screen() {
    * @memberof Screen
    */
   this.showCanvas = function () {
-    canvas.style.visibility = "visible";
+    canvas.style.visibility = 'visible';
   };
 
   /**
@@ -141,7 +141,7 @@ function Screen() {
     let resultFactor;
     let screenSize = self.getSize();
 
-    Assert.assert(screenSize.x, "screen not ready!");
+    Assert.assert(screenSize.x, 'screen not ready!');
 
     if (
       screenSize.x >= minScreenDimension &&
@@ -202,7 +202,7 @@ function Screen() {
     //attempt orientation lock
     //this.lockOrientation()
 
-    context = canvas.getContext("2d");
+    context = canvas.getContext('2d');
 
     camera.rectangle.size = this.setCameraSizeToCanvas();
     particlesContainer.start(camera, resourceStore, self);
@@ -277,7 +277,7 @@ function Screen() {
    */
   function clear() {
     context.save();
-    context.fillStyle = "black";
+    context.fillStyle = 'black';
     context.fillRect(0, 0, canvas.width, canvas.height);
     context.restore();
   }
@@ -308,7 +308,7 @@ function Screen() {
     onBeforeDrawAgent &&
       onBeforeDrawAgent(agent, imageOrientation, context, canvasRectangle);
 
-    context.globalCompositeOperation = "lighter";
+    context.globalCompositeOperation = 'lighter';
     //draw from center (canvas translation)
     //Note: this was added because Firefox generetes an error drawing the mouse hint.
     // Perhaps we need to wait for the canvas to be ready before using it...
@@ -321,7 +321,7 @@ function Screen() {
         canvasRectangle.size.y,
       );
     } catch (e) {
-      console.log("Screen#drawAgentImage error: " + e);
+      console.log('Screen#drawAgentImage error: ' + e);
     }
 
     //give game client a chance to decorate the image with game specific effects
@@ -451,7 +451,7 @@ function Screen() {
     context.beginPath();
     let lineWidth = 20;
     context.lineWidth = lineWidth; //.toString()
-    context.strokeStyle = "red";
+    context.strokeStyle = 'red';
 
     // context.fillStyle="red"
     context.rect(

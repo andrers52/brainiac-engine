@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { vect } from "../../../../../common/geometry/Vector.js";
+import { vect } from '../../../../../common/geometry/Vector.js';
 
 /**
  * Draws a triangle shape on the canvas context

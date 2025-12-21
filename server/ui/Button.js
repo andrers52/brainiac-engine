@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import { EFunction } from "arslib";
-import { createWidget } from "./Widget.js";
-import { ChangeOnMouseDown } from "./mixin/ChangeOnMouseDown.js";
+import { EFunction } from 'arslib';
+import { createWidget } from './Widget.js';
+import { ChangeOnMouseDown } from './mixin/ChangeOnMouseDown.js';
 
 /**
  * @file Button UI component for the Brainiac Engine.
@@ -43,6 +43,6 @@ export function createButton(
   button.onMouseDownHit = button.onMouseDownHit
     ? EFunction.sequence(button.onMouseDownHit, onMouseDownHit, button)
     : onMouseDownHit;
-  ChangeOnMouseDown.call(button, "shrink");
+  ChangeOnMouseDown.call(button, 'shrink');
   return button;
 }

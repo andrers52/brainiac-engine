@@ -25,7 +25,7 @@ function FakeSocket() {
     // window.dispatchEvent(new CustomEvent(name, {
     //   detail: data, bubbles: true, composed: true
     // }))
-    if (eventsToFuncs[name] && typeof eventsToFuncs[name] === "function") {
+    if (eventsToFuncs[name] && typeof eventsToFuncs[name] === 'function') {
       eventsToFuncs[name](data);
     }
   };

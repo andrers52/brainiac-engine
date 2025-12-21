@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import { EFunction } from "arslib";
-import { createLabel } from "../Label.js";
+import { EFunction } from 'arslib';
+import { createLabel } from '../Label.js';
 
 /**
  * @file Mixin that provides tooltip/hint functionality for UI widgets.
@@ -30,7 +30,7 @@ import { createLabel } from "../Label.js";
  * @requires The widget must have aggregateBehavior() and die() methods
  * @mixin
  */
-export function HasHint(text, font = "GoodDog") {
+export function HasHint(text, font = 'GoodDog') {
   /** @type {string} Font used for hint creation */
   let creationFont = font;
 
@@ -40,7 +40,7 @@ export function HasHint(text, font = "GoodDog") {
    * @private
    */
   function hintBehavior() {
-    this.hint.moveRelativeToAgent(this, "aboveRight", 10, true);
+    this.hint.moveRelativeToAgent(this, 'aboveRight', 10, true);
   }
 
   this.aggregateBehavior(hintBehavior);
@@ -62,7 +62,7 @@ export function HasHint(text, font = "GoodDog") {
   this.setHintText = function (text, font = creationFont) {
     if (this.hint && text === this.hint.getText()) return;
     if (this.hint) this.hint.die();
-    this.hint = createLabel(this.beServer, null, text, font, "white", "Black");
+    this.hint = createLabel(this.beServer, null, text, font, 'white', 'Black');
     hintBehavior.bind(this)(); //call first time to avoid appearing at the center of screen
   };
 

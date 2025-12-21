@@ -1,9 +1,9 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { ImageFilter } from "../ImageFilter.js";
-import { Sharpen } from "./Sharpen.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { ImageFilter } from '../ImageFilter.js';
+import { Sharpen } from './Sharpen.js';
 
-describe("Sharpen", function () {
+describe('Sharpen', function () {
   let sandbox;
   let mockImageData;
   let convoluteSpy;
@@ -30,7 +30,7 @@ describe("Sharpen", function () {
 
     // Spy on ImageFilter.convolute
     convoluteSpy = sandbox
-      .stub(ImageFilter, "convolute")
+      .stub(ImageFilter, 'convolute')
       .returns(mockImageData);
   });
 
@@ -38,8 +38,8 @@ describe("Sharpen", function () {
     sandbox.restore();
   });
 
-  describe("Basic functionality", function () {
-    it("should call ImageFilter.convolute with correct sharpen kernel", function () {
+  describe('Basic functionality', function () {
+    it('should call ImageFilter.convolute with correct sharpen kernel', function () {
       const expectedKernel = [0, -1, 0, -1, 5, -1, 0, -1, 0];
 
       Sharpen(mockImageData);
@@ -48,13 +48,13 @@ describe("Sharpen", function () {
       assert(convoluteSpy.calledWith(mockImageData, expectedKernel));
     });
 
-    it("should return the result from ImageFilter.convolute", function () {
+    it('should return the result from ImageFilter.convolute', function () {
       const result = Sharpen(mockImageData);
 
       assert.strictEqual(result, mockImageData);
     });
 
-    it("should use 3x3 sharpen kernel", function () {
+    it('should use 3x3 sharpen kernel', function () {
       Sharpen(mockImageData);
 
       const calledKernel = convoluteSpy.firstCall.args[1];
@@ -65,8 +65,8 @@ describe("Sharpen", function () {
     });
   });
 
-  describe("Kernel properties", function () {
-    it("should use the correct sharpen kernel values", function () {
+  describe('Kernel properties', function () {
+    it('should use the correct sharpen kernel values', function () {
       Sharpen(mockImageData);
 
       const kernel = convoluteSpy.firstCall.args[1];
@@ -75,7 +75,7 @@ describe("Sharpen", function () {
       assert.deepStrictEqual(kernel, expectedKernel);
     });
 
-    it("should have center value of 5", function () {
+    it('should have center value of 5', function () {
       Sharpen(mockImageData);
 
       const kernel = convoluteSpy.firstCall.args[1];
@@ -84,7 +84,7 @@ describe("Sharpen", function () {
       assert.strictEqual(kernel[4], 5);
     });
 
-    it("should have edge values of -1", function () {
+    it('should have edge values of -1', function () {
       Sharpen(mockImageData);
 
       const kernel = convoluteSpy.firstCall.args[1];
@@ -96,7 +96,7 @@ describe("Sharpen", function () {
       assert.strictEqual(kernel[7], -1); // Bottom
     });
 
-    it("should have corner values of 0", function () {
+    it('should have corner values of 0', function () {
       Sharpen(mockImageData);
 
       const kernel = convoluteSpy.firstCall.args[1];
@@ -108,7 +108,7 @@ describe("Sharpen", function () {
       assert.strictEqual(kernel[8], 0); // Bottom-right
     });
 
-    it("should create an edge-enhancing kernel", function () {
+    it('should create an edge-enhancing kernel', function () {
       Sharpen(mockImageData);
 
       const kernel = convoluteSpy.firstCall.args[1];
@@ -127,7 +127,7 @@ describe("Sharpen", function () {
       cornerWeights.forEach((weight) => assert.strictEqual(weight, 0));
     });
 
-    it("should have positive kernel sum (enhances brightness)", function () {
+    it('should have positive kernel sum (enhances brightness)', function () {
       Sharpen(mockImageData);
 
       const kernel = convoluteSpy.firstCall.args[1];
@@ -139,20 +139,20 @@ describe("Sharpen", function () {
     });
   });
 
-  describe("Edge cases", function () {
-    it("should handle null imageData gracefully", function () {
+  describe('Edge cases', function () {
+    it('should handle null imageData gracefully', function () {
       Sharpen(null);
 
       assert(convoluteSpy.calledWith(null));
     });
 
-    it("should handle undefined imageData gracefully", function () {
+    it('should handle undefined imageData gracefully', function () {
       Sharpen(undefined);
 
       assert(convoluteSpy.calledWith(undefined));
     });
 
-    it("should handle empty imageData", function () {
+    it('should handle empty imageData', function () {
       const emptyImageData = {
         width: 0,
         height: 0,
@@ -164,7 +164,7 @@ describe("Sharpen", function () {
       assert(convoluteSpy.calledWith(emptyImageData));
     });
 
-    it("should handle single pixel image", function () {
+    it('should handle single pixel image', function () {
       const singlePixelImageData = {
         width: 1,
         height: 1,
@@ -177,8 +177,8 @@ describe("Sharpen", function () {
     });
   });
 
-  describe("Integration with ImageFilter", function () {
-    it("should pass through any additional parameters to convolute", function () {
+  describe('Integration with ImageFilter', function () {
+    it('should pass through any additional parameters to convolute', function () {
       // Restore the stub to test actual integration
       convoluteSpy.restore();
 
@@ -200,17 +200,17 @@ describe("Sharpen", function () {
       assert.strictEqual(result.height, mockImageData.height);
     });
 
-    it("should maintain imageData structure", function () {
+    it('should maintain imageData structure', function () {
       const result = Sharpen(mockImageData);
 
-      assert(result.hasOwnProperty("width"));
-      assert(result.hasOwnProperty("height"));
-      assert(result.hasOwnProperty("data"));
+      assert(result.hasOwnProperty('width'));
+      assert(result.hasOwnProperty('height'));
+      assert(result.hasOwnProperty('data'));
     });
   });
 
-  describe("Comparison with blur", function () {
-    it("should use opposite approach compared to blur filter", function () {
+  describe('Comparison with blur', function () {
+    it('should use opposite approach compared to blur filter', function () {
       // Blur kernel: all positive, uniform weights
       const blurKernel = [
         1 / 9,
@@ -235,8 +235,8 @@ describe("Sharpen", function () {
     });
   });
 
-  describe("Kernel mathematical properties", function () {
-    it("should be a high-pass filter", function () {
+  describe('Kernel mathematical properties', function () {
+    it('should be a high-pass filter', function () {
       Sharpen(mockImageData);
 
       const kernel = convoluteSpy.firstCall.args[1];
@@ -253,7 +253,7 @@ describe("Sharpen", function () {
       assert(centerValue + negativeSum === 1); // Total sum
     });
 
-    it("should enhance edge detection", function () {
+    it('should enhance edge detection', function () {
       Sharpen(mockImageData);
 
       const kernel = convoluteSpy.firstCall.args[1];
@@ -268,8 +268,8 @@ describe("Sharpen", function () {
     });
   });
 
-  describe("Performance characteristics", function () {
-    it("should only call convolute once per sharpen operation", function () {
+  describe('Performance characteristics', function () {
+    it('should only call convolute once per sharpen operation', function () {
       Sharpen(mockImageData);
       Sharpen(mockImageData);
       Sharpen(mockImageData);
@@ -277,7 +277,7 @@ describe("Sharpen", function () {
       assert.strictEqual(convoluteSpy.callCount, 3);
     });
 
-    it("should pass the same imageData reference", function () {
+    it('should pass the same imageData reference', function () {
       Sharpen(mockImageData);
 
       const passedImageData = convoluteSpy.firstCall.args[0];
@@ -285,8 +285,8 @@ describe("Sharpen", function () {
     });
   });
 
-  describe("Filter characteristics", function () {
-    it("should be suitable for edge enhancement", function () {
+  describe('Filter characteristics', function () {
+    it('should be suitable for edge enhancement', function () {
       // The sharpen kernel is specifically designed to enhance edges
       // by amplifying differences between adjacent pixels
 

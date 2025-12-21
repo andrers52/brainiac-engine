@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Applies a text label to the current image
@@ -18,9 +18,9 @@ export function Label(context, parameters) {
   }
 
   // Set default values
-  const fontFace = parameters.fontFace || "Arial";
-  const backgroundColor = parameters.backgroundColor || "rgba(0,0,0,0.5)";
-  const textColor = parameters.textColor || "white";
+  const fontFace = parameters.fontFace || 'Arial';
+  const backgroundColor = parameters.backgroundColor || 'rgba(0,0,0,0.5)';
+  const textColor = parameters.textColor || 'white';
   const fontSize = parameters.fontSize || 16;
   const x = parameters.x !== undefined ? parameters.x : 10;
   const y = parameters.y !== undefined ? parameters.y : 30;

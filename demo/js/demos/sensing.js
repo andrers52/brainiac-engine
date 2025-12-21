@@ -3,18 +3,18 @@ import {
   SensingAgent,
   SensingWorldBorder,
   Vector,
-} from "brainiac-engine";
+} from 'brainiac-engine';
 
 export function startSensingDemo(server) {
   server.clearCurrentDemo();
-  server.currentDemo = "sensing";
-  console.log("Starting Collision & Sensing Demo...");
+  server.currentDemo = 'sensing';
+  console.log('Starting Collision & Sensing Demo...');
 
   try {
     // Create an obstacle agent
     const obstacleAgent = createAgent(
       server.beServer,
-      "media/images/bubble.png",
+      'media/images/bubble.png',
       60,
       60,
       false,
@@ -26,7 +26,7 @@ export function startSensingDemo(server) {
     // Create a sensing agent that moves toward the obstacle
     const sensingAgent = createAgent(
       server.beServer,
-      "media/images/blue_square.png",
+      'media/images/blue_square.png',
       40,
       40,
       false,
@@ -36,7 +36,7 @@ export function startSensingDemo(server) {
 
     // Add sensing behavior
     sensingAgent.onSensingAgent = function (otherAgent) {
-      console.log("Agent collision detected!");
+      console.log('Agent collision detected!');
       otherAgent.die();
       this.die();
     };
@@ -51,7 +51,7 @@ export function startSensingDemo(server) {
     // Create a world border sensing agent
     const borderAgent = createAgent(
       server.beServer,
-      "media/images/blue_square.png",
+      'media/images/blue_square.png',
       30,
       30,
       false,
@@ -60,7 +60,7 @@ export function startSensingDemo(server) {
     );
 
     borderAgent.onSensingWorldBorder = function () {
-      console.log("World border detected!");
+      console.log('World border detected!');
       this.die();
     };
 
@@ -72,9 +72,9 @@ export function startSensingDemo(server) {
     server.demoAgents.push(borderAgent);
 
     server.updateDemoInfo(
-      "Collision & Sensing: Watch agents detect collisions and world boundaries",
+      'Collision & Sensing: Watch agents detect collisions and world boundaries',
     );
   } catch (error) {
-    console.error("Error in sensing demo:", error);
+    console.error('Error in sensing demo:', error);
   }
 }

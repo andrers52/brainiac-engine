@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * @fileoverview Standard pulsating effect that grows and shrinks the agent uniformly.

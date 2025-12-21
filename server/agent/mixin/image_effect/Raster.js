@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import { EFunction } from "arslib";
-import { createAgentWithRectangle } from "../../../agent/Agent.js";
-import { Fade } from "./Fade.js";
+import { EFunction } from 'arslib';
+import { createAgentWithRectangle } from '../../../agent/Agent.js';
+import { Fade } from './Fade.js';
 
 /**
  * @fileoverview Raster effect that creates a trail of fading images behind a moving agent.

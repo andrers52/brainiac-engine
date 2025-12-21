@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { DottedRectangle } from "./DottedRectangle.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { DottedRectangle } from './DottedRectangle.js';
 
-describe("DottedRectangle", function () {
+describe('DottedRectangle', function () {
   let mockContext;
   let mockCanvas;
 
@@ -18,12 +18,12 @@ describe("DottedRectangle", function () {
       rect: sinon.spy(),
       stroke: sinon.spy(),
       lineWidth: 0,
-      fillStyle: "",
-      strokeStyle: "",
+      fillStyle: '',
+      strokeStyle: '',
     };
   });
 
-  it("should draw a rectangle border", function () {
+  it('should draw a rectangle border', function () {
     DottedRectangle(mockContext);
 
     assert(mockContext.beginPath.calledOnce);
@@ -38,21 +38,21 @@ describe("DottedRectangle", function () {
     assert.strictEqual(firstRectCall.args[3], 100); // height
   });
 
-  it("should set correct styles", function () {
+  it('should set correct styles', function () {
     DottedRectangle(mockContext);
 
-    assert.strictEqual(mockContext.fillStyle, "black");
-    assert.strictEqual(mockContext.strokeStyle, "grey");
+    assert.strictEqual(mockContext.fillStyle, 'black');
+    assert.strictEqual(mockContext.strokeStyle, 'grey');
   });
 
-  it("should set line widths correctly", function () {
+  it('should set line widths correctly', function () {
     DottedRectangle(mockContext);
 
     // Should end with lineWidth = 1 for dots
     assert.strictEqual(mockContext.lineWidth, 1);
   });
 
-  it("should draw a 20x20 grid of dots", function () {
+  it('should draw a 20x20 grid of dots', function () {
     DottedRectangle(mockContext);
 
     // Should have 1 border rect + 400 dot rects (20x20)
@@ -75,7 +75,7 @@ describe("DottedRectangle", function () {
     assert.strictEqual(dotCalls[20].args[1], 0); // y back to 0
   });
 
-  it("should adapt to different canvas sizes", function () {
+  it('should adapt to different canvas sizes', function () {
     mockContext.canvas.width = 200;
     mockContext.canvas.height = 150;
 

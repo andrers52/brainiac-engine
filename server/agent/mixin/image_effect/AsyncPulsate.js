@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { Rectangle } from "../../../../common/geometry/Rectangle.js";
+import { Rectangle } from '../../../../common/geometry/Rectangle.js';
 
 /**
  * @fileoverview Asynchronous pulsating effect that alternates between growing width and height.

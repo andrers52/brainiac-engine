@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Pulsate } from "./Pulsate.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Pulsate } from './Pulsate.js';
 
-describe("Pulsate", function () {
+describe('Pulsate', function () {
   let agent, clock;
 
   beforeEach(function () {
@@ -34,12 +34,12 @@ describe("Pulsate", function () {
     clock.restore();
   });
 
-  it("should initialize with default max time if not provided", function () {
+  it('should initialize with default max time if not provided', function () {
     Pulsate.call(agent);
     assert.strictEqual(agent.maxTimeinMilliseconds, undefined);
   });
 
-  it("should start and stop pulsate correctly", function () {
+  it('should start and stop pulsate correctly', function () {
     const initialSize = agent.rectangle.size.clone();
 
     Pulsate.call(agent, 2000);
@@ -61,7 +61,7 @@ describe("Pulsate", function () {
     assert.strictEqual(agent.rectangle.size.y, initialSize.y);
   });
 
-  it("should pulsate correctly during the cycle", function () {
+  it('should pulsate correctly during the cycle', function () {
     const initialSize = agent.rectangle.size.clone();
 
     Pulsate.call(agent, 2000);
@@ -83,7 +83,7 @@ describe("Pulsate", function () {
     assert.strictEqual(agent.rectangle.size.y, initialSize.y);
   });
 
-  it("should reset size after stop pulsate", function () {
+  it('should reset size after stop pulsate', function () {
     const initialSize = agent.rectangle.size.clone();
 
     Pulsate.call(agent, 2000);
@@ -97,10 +97,10 @@ describe("Pulsate", function () {
     assert.strictEqual(agent.rectangle.size.y, initialSize.y);
   });
 
-  it("should not start pulsate if already started", function () {
+  it('should not start pulsate if already started', function () {
     Pulsate.call(agent, 2000);
 
-    const startSpy = sinon.spy(agent, "startPulsate");
+    const startSpy = sinon.spy(agent, 'startPulsate');
 
     agent.startPulsate();
     assert(agent.started);
@@ -111,10 +111,10 @@ describe("Pulsate", function () {
     assert(agent.started); // Should still be started
   });
 
-  it("should not stop pulsate if not started", function () {
+  it('should not stop pulsate if not started', function () {
     Pulsate.call(agent, 2000);
 
-    const stopSpy = sinon.spy(agent, "stopPulsate");
+    const stopSpy = sinon.spy(agent, 'stopPulsate');
 
     agent.stopPulsate();
     assert(stopSpy.calledOnce);

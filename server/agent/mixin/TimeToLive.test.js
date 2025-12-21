@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { TimeToLive } from "./TimeToLive.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { TimeToLive } from './TimeToLive.js';
 
-describe("TimeToLive", function () {
+describe('TimeToLive', function () {
   let clock;
 
   beforeEach(function () {
@@ -13,7 +13,7 @@ describe("TimeToLive", function () {
     clock.restore();
   });
 
-  it("should call die method after the specified time", function () {
+  it('should call die method after the specified time', function () {
     const timeToLiveInMilliseconds = 3000;
     const agent = {
       isAlive: true,
@@ -29,7 +29,7 @@ describe("TimeToLive", function () {
     assert.strictEqual(agent.die.called, true);
   });
 
-  it("should call die method after the default time if no time is specified", function () {
+  it('should call die method after the default time if no time is specified', function () {
     const DEFAULT_TIME_TO_LIVE = 5000;
     const agent = {
       isAlive: true,
@@ -45,7 +45,7 @@ describe("TimeToLive", function () {
     assert.strictEqual(agent.die.called, true);
   });
 
-  it("should not call die if isAlive is false", function () {
+  it('should not call die if isAlive is false', function () {
     const timeToLiveInMilliseconds = 3000;
     const agent = {
       isAlive: false,

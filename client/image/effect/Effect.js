@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
-import { RadialGradient } from "./RadialGradient.js";
-import { Circle } from "./drawingeffect/shapes/Circle.js";
-import { DottedRectangle } from "./drawingeffect/shapes/DottedRectangle.js";
-import { Ship } from "./drawingeffect/shapes/Ship.js";
-import { Star } from "./drawingeffect/shapes/Star.js";
-import { Triangle } from "./drawingeffect/shapes/Triangle.js";
+import { RadialGradient } from './RadialGradient.js';
+import { Circle } from './drawingeffect/shapes/Circle.js';
+import { DottedRectangle } from './drawingeffect/shapes/DottedRectangle.js';
+import { Ship } from './drawingeffect/shapes/Ship.js';
+import { Star } from './drawingeffect/shapes/Star.js';
+import { Triangle } from './drawingeffect/shapes/Triangle.js';
 
 /**
  * Applies visual effects to images or creates new images with effects
@@ -34,7 +34,7 @@ function Effect(
   newImageName,
   drawingEffectName,
   argsObj,
-  combineOption = "source-over",
+  combineOption = 'source-over',
 ) {
   //     Assert.assert(imageName || imageSize, "let Effect error: either imageName or imageSize must be defined.");
   //     Assert.assert(
@@ -70,18 +70,18 @@ function Effect(
   var image = imageName && resourceStore.retrieveResourceObject(imageName);
 
   //create canvas to hold the drawing
-  let canvas = document.createElement("canvas");
+  let canvas = document.createElement('canvas');
   canvas.width = imageSize ? imageSize.x : image.width;
   canvas.height = imageSize ? imageSize.y : image.height;
 
-  var context = canvas.getContext("2d");
+  var context = canvas.getContext('2d');
 
   imageName && context.drawImage(image, 0, 0);
 
   //set defaults
   context.save();
-  if (context.fillStyle === "#000000") context.fillStyle = "white";
-  if (context.strokeStyle === "#000000") context.strokeStyle = "white";
+  if (context.fillStyle === '#000000') context.fillStyle = 'white';
+  if (context.strokeStyle === '#000000') context.strokeStyle = 'white';
 
   //apply effect
   if (opacity) context.globalAlpha = opacity;
@@ -90,24 +90,24 @@ function Effect(
   if (combineOption) context.globalCompositeOperation = combineOption;
 
   switch (drawingEffectName) {
-    case "RadialGradient":
-      RadialGradient(context, argsObj);
-      break;
-    case "Ship":
-      Ship(context, argsObj);
-      break;
-    case "Triangle":
-      Triangle(context, argsObj);
-      break;
-    case "Star":
-      Star(context, argsObj);
-      break;
-    case "Circle":
-      Circle(context, argsObj);
-      break;
-    case "DottedRectangle":
-      DottedRectangle(context, argsObj);
-      break;
+  case 'RadialGradient':
+    RadialGradient(context, argsObj);
+    break;
+  case 'Ship':
+    Ship(context, argsObj);
+    break;
+  case 'Triangle':
+    Triangle(context, argsObj);
+    break;
+  case 'Star':
+    Star(context, argsObj);
+    break;
+  case 'Circle':
+    Circle(context, argsObj);
+    break;
+  case 'DottedRectangle':
+    DottedRectangle(context, argsObj);
+    break;
   }
 
   context.fill();

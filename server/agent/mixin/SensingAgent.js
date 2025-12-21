@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-import { Assert } from "arslib";
-import { rect } from "../../../common/geometry/Rectangle.js";
-import { Vector } from "../../../common/geometry/Vector.js";
-import { BEServer } from "../../BEServer.js";
+import { Assert } from 'arslib';
+import { rect } from '../../../common/geometry/Rectangle.js';
+import { Vector } from '../../../common/geometry/Vector.js';
+import { BEServer } from '../../BEServer.js';
 
 /**
  * @fileoverview Agent sensing system for detecting nearby agents and user interactions.
@@ -96,11 +96,11 @@ export function SensingAgent(
 
     Assert.assertIsArray(
       vectorsAndAgents,
-      "SensingAgent#getSensingAgents should return an array of objects",
+      'SensingAgent#getSensingAgents should return an array of objects',
     );
     Assert.assert(
       vectorsAndAgents[0].vector && vectorsAndAgents[0].agent,
-      "SensingAgent#getSensingAgents object seems mal-formed",
+      'SensingAgent#getSensingAgents object seems mal-formed',
     );
     return vectorsAndAgents;
   }

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Common definitions and constants for the Brainiac Engine
@@ -35,11 +35,11 @@ BECommonDefinitions.CAMERA_WIDTH = 500;
 BECommonDefinitions.CAMERA_HEIGHT = BECommonDefinitions.CAMERA_WIDTH;
 
 /** @type {string} Path to back button image resource */
-BECommonDefinitions.BACK_BUTTON_IMAGE = "./be/media/images/button_close.png";
+BECommonDefinitions.BACK_BUTTON_IMAGE = './be/media/images/button_close.png';
 /** @type {string} Path to mouse pointer image resource */
-BECommonDefinitions.MOUSE_POINTER_IMAGE = "./be/media/images/mouse_pointer.png";
+BECommonDefinitions.MOUSE_POINTER_IMAGE = './be/media/images/mouse_pointer.png';
 /** @type {string} Path to configuration JSON file */
-BECommonDefinitions.CONFIG_JSON = "./config/config.json";
+BECommonDefinitions.CONFIG_JSON = './config/config.json';
 /** @type {string[]} Array of common resource paths */
 BECommonDefinitions.COMMON_RESOURCES = [BECommonDefinitions.CONFIG_JSON];
 // [BECommonDefinitions.BACK_BUTTON_IMAGE,
@@ -54,127 +54,127 @@ BECommonDefinitions.COMMON_RESOURCES = [BECommonDefinitions.CONFIG_JSON];
 BECommonDefinitions.COMMON_EFFECTS_DESCRIPTION = {
   images: [
     {
-      newImageName: "whiteParticle.jpg",
+      newImageName: 'whiteParticle.jpg',
       size: {
         x: 30,
         y: 30,
       },
       effectsToApply: [
         {
-          name: "RadialGradient",
+          name: 'RadialGradient',
           parameters: {
-            startColor: "white",
-            endColor: "black",
+            startColor: 'white',
+            endColor: 'black',
           },
         },
       ],
     },
     {
-      newImageName: "redParticle.jpg",
+      newImageName: 'redParticle.jpg',
       size: {
         x: 30,
         y: 30,
       },
       effectsToApply: [
         {
-          name: "RadialGradient",
+          name: 'RadialGradient',
           parameters: {
-            startColor: "red",
-            endColor: "black",
+            startColor: 'red',
+            endColor: 'black',
           },
         },
       ],
     },
     {
-      newImageName: "greenParticle.jpg",
+      newImageName: 'greenParticle.jpg',
       size: {
         x: 30,
         y: 30,
       },
       effectsToApply: [
         {
-          name: "RadialGradient",
+          name: 'RadialGradient',
           parameters: {
-            startColor: "green",
-            endColor: "black",
+            startColor: 'green',
+            endColor: 'black',
           },
         },
       ],
     },
     {
-      newImageName: "blueParticle.jpg",
+      newImageName: 'blueParticle.jpg',
       size: {
         x: 30,
         y: 30,
       },
       effectsToApply: [
         {
-          name: "RadialGradient",
+          name: 'RadialGradient',
           parameters: {
-            startColor: "blue",
-            endColor: "black",
+            startColor: 'blue',
+            endColor: 'black',
           },
         },
       ],
     },
     {
-      newImageName: "triangle.jpg",
+      newImageName: 'triangle.jpg',
       size: {
         x: 100,
         y: 100,
       },
       opacity: 0.6,
-      fillColor: "red",
-      strokeColor: "yellow",
+      fillColor: 'red',
+      strokeColor: 'yellow',
       effectsToApply: [
         {
-          name: "Triangle",
+          name: 'Triangle',
           parameters: {},
         },
       ],
     },
     {
-      newImageName: "star.jpg",
+      newImageName: 'star.jpg',
       size: {
         x: 100,
         y: 100,
       },
-      fillColor: "grey",
-      strokeColor: "grey",
+      fillColor: 'grey',
+      strokeColor: 'grey',
       effectsToApply: [
         {
-          name: "Star",
+          name: 'Star',
           parameters: {},
         },
       ],
     },
     {
-      newImageName: "circle.jpg",
+      newImageName: 'circle.jpg',
       size: {
         x: 100,
         y: 100,
       },
-      fillColor: "red",
-      strokeColor: "red",
+      fillColor: 'red',
+      strokeColor: 'red',
       effectsToApply: [
         {
-          name: "Circle",
+          name: 'Circle',
           parameters: {},
         },
       ],
     },
 
     {
-      newImageName: "dotted_black_background.jpg",
+      newImageName: 'dotted_black_background.jpg',
       size: {
         x: 1000,
         y: 1000,
       },
-      fillColor: "grey",
-      strokeColor: "white",
+      fillColor: 'grey',
+      strokeColor: 'white',
       effectsToApply: [
         {
-          name: "DottedRectangle",
+          name: 'DottedRectangle',
           parameters: {},
         },
       ],
@@ -199,19 +199,19 @@ BECommonDefinitions.AGENT_PRESSABLE_SIZE_CHANGE_FACTOR =
  */
 BECommonDefinitions.start = function (config) {
   BECommonDefinitions.config = config;
-  if (config.buildType === "deploy") {
+  if (config.buildType === 'deploy') {
     /** @type {number} Web server port for deployment */
     BECommonDefinitions.WEB_PORT = 80;
     //vultr
     /** @type {string} Web socket server IP address for deployment */
-    BECommonDefinitions.WEB_SOCKET_ADDRESS_IP = "45.63.87.109";
+    BECommonDefinitions.WEB_SOCKET_ADDRESS_IP = '45.63.87.109';
     //BECommonDefinitions.WEB_SOCKET_ADDRESS_IP = 'z32.space'; // <- don't use this.
   } else {
     //'dev' -> working on the couch... :)
     /** @type {number} Web server port for development */
     BECommonDefinitions.WEB_PORT = 4000;
     /** @type {string} Web socket server IP address for development */
-    BECommonDefinitions.WEB_SOCKET_ADDRESS_IP = "localhost";
+    BECommonDefinitions.WEB_SOCKET_ADDRESS_IP = 'localhost';
   }
 
   /** @type {string} Complete web socket address URL */

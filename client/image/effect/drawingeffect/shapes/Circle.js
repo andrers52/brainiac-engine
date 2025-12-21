@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Draws a circle shape on the canvas context

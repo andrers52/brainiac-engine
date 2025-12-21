@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Invert } from "./Invert.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Invert } from './Invert.js';
 
-describe("Invert", function () {
+describe('Invert', function () {
   let sandbox;
   let mockImageData;
 
@@ -30,8 +30,8 @@ describe("Invert", function () {
     sandbox.restore();
   });
 
-  describe("Basic functionality", function () {
-    it("should invert RGB values by subtracting from 255", function () {
+  describe('Basic functionality', function () {
+    it('should invert RGB values by subtracting from 255', function () {
       const originalData = new Uint8ClampedArray(mockImageData.data);
 
       const result = Invert(mockImageData);
@@ -45,13 +45,13 @@ describe("Invert", function () {
       }
     });
 
-    it("should return the modified imageData object", function () {
+    it('should return the modified imageData object', function () {
       const result = Invert(mockImageData);
 
       assert.strictEqual(result, mockImageData);
     });
 
-    it("should not modify alpha channel", function () {
+    it('should not modify alpha channel', function () {
       const originalAlpha = Array.from(mockImageData.data).filter(
         (_, i) => i % 4 === 3,
       );
@@ -65,8 +65,8 @@ describe("Invert", function () {
     });
   });
 
-  describe("Color inversion accuracy", function () {
-    it("should invert pure red to cyan", function () {
+  describe('Color inversion accuracy', function () {
+    it('should invert pure red to cyan', function () {
       const redImageData = {
         width: 1,
         height: 1,
@@ -81,7 +81,7 @@ describe("Invert", function () {
       // Result: cyan (0, 255, 255)
     });
 
-    it("should invert pure green to magenta", function () {
+    it('should invert pure green to magenta', function () {
       const greenImageData = {
         width: 1,
         height: 1,
@@ -96,7 +96,7 @@ describe("Invert", function () {
       // Result: magenta (255, 0, 255)
     });
 
-    it("should invert pure blue to yellow", function () {
+    it('should invert pure blue to yellow', function () {
       const blueImageData = {
         width: 1,
         height: 1,
@@ -111,7 +111,7 @@ describe("Invert", function () {
       // Result: yellow (255, 255, 0)
     });
 
-    it("should invert white to black", function () {
+    it('should invert white to black', function () {
       const whiteImageData = {
         width: 1,
         height: 1,
@@ -126,7 +126,7 @@ describe("Invert", function () {
       // Result: black (0, 0, 0)
     });
 
-    it("should invert black to white", function () {
+    it('should invert black to white', function () {
       const blackImageData = {
         width: 1,
         height: 1,
@@ -141,7 +141,7 @@ describe("Invert", function () {
       // Result: white (255, 255, 255)
     });
 
-    it("should invert gray correctly", function () {
+    it('should invert gray correctly', function () {
       const grayImageData = {
         width: 1,
         height: 1,
@@ -157,8 +157,8 @@ describe("Invert", function () {
     });
   });
 
-  describe("Inversion properties", function () {
-    it("should be symmetric (double inversion returns to original)", function () {
+  describe('Inversion properties', function () {
+    it('should be symmetric (double inversion returns to original)', function () {
       const originalImageData = {
         width: 1,
         height: 1,
@@ -179,7 +179,7 @@ describe("Invert", function () {
       assert.strictEqual(originalImageData.data[3], originalData[3]);
     });
 
-    it("should handle mid-point value correctly", function () {
+    it('should handle mid-point value correctly', function () {
       const midPointImageData = {
         width: 1,
         height: 1,
@@ -193,7 +193,7 @@ describe("Invert", function () {
       assert.strictEqual(midPointImageData.data[2], 128); // 255 - 127 = 128
     });
 
-    it("should handle the complement value correctly", function () {
+    it('should handle the complement value correctly', function () {
       const imageData = {
         width: 1,
         height: 1,
@@ -208,8 +208,8 @@ describe("Invert", function () {
     });
   });
 
-  describe("Edge cases", function () {
-    it("should handle empty imageData", function () {
+  describe('Edge cases', function () {
+    it('should handle empty imageData', function () {
       const emptyImageData = {
         width: 0,
         height: 0,
@@ -222,7 +222,7 @@ describe("Invert", function () {
       assert.strictEqual(result.data.length, 0);
     });
 
-    it("should handle single pixel image", function () {
+    it('should handle single pixel image', function () {
       const singlePixelImageData = {
         width: 1,
         height: 1,
@@ -237,7 +237,7 @@ describe("Invert", function () {
       assert.strictEqual(singlePixelImageData.data[3], 255); // Alpha unchanged
     });
 
-    it("should handle large image data", function () {
+    it('should handle large image data', function () {
       const largeImageData = {
         width: 100,
         height: 100,
@@ -266,8 +266,8 @@ describe("Invert", function () {
     });
   });
 
-  describe("Boundary values", function () {
-    it("should handle minimum RGB values (0)", function () {
+  describe('Boundary values', function () {
+    it('should handle minimum RGB values (0)', function () {
       const minImageData = {
         width: 1,
         height: 1,
@@ -281,7 +281,7 @@ describe("Invert", function () {
       assert.strictEqual(minImageData.data[2], 255); // 255 - 0 = 255
     });
 
-    it("should handle maximum RGB values (255)", function () {
+    it('should handle maximum RGB values (255)', function () {
       const maxImageData = {
         width: 1,
         height: 1,
@@ -295,7 +295,7 @@ describe("Invert", function () {
       assert.strictEqual(maxImageData.data[2], 0); // 255 - 255 = 0
     });
 
-    it("should handle all possible RGB values correctly", function () {
+    it('should handle all possible RGB values correctly', function () {
       for (let value = 0; value <= 255; value += 51) {
         // Test 0, 51, 102, 153, 204, 255
         const imageData = {
@@ -314,8 +314,8 @@ describe("Invert", function () {
     });
   });
 
-  describe("Alpha channel preservation", function () {
-    it("should preserve various alpha values", function () {
+  describe('Alpha channel preservation', function () {
+    it('should preserve various alpha values', function () {
       const alphaValues = [0, 64, 128, 192, 255];
 
       alphaValues.forEach((alphaValue) => {
@@ -336,17 +336,17 @@ describe("Invert", function () {
     });
   });
 
-  describe("Data integrity", function () {
-    it("should maintain imageData structure", function () {
+  describe('Data integrity', function () {
+    it('should maintain imageData structure', function () {
       const result = Invert(mockImageData);
 
-      assert(result.hasOwnProperty("width"));
-      assert(result.hasOwnProperty("height"));
-      assert(result.hasOwnProperty("data"));
+      assert(result.hasOwnProperty('width'));
+      assert(result.hasOwnProperty('height'));
+      assert(result.hasOwnProperty('data'));
       assert(result.data instanceof Uint8ClampedArray);
     });
 
-    it("should not change imageData dimensions", function () {
+    it('should not change imageData dimensions', function () {
       const originalWidth = mockImageData.width;
       const originalHeight = mockImageData.height;
       const originalLength = mockImageData.data.length;
@@ -358,17 +358,17 @@ describe("Invert", function () {
       assert.strictEqual(mockImageData.data.length, originalLength);
     });
 
-    it("should process all pixels", function () {
+    it('should process all pixels', function () {
       const pixelCount = mockImageData.width * mockImageData.height;
 
       Invert(mockImageData);
 
       // Verify all pixels were processed
       for (let i = 0; i < pixelCount * 4; i += 4) {
-        assert(typeof mockImageData.data[i] === "number"); // Red
-        assert(typeof mockImageData.data[i + 1] === "number"); // Green
-        assert(typeof mockImageData.data[i + 2] === "number"); // Blue
-        assert(typeof mockImageData.data[i + 3] === "number"); // Alpha
+        assert(typeof mockImageData.data[i] === 'number'); // Red
+        assert(typeof mockImageData.data[i + 1] === 'number'); // Green
+        assert(typeof mockImageData.data[i + 2] === 'number'); // Blue
+        assert(typeof mockImageData.data[i + 3] === 'number'); // Alpha
 
         // RGB values should be within valid range
         assert(mockImageData.data[i] >= 0 && mockImageData.data[i] <= 255);

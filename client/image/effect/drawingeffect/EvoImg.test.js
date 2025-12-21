@@ -1,6 +1,6 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { EvoImg } from "./EvoImg.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { EvoImg } from './EvoImg.js';
 
 // Mock Assert if not available
 global.Assert = global.Assert || {
@@ -9,7 +9,7 @@ global.Assert = global.Assert || {
   },
 };
 
-describe("EvoImg", function () {
+describe('EvoImg', function () {
   let mockContext;
   let mockCanvas;
 
@@ -33,16 +33,16 @@ describe("EvoImg", function () {
       fillRect: sinon.spy(),
       fill: sinon.spy(),
       stroke: sinon.spy(),
-      fillStyle: "",
-      strokeStyle: "",
+      fillStyle: '',
+      strokeStyle: '',
       globalAlpha: 1,
-      globalCompositeOperation: "source-over",
+      globalCompositeOperation: 'source-over',
       lineWidth: 1,
     };
   });
 
-  describe("Rectangle drawing", function () {
-    it("should draw a filled rectangle with correct parameters", function () {
+  describe('Rectangle drawing', function () {
+    it('should draw a filled rectangle with correct parameters', function () {
       // Instruction: [shapeType, compositeOp, x, y, sizeX, sizeY, r, g, b, orientation, alpha]
       const code = [[0, 0, 100, 75, 50, 30, 255, 128, 0, 0, 0.8]]; // Rectangle
 
@@ -52,17 +52,17 @@ describe("EvoImg", function () {
       assert(mockContext.restore.calledOnce);
       assert(mockContext.translate.calledWith(100, 75));
       assert(mockContext.rotate.calledWith(-0)); // -orientation = -0
-      assert.strictEqual(mockContext.fillStyle, "rgba(255, 128, 0, 1)");
-      assert.strictEqual(mockContext.strokeStyle, "rgba(255, 128, 0, 1)");
+      assert.strictEqual(mockContext.fillStyle, 'rgba(255, 128, 0, 1)');
+      assert.strictEqual(mockContext.strokeStyle, 'rgba(255, 128, 0, 1)');
       assert.strictEqual(mockContext.globalAlpha, 0.8);
-      assert.strictEqual(mockContext.globalCompositeOperation, "source-over");
+      assert.strictEqual(mockContext.globalCompositeOperation, 'source-over');
       assert.strictEqual(mockContext.lineWidth, 1);
 
       // Rectangle should be drawn centered at original position (not translated position)
       assert(mockContext.fillRect.calledWith(75, 60, 50, 30)); // x-sizeX/2, y-sizeY/2, sizeX, sizeY
     });
 
-    it("should draw stroked rectangle when fill is false", function () {
+    it('should draw stroked rectangle when fill is false', function () {
       // We'd need to modify the module to support stroke mode, but for now test the current behavior
       const code = [[0, 0, 50, 50, 40, 40, 100, 200, 50, Math.PI / 4, 1]];
 
@@ -73,8 +73,8 @@ describe("EvoImg", function () {
     });
   });
 
-  describe("Circle drawing", function () {
-    it("should draw a filled circle with correct parameters", function () {
+  describe('Circle drawing', function () {
+    it('should draw a filled circle with correct parameters', function () {
       const code = [[1, 1, 80, 60, 40, 30, 0, 255, 128, Math.PI / 2, 0.5]]; // Circle
 
       EvoImg(mockContext, code);
@@ -83,9 +83,9 @@ describe("EvoImg", function () {
       assert(mockContext.restore.calledOnce);
       assert(mockContext.translate.calledWith(80, 60));
       assert(mockContext.rotate.calledWith(-Math.PI / 2));
-      assert.strictEqual(mockContext.fillStyle, "rgba(0, 255, 128, 1)");
+      assert.strictEqual(mockContext.fillStyle, 'rgba(0, 255, 128, 1)');
       assert.strictEqual(mockContext.globalAlpha, 0.5);
-      assert.strictEqual(mockContext.globalCompositeOperation, "lighter");
+      assert.strictEqual(mockContext.globalCompositeOperation, 'lighter');
 
       assert(mockContext.beginPath.calledOnce);
       // Circle radius should be (sizeX + sizeY) / 4 = (40 + 30) / 4 = 17.5
@@ -94,8 +94,8 @@ describe("EvoImg", function () {
     });
   });
 
-  describe("Triangle drawing", function () {
-    it("should draw a filled triangle with correct parameters", function () {
+  describe('Triangle drawing', function () {
+    it('should draw a filled triangle with correct parameters', function () {
       const code = [[2, 2, 120, 90, 60, 80, 255, 0, 255, 0, 1]]; // Triangle
 
       EvoImg(mockContext, code);
@@ -103,8 +103,8 @@ describe("EvoImg", function () {
       assert(mockContext.save.calledOnce);
       assert(mockContext.restore.calledOnce);
       assert(mockContext.translate.calledWith(120, 90));
-      assert.strictEqual(mockContext.fillStyle, "rgba(255, 0, 255, 1)");
-      assert.strictEqual(mockContext.globalCompositeOperation, "copy");
+      assert.strictEqual(mockContext.fillStyle, 'rgba(255, 0, 255, 1)');
+      assert.strictEqual(mockContext.globalCompositeOperation, 'copy');
 
       assert(mockContext.beginPath.calledOnce);
 
@@ -128,8 +128,8 @@ describe("EvoImg", function () {
     });
   });
 
-  describe("Composite operations", function () {
-    it("should handle different composite operation codes", function () {
+  describe('Composite operations', function () {
+    it('should handle different composite operation codes', function () {
       const operations = [
         [0, 0], // source-over
         [0, 1], // lighter
@@ -140,19 +140,19 @@ describe("EvoImg", function () {
       ];
 
       const expectedOps = [
-        "source-over",
-        "lighter",
-        "copy",
-        "xor",
-        "multiply",
-        "luminosity",
+        'source-over',
+        'lighter',
+        'copy',
+        'xor',
+        'multiply',
+        'luminosity',
       ];
 
       operations.forEach((op, index) => {
         const code = [[op[0], op[1], 50, 50, 20, 20, 255, 255, 255, 0, 1]];
         const freshContext = { ...mockContext };
         Object.keys(mockContext).forEach((key) => {
-          if (typeof mockContext[key] === "function") {
+          if (typeof mockContext[key] === 'function') {
             freshContext[key] = sinon.spy();
           }
         });
@@ -166,8 +166,8 @@ describe("EvoImg", function () {
     });
   });
 
-  describe("Multiple instructions", function () {
-    it("should execute multiple drawing instructions in sequence", function () {
+  describe('Multiple instructions', function () {
+    it('should execute multiple drawing instructions in sequence', function () {
       const code = [
         [0, 0, 50, 50, 30, 30, 255, 0, 0, 0, 1], // Red rectangle
         [1, 1, 100, 100, 40, 40, 0, 255, 0, 0, 0.5], // Green circle
@@ -193,8 +193,8 @@ describe("EvoImg", function () {
     });
   });
 
-  describe("Edge cases and error handling", function () {
-    it("should handle empty code array", function () {
+  describe('Edge cases and error handling', function () {
+    it('should handle empty code array', function () {
       EvoImg(mockContext, []);
 
       // No drawing operations should be called
@@ -202,7 +202,7 @@ describe("EvoImg", function () {
       assert.strictEqual(mockContext.restore.callCount, 0);
     });
 
-    it("should throw error for invalid shape type", function () {
+    it('should throw error for invalid shape type', function () {
       const code = [[99, 0, 50, 50, 20, 20, 255, 255, 255, 0, 1]]; // Invalid shape type
 
       assert.throws(() => {
@@ -210,7 +210,7 @@ describe("EvoImg", function () {
       }, /Instruction is flawed/);
     });
 
-    it("should handle extreme parameter values", function () {
+    it('should handle extreme parameter values', function () {
       const code = [
         [0, 0, 0, 0, 1000, 1000, 255, 255, 255, 2 * Math.PI, 0], // Large size, full rotation, zero alpha
         [1, 0, -100, -100, 1, 1, 0, 0, 0, -Math.PI, 1], // Negative position, tiny size, negative rotation
@@ -226,18 +226,18 @@ describe("EvoImg", function () {
     });
   });
 
-  describe("Color and alpha handling", function () {
-    it("should set correct RGBA colors", function () {
+  describe('Color and alpha handling', function () {
+    it('should set correct RGBA colors', function () {
       const code = [[0, 0, 50, 50, 20, 20, 128, 64, 192, 0, 0.3]];
 
       EvoImg(mockContext, code);
 
-      assert.strictEqual(mockContext.fillStyle, "rgba(128, 64, 192, 1)");
-      assert.strictEqual(mockContext.strokeStyle, "rgba(128, 64, 192, 1)");
+      assert.strictEqual(mockContext.fillStyle, 'rgba(128, 64, 192, 1)');
+      assert.strictEqual(mockContext.strokeStyle, 'rgba(128, 64, 192, 1)');
       assert.strictEqual(mockContext.globalAlpha, 0.3);
     });
 
-    it("should handle color values at boundaries", function () {
+    it('should handle color values at boundaries', function () {
       const code = [
         [0, 0, 50, 50, 20, 20, 0, 0, 0, 0, 0], // Black, zero alpha
         [1, 0, 100, 100, 20, 20, 255, 255, 255, 0, 1], // White, full alpha
@@ -251,8 +251,8 @@ describe("EvoImg", function () {
     });
   });
 
-  describe("Transformation handling", function () {
-    it("should apply transformations in correct order", function () {
+  describe('Transformation handling', function () {
+    it('should apply transformations in correct order', function () {
       const code = [[0, 0, 100, 75, 40, 30, 255, 255, 255, Math.PI / 3, 1]];
 
       EvoImg(mockContext, code);
@@ -266,7 +266,7 @@ describe("EvoImg", function () {
       assert(mockContext.rotate.calledWith(-Math.PI / 3)); // Note: negative orientation
     });
 
-    it("should save and restore context for each instruction", function () {
+    it('should save and restore context for each instruction', function () {
       const code = [
         [0, 0, 50, 50, 20, 20, 255, 0, 0, 0, 1],
         [1, 1, 100, 100, 30, 30, 0, 255, 0, Math.PI / 2, 0.5],

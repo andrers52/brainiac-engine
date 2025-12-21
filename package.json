@@ -63,6 +63,7 @@
         "socket.io-client": "4.8.1"
     },
     "devDependencies": {
+        "eslint": "8.57.0",
         "jsdom": "26.1.0",
         "mocha": "11.6.0",
         "sinon": "20.0.0"

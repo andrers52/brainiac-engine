@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "allowJs": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es2020"
+  },
+  "include": ["./**/*.js", "./**/*.mjs"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,6 +1,6 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Mirror } from "./Mirror.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Mirror } from './Mirror.js';
 
 // Mock Assert if not available
 global.Assert = global.Assert || {
@@ -14,7 +14,7 @@ global.document = global.document || {
   createElement: sinon.stub(),
 };
 
-describe("Mirror", function () {
+describe('Mirror', function () {
   let mockContext;
   let mockCanvas;
   let mockTmpCanvas;
@@ -47,57 +47,57 @@ describe("Mirror", function () {
     global.document.createElement = sinon.stub().returns(mockTmpCanvas);
   });
 
-  describe("Parameter validation", function () {
-    it("should throw error when no parameters provided", function () {
+  describe('Parameter validation', function () {
+    it('should throw error when no parameters provided', function () {
       assert.throws(() => {
         Mirror(mockContext);
       }, /Mirror Effect error: invalid parameters configuration/);
     });
 
-    it("should throw error when parameters object is undefined", function () {
+    it('should throw error when parameters object is undefined', function () {
       assert.throws(() => {
         Mirror(mockContext, undefined);
       }, /Mirror Effect error: invalid parameters configuration/);
     });
 
-    it("should throw error when neither horizontal nor vertical is defined", function () {
+    it('should throw error when neither horizontal nor vertical is defined', function () {
       assert.throws(() => {
         Mirror(mockContext, {});
       }, /Mirror Effect error: invalid parameters configuration/);
     });
 
-    it("should accept parameters with horizontal defined", function () {
+    it('should accept parameters with horizontal defined', function () {
       assert.doesNotThrow(() => {
         Mirror(mockContext, { horizontal: true });
       });
     });
 
-    it("should accept parameters with vertical defined", function () {
+    it('should accept parameters with vertical defined', function () {
       assert.doesNotThrow(() => {
         Mirror(mockContext, { vertical: true });
       });
     });
 
-    it("should accept parameters with both horizontal and vertical defined", function () {
+    it('should accept parameters with both horizontal and vertical defined', function () {
       assert.doesNotThrow(() => {
         Mirror(mockContext, { horizontal: true, vertical: false });
       });
     });
   });
 
-  describe("Canvas creation and setup", function () {
-    it("should create temporary canvas with correct dimensions", function () {
+  describe('Canvas creation and setup', function () {
+    it('should create temporary canvas with correct dimensions', function () {
       Mirror(mockContext, { horizontal: true });
 
-      assert(global.document.createElement.calledWith("CANVAS"));
+      assert(global.document.createElement.calledWith('CANVAS'));
       assert.strictEqual(mockTmpCanvas.width, 100);
       assert.strictEqual(mockTmpCanvas.height, 80);
-      assert(mockTmpCanvas.getContext.calledWith("2d"));
+      assert(mockTmpCanvas.getContext.calledWith('2d'));
     });
   });
 
-  describe("Horizontal mirroring", function () {
-    it("should apply horizontal flip transformation", function () {
+  describe('Horizontal mirroring', function () {
+    it('should apply horizontal flip transformation', function () {
       Mirror(mockContext, { horizontal: true, vertical: false });
 
       assert(mockTmpContext.save.calledOnce);
@@ -113,7 +113,7 @@ describe("Mirror", function () {
       );
     });
 
-    it("should handle horizontal flip only", function () {
+    it('should handle horizontal flip only', function () {
       Mirror(mockContext, { horizontal: true });
 
       assert(mockTmpContext.scale.calledWith(-1, 1));
@@ -121,8 +121,8 @@ describe("Mirror", function () {
     });
   });
 
-  describe("Vertical mirroring", function () {
-    it("should apply vertical flip transformation", function () {
+  describe('Vertical mirroring', function () {
+    it('should apply vertical flip transformation', function () {
       Mirror(mockContext, { horizontal: false, vertical: true });
 
       assert(mockTmpContext.save.calledOnce);
@@ -138,7 +138,7 @@ describe("Mirror", function () {
       );
     });
 
-    it("should handle vertical flip only", function () {
+    it('should handle vertical flip only', function () {
       Mirror(mockContext, { vertical: true });
 
       assert(mockTmpContext.scale.calledWith(1, -1));
@@ -146,8 +146,8 @@ describe("Mirror", function () {
     });
   });
 
-  describe("Both horizontal and vertical mirroring", function () {
-    it("should apply both transformations", function () {
+  describe('Both horizontal and vertical mirroring', function () {
+    it('should apply both transformations', function () {
       Mirror(mockContext, { horizontal: true, vertical: true });
 
       assert(mockTmpContext.save.calledOnce);
@@ -164,20 +164,20 @@ describe("Mirror", function () {
     });
   });
 
-  describe("Canvas manipulation", function () {
-    it("should clear original canvas", function () {
+  describe('Canvas manipulation', function () {
+    it('should clear original canvas', function () {
       Mirror(mockContext, { horizontal: true });
 
       assert(mockContext.clearRect.calledWith(0, 0, 100, 80));
     });
 
-    it("should draw flipped image back to original canvas", function () {
+    it('should draw flipped image back to original canvas', function () {
       Mirror(mockContext, { horizontal: true });
 
       assert(mockContext.drawImage.calledWith(mockTmpCanvas, 0, 0));
     });
 
-    it("should perform operations in correct order", function () {
+    it('should perform operations in correct order', function () {
       Mirror(mockContext, { horizontal: true });
 
       // Should save, scale, draw to temp, clear original, then draw back
@@ -188,8 +188,8 @@ describe("Mirror", function () {
     });
   });
 
-  describe("Different canvas sizes", function () {
-    it("should handle different canvas dimensions", function () {
+  describe('Different canvas sizes', function () {
+    it('should handle different canvas dimensions', function () {
       mockCanvas.width = 200;
       mockCanvas.height = 150;
 
@@ -203,7 +203,7 @@ describe("Mirror", function () {
       assert(mockContext.clearRect.calledWith(0, 0, 200, 150));
     });
 
-    it("should handle square canvas", function () {
+    it('should handle square canvas', function () {
       mockCanvas.width = 100;
       mockCanvas.height = 100;
 
@@ -217,27 +217,27 @@ describe("Mirror", function () {
     });
   });
 
-  describe("Edge cases", function () {
-    it("should handle false values correctly", function () {
+  describe('Edge cases', function () {
+    it('should handle false values correctly', function () {
       Mirror(mockContext, { horizontal: false, vertical: false });
 
       assert(mockTmpContext.scale.calledWith(1, 1)); // No flipping
       assert(mockTmpContext.drawImage.calledWith(mockCanvas, 0, 0, 100, 80));
     });
 
-    it("should handle undefined horizontal with defined vertical", function () {
+    it('should handle undefined horizontal with defined vertical', function () {
       Mirror(mockContext, { vertical: true });
 
       assert(mockTmpContext.scale.calledWith(1, -1));
     });
 
-    it("should handle undefined vertical with defined horizontal", function () {
+    it('should handle undefined vertical with defined horizontal', function () {
       Mirror(mockContext, { horizontal: true });
 
       assert(mockTmpContext.scale.calledWith(-1, 1));
     });
 
-    it("should handle very small canvas", function () {
+    it('should handle very small canvas', function () {
       mockCanvas.width = 1;
       mockCanvas.height = 1;
 

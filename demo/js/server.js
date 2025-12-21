@@ -1,12 +1,12 @@
-import { createAgent } from "../../index.js";
+import { createAgent } from '../../index.js';
 
 // Import all demo functions
-import { startContainersDemo } from "./demos/containers.js";
-import { startDraggableDemo } from "./demos/draggable.js";
-import { startMixinsDemo } from "./demos/mixins.js";
-import { startRasterDemo } from "./demos/raster.js";
-import { startSensingDemo } from "./demos/sensing.js";
-import { startWidgetsDemo } from "./demos/widgets.js";
+import { startContainersDemo } from './demos/containers.js';
+import { startDraggableDemo } from './demos/draggable.js';
+import { startMixinsDemo } from './demos/mixins.js';
+import { startRasterDemo } from './demos/raster.js';
+import { startSensingDemo } from './demos/sensing.js';
+import { startWidgetsDemo } from './demos/widgets.js';
 
 // Advanced server class with multiple demo modes
 export class AdvancedInteractiveTestsServer {
@@ -23,7 +23,7 @@ export class AdvancedInteractiveTestsServer {
   }
 
   start() {
-    console.log("Advanced Interactive Tests server started");
+    console.log('Advanced Interactive Tests server started');
 
     // Start the environment with proper world dimensions
     this.beServer.environment.start(800, 600);
@@ -35,7 +35,7 @@ export class AdvancedInteractiveTestsServer {
   }
 
   clearCurrentDemo() {
-    console.log("Clearing current demo...");
+    console.log('Clearing current demo...');
     console.log(`Current demo agents to remove: ${this.demoAgents.length}`);
     console.log(`Current demo widgets to remove: ${this.demoWidgets.length}`);
 
@@ -47,31 +47,31 @@ export class AdvancedInteractiveTestsServer {
       }`,
     );
     console.log(
-      `Agent IDs before cleanup:`,
+      'Agent IDs before cleanup:',
       Object.keys(allAgentsBefore).map((id) => parseInt(id)),
     );
 
     // Remove all demo agents
     this.demoAgents.forEach((agent) => {
       try {
-        if (agent && typeof agent.die === "function") {
+        if (agent && typeof agent.die === 'function') {
           console.log(`Removing demo agent ${agent.id}`);
           agent.die();
         }
       } catch (error) {
-        console.warn("Error removing agent:", error);
+        console.warn('Error removing agent:', error);
       }
     });
 
     // Remove all demo widgets
     this.demoWidgets.forEach((widget) => {
       try {
-        if (widget && typeof widget.die === "function") {
+        if (widget && typeof widget.die === 'function') {
           console.log(`Removing demo widget ${widget.id}`);
           widget.die();
         }
       } catch (error) {
-        console.warn("Error removing widget:", error);
+        console.warn('Error removing widget:', error);
       }
     });
 
@@ -81,7 +81,7 @@ export class AdvancedInteractiveTestsServer {
 
     // More aggressive cleanup: kill all agents and clear spatial index
     console.log(
-      "Performing aggressive cleanup - killing all agents and clearing spatial index",
+      'Performing aggressive cleanup - killing all agents and clearing spatial index',
     );
     this.beServer.getEnvironment().killAllAgents();
 
@@ -93,7 +93,7 @@ export class AdvancedInteractiveTestsServer {
       }`,
     );
     console.log(
-      `Agent IDs after cleanup:`,
+      'Agent IDs after cleanup:',
       Object.keys(allAgentsAfter).map((id) => parseInt(id)),
     );
   }
@@ -124,9 +124,9 @@ export class AdvancedInteractiveTestsServer {
 
   updateDemoInfo(text) {
     // This will be called from the client side
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       const updateText = () => {
-        const infoElement = document.getElementById("demo-info");
+        const infoElement = document.getElementById('demo-info');
         if (infoElement) {
           infoElement.innerHTML = `<strong>Advanced Interactive Demo</strong><br>${text}`;
         }
@@ -141,13 +141,13 @@ export class AdvancedInteractiveTestsServer {
   }
 
   onUserConnected(user, cameraSize) {
-    console.log("User connected:", user.name, "Camera size:", cameraSize);
+    console.log('User connected:', user.name, 'Camera size:', cameraSize);
 
     try {
       // Create the player agent
       const agent = createAgent(
         this.beServer,
-        "media/images/star.png",
+        'media/images/star.png',
         50,
         50,
         true,
@@ -156,26 +156,26 @@ export class AdvancedInteractiveTestsServer {
       );
 
       user.agent = agent;
-      agent.name = user.name || "Player";
+      agent.name = user.name || 'Player';
 
-      console.log("Player agent created successfully for:", agent.name);
+      console.log('Player agent created successfully for:', agent.name);
     } catch (error) {
-      console.error("Error creating player agent:", error);
+      console.error('Error creating player agent:', error);
     }
   }
   onUserDisconnected(user) {
-    console.log("User disconnected:", user.name);
+    console.log('User disconnected:', user.name);
 
     // Remove the player agent if it exists
-    if (user.agent && typeof user.agent.die === "function") {
+    if (user.agent && typeof user.agent.die === 'function') {
       try {
-        console.log("Removing player agent for:", user.name);
+        console.log('Removing player agent for:', user.name);
         user.agent.die();
       } catch (error) {
-        console.error("Error removing player agent:", error);
+        console.error('Error removing player agent:', error);
       }
     } else {
-      console.warn("No player agent found for user:", user.name);
+      console.warn('No player agent found for user:', user.name);
     }
   }
 }

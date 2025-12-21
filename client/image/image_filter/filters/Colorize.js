@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { Assert } from "arslib";
+import { Assert } from 'arslib';
 
 /**
  * Applies a color tint to image data by adding color values to each pixel
@@ -13,7 +13,7 @@ import { Assert } from "arslib";
  * @throws {Error} If color parameter is not provided
  */
 export function Colorize(imageData, color) {
-  Assert.assert(color, "The colorize effect needs a color. Not found");
+  Assert.assert(color, 'The colorize effect needs a color. Not found');
 
   let pix = imageData.data;
   for (let i = 0, n = pix.length; i < n; i += 4) {

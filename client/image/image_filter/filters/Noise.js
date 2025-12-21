@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Adds random noise to image data by applying random variations to RGB channels

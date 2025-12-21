@@ -1,13 +1,13 @@
-import { strict as assert } from "assert";
-import { Rectangle, rect } from "./Rectangle.js";
-import { Vector } from "./Vector.js";
+import { strict as assert } from 'assert';
+import { Rectangle, rect } from './Rectangle.js';
+import { Vector } from './Vector.js';
 
-describe("Rectangle", function () {
-  it("should be created as type Rectangle", function () {
+describe('Rectangle', function () {
+  it('should be created as type Rectangle', function () {
     assert.ok(new Rectangle() instanceof Rectangle);
   });
 
-  it("should provide a constructor with default values", function () {
+  it('should provide a constructor with default values', function () {
     let rectangle = new Rectangle();
     assert.strictEqual(rectangle.topLeft().x, 0);
     assert.strictEqual(rectangle.topLeft().y, 0);
@@ -15,7 +15,7 @@ describe("Rectangle", function () {
     assert.strictEqual(rectangle.bottomRight().y, 0);
   });
 
-  it("should provide a constructor defining initial values", function () {
+  it('should provide a constructor defining initial values', function () {
     let rectangle = new Rectangle(new Vector(), new Vector(10, 10));
 
     assert.strictEqual(rectangle.topLeft().x, -5);
@@ -28,7 +28,7 @@ describe("Rectangle", function () {
     assert.strictEqual(rectangle.bottomLeft().y, -5);
   });
 
-  it("should check if a point is inside the rectangle", function () {
+  it('should check if a point is inside the rectangle', function () {
     let rectangle = new Rectangle(new Vector(10, 10), new Vector(10, 10));
 
     assert.ok(rectangle.checkPointInside(new Vector(5, 5)));
@@ -37,18 +37,18 @@ describe("Rectangle", function () {
     assert.ok(rectangle.checkPointInside(new Vector(5, 15)));
   });
 
-  it("should have its center inside itself", function () {
+  it('should have its center inside itself', function () {
     let rectangle = new Rectangle(new Vector(10, 10), new Vector(10, 10));
     assert.ok(rectangle.checkPointInside(rectangle.center));
   });
 
-  it("should detect a smaller rectangle at its position is inside it", function () {
+  it('should detect a smaller rectangle at its position is inside it', function () {
     let internalRectangle = new Rectangle(new Vector(0, 0), new Vector(1, 1));
     let externalRectangle = new Rectangle(new Vector(0, 0), new Vector(2, 2));
     assert.ok(externalRectangle.checkInside(internalRectangle));
   });
 
-  it("should detect a rectangle in its right upper corner as being inside it", function () {
+  it('should detect a rectangle in its right upper corner as being inside it', function () {
     let internalRectangle = new Rectangle(
       new Vector(0.5, 0.5),
       new Vector(1, 1),
@@ -57,7 +57,7 @@ describe("Rectangle", function () {
     assert.ok(externalRectangle.checkInside(internalRectangle));
   });
 
-  it("should detect a rectangle in its left upper corner as being inside it", function () {
+  it('should detect a rectangle in its left upper corner as being inside it', function () {
     let internalRectangle = new Rectangle(
       new Vector(-0.5, 0.5),
       new Vector(1, 1),
@@ -66,7 +66,7 @@ describe("Rectangle", function () {
     assert.ok(externalRectangle.checkInside(internalRectangle));
   });
 
-  it("should detect a rectangle in its left bottom corner as being inside it", function () {
+  it('should detect a rectangle in its left bottom corner as being inside it', function () {
     let internalRectangle = new Rectangle(
       new Vector(-0.5, -0.5),
       new Vector(1, 1),
@@ -75,7 +75,7 @@ describe("Rectangle", function () {
     assert.ok(externalRectangle.checkInside(internalRectangle));
   });
 
-  it("should detect a rectangle in its right bottom corner as being inside it", function () {
+  it('should detect a rectangle in its right bottom corner as being inside it', function () {
     let internalRectangle = new Rectangle(
       new Vector(0.5, -0.5),
       new Vector(1, 1),
@@ -84,7 +84,7 @@ describe("Rectangle", function () {
     assert.ok(externalRectangle.checkInside(internalRectangle));
   });
 
-  it("should detect a position is outside", function () {
+  it('should detect a position is outside', function () {
     let rectangle = new Rectangle(new Vector(10, 10), new Vector(10, 10));
 
     assert.ok(!rectangle.checkPointInside(new Vector(20, 20)));
@@ -92,7 +92,7 @@ describe("Rectangle", function () {
     assert.ok(!rectangle.checkPointInside(new Vector(20, 15)));
   });
 
-  it("should move from position to position + vector", function () {
+  it('should move from position to position + vector', function () {
     let center1 = new Vector(10, 10);
     let size = new Vector(20, 20);
     let moveDistance = new Vector(30, 30);
@@ -105,7 +105,7 @@ describe("Rectangle", function () {
     assert.ok(rectangle2.center.equal(center2));
   });
 
-  it("should detect intersection with another rectangle", function () {
+  it('should detect intersection with another rectangle', function () {
     let center = new Vector(0, 0);
     let size = new Vector(20, 20);
     let rectangleOutside = new Rectangle(center, size);
@@ -120,7 +120,7 @@ describe("Rectangle", function () {
     assert.ok(rectangleOutside.checkIntersection(intersectingRectangle));
   });
 
-  it("should detect no intersection between rectangles", function () {
+  it('should detect no intersection between rectangles', function () {
     let center1 = new Vector(0, 0);
     let center2 = new Vector(10, 10);
     let size = new Vector(2, 2);
@@ -130,7 +130,7 @@ describe("Rectangle", function () {
     assert.ok(!rectangle1.checkIntersection(rectangle2));
   });
 
-  it("should clone a rectangle", function () {
+  it('should clone a rectangle', function () {
     let center = new Vector(0, 0);
     let size = new Vector(2, 2);
     let rectangle1 = new Rectangle(center, size);
@@ -140,7 +140,7 @@ describe("Rectangle", function () {
     assert.ok(rectangle1.size.equal(rectangle2.size));
   });
 
-  it("should pick greater and smaller X and Y", function () {
+  it('should pick greater and smaller X and Y', function () {
     let center1 = new Vector(0, 0);
     let center2 = new Vector(10, 10);
     let size1 = new Vector(1, 2);
@@ -166,7 +166,7 @@ describe("Rectangle", function () {
     );
   });
 
-  it("should detect intersection without corners inside", function () {
+  it('should detect intersection without corners inside', function () {
     let origin = new Vector(0, 0);
     let size1 = new Vector(20, 5);
     let size2 = new Vector(5, 20);
@@ -176,7 +176,7 @@ describe("Rectangle", function () {
     assert.ok(rectangle1.checkIntersection(rectangle2));
   });
 
-  it("should make a rectangle from corners", function () {
+  it('should make a rectangle from corners', function () {
     let bottomLeft = new Vector(0, 0);
     let topRight = new Vector(2, 1);
     let result = Rectangle.makeFromCorners(bottomLeft, topRight);
@@ -190,7 +190,7 @@ describe("Rectangle", function () {
     );
   });
 
-  it("should calculate position percentage correctly", function () {
+  it('should calculate position percentage correctly', function () {
     let rectangleSize = new Vector(10, 10);
     let rectangle = new Rectangle(null, rectangleSize);
     let bottomLeft = new Vector(-5, -5);
@@ -212,7 +212,7 @@ describe("Rectangle", function () {
     );
   });
 
-  it("should convert size percentage to position correctly", function () {
+  it('should convert size percentage to position correctly', function () {
     let rectangleSize = new Vector(10, 10);
     let rectangle = new Rectangle(null, rectangleSize);
     let expectedBottomLeftPosition = new Vector(-5, -5);
@@ -242,7 +242,7 @@ describe("Rectangle", function () {
     );
   });
 
-  it("should make a rectangle from a collection of rectangles", function () {
+  it('should make a rectangle from a collection of rectangles', function () {
     // Test from two rectangles inside one another
     let enclosingRectangleSize = new Vector(10, 10);
     let enclosedRectangleSize = new Vector(5, 5);
@@ -285,67 +285,67 @@ describe("Rectangle", function () {
     );
   });
 
-  it("should set position correctly", function () {
+  it('should set position correctly', function () {
     let baseRect = rect(0, 0, 100, 100);
     let rect1 = rect(0, 0, 10, 10);
 
     rect1.setPosition(baseRect.center);
     assert.strictEqual(rect1.center.toString(), baseRect.center.toString());
 
-    rect1.setPosition(baseRect.bottomLeft(), "bottomLeft");
+    rect1.setPosition(baseRect.bottomLeft(), 'bottomLeft');
     assert.strictEqual(
       rect1.bottomLeft().toString(),
       baseRect.bottomLeft().toString(),
-      "bottomLeft error",
+      'bottomLeft error',
     );
 
-    rect1.setPosition(baseRect.topLeft(), "topLeft");
+    rect1.setPosition(baseRect.topLeft(), 'topLeft');
     assert.strictEqual(
       rect1.topLeft().toString(),
       baseRect.topLeft().toString(),
-      "topLeft error",
+      'topLeft error',
     );
 
-    rect1.setPosition(baseRect.bottomRight(), "bottomRight");
+    rect1.setPosition(baseRect.bottomRight(), 'bottomRight');
     assert.strictEqual(
       rect1.bottomRight().toString(),
       baseRect.bottomRight().toString(),
-      "bottomRight error",
+      'bottomRight error',
     );
 
-    rect1.setPosition(baseRect.topRight(), "topRight");
+    rect1.setPosition(baseRect.topRight(), 'topRight');
     assert.strictEqual(
       rect1.topRight().toString(),
       baseRect.topRight().toString(),
-      "topRight error",
+      'topRight error',
     );
 
-    rect1.setPosition(baseRect.bottomCenter(), "bottomCenter");
+    rect1.setPosition(baseRect.bottomCenter(), 'bottomCenter');
     assert.strictEqual(
       rect1.bottomCenter().toString(),
       baseRect.bottomCenter().toString(),
-      "bottomCenter error",
+      'bottomCenter error',
     );
 
-    rect1.setPosition(baseRect.topCenter(), "topCenter");
+    rect1.setPosition(baseRect.topCenter(), 'topCenter');
     assert.strictEqual(
       rect1.topCenter().toString(),
       baseRect.topCenter().toString(),
-      "topCenter error",
+      'topCenter error',
     );
 
-    rect1.setPosition(baseRect.leftCenter(), "leftCenter");
+    rect1.setPosition(baseRect.leftCenter(), 'leftCenter');
     assert.strictEqual(
       rect1.leftCenter().toString(),
       baseRect.leftCenter().toString(),
-      "leftCenter error",
+      'leftCenter error',
     );
 
-    rect1.setPosition(baseRect.rightCenter(), "rightCenter");
+    rect1.setPosition(baseRect.rightCenter(), 'rightCenter');
     assert.strictEqual(
       rect1.rightCenter().toString(),
       baseRect.rightCenter().toString(),
-      "rightCenter error",
+      'rightCenter error',
     );
   });
 });

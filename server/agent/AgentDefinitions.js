@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * @file Global agent configuration definitions for the Brainiac Engine.

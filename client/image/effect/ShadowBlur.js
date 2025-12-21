@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Applies a shadow blur effect to the current image
@@ -13,10 +13,10 @@ export function ShadowBlur(context, parameters) {
   }
 
   //save image with shadow to tmpCanvas
-  let tmpCanvas = document.createElement("canvas");
+  let tmpCanvas = document.createElement('canvas');
   tmpCanvas.width = context.canvas.width;
   tmpCanvas.height = context.canvas.height;
-  let tmpContext = tmpCanvas.getContext("2d");
+  let tmpContext = tmpCanvas.getContext('2d');
 
   //apply shadow
   context.shadowBlur = parameters.thickness;

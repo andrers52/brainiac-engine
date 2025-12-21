@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Converts image data to grayscale using luminance weighting

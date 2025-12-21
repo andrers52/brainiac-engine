@@ -1,6 +1,6 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Sepia } from "./Sepia.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Sepia } from './Sepia.js';
 
 // Helper function to simulate Uint8ClampedArray rounding (round half to even / banker's rounding)
 function clampedRound(value) {
@@ -14,7 +14,7 @@ function clampedRound(value) {
   return Math.max(0, Math.min(255, rounded));
 }
 
-describe("Sepia", function () {
+describe('Sepia', function () {
   let sandbox;
   let mockImageData;
 
@@ -42,8 +42,8 @@ describe("Sepia", function () {
     sandbox.restore();
   });
 
-  describe("Basic functionality", function () {
-    it("should apply sepia tone using luminance calculation", function () {
+  describe('Basic functionality', function () {
+    it('should apply sepia tone using luminance calculation', function () {
       const originalData = new Uint8ClampedArray(mockImageData.data);
 
       const result = Sepia(mockImageData);
@@ -63,13 +63,13 @@ describe("Sepia", function () {
       }
     });
 
-    it("should return the modified imageData object", function () {
+    it('should return the modified imageData object', function () {
       const result = Sepia(mockImageData);
 
       assert.strictEqual(result, mockImageData);
     });
 
-    it("should not modify alpha channel", function () {
+    it('should not modify alpha channel', function () {
       const originalAlpha = Array.from(mockImageData.data).filter(
         (_, i) => i % 4 === 3,
       );
@@ -83,8 +83,8 @@ describe("Sepia", function () {
     });
   });
 
-  describe("Sepia tone calculation", function () {
-    it("should handle pure red correctly", function () {
+  describe('Sepia tone calculation', function () {
+    it('should handle pure red correctly', function () {
       const redImageData = {
         width: 1,
         height: 1,
@@ -99,7 +99,7 @@ describe("Sepia", function () {
       assert.strictEqual(redImageData.data[2], clampedRound(avg)); // 76.5 -> 76
     });
 
-    it("should handle pure green correctly", function () {
+    it('should handle pure green correctly', function () {
       const greenImageData = {
         width: 1,
         height: 1,
@@ -114,7 +114,7 @@ describe("Sepia", function () {
       assert.strictEqual(greenImageData.data[2], clampedRound(avg)); // 150.45 -> 150
     });
 
-    it("should handle pure blue correctly", function () {
+    it('should handle pure blue correctly', function () {
       const blueImageData = {
         width: 1,
         height: 1,
@@ -129,7 +129,7 @@ describe("Sepia", function () {
       assert.strictEqual(blueImageData.data[2], clampedRound(avg)); // 28.05 -> 28
     });
 
-    it("should handle white correctly", function () {
+    it('should handle white correctly', function () {
       const whiteImageData = {
         width: 1,
         height: 1,
@@ -144,7 +144,7 @@ describe("Sepia", function () {
       assert.strictEqual(whiteImageData.data[2], clampedRound(avg)); // 255
     });
 
-    it("should handle black correctly", function () {
+    it('should handle black correctly', function () {
       const blackImageData = {
         width: 1,
         height: 1,
@@ -160,8 +160,8 @@ describe("Sepia", function () {
     });
   });
 
-  describe("Sepia characteristics", function () {
-    it("should create warm tones (red > green > blue)", function () {
+  describe('Sepia characteristics', function () {
+    it('should create warm tones (red > green > blue)', function () {
       const imageData = {
         width: 1,
         height: 1,
@@ -182,7 +182,7 @@ describe("Sepia", function () {
       assert(imageData.data[1] > imageData.data[2]);
     });
 
-    it("should maintain relative brightness order", function () {
+    it('should maintain relative brightness order', function () {
       const imageData = {
         width: 3,
         height: 1,
@@ -209,7 +209,7 @@ describe("Sepia", function () {
       assert(imageData.data[4] < imageData.data[8]); // Medium < Light
     });
 
-    it("should preserve luminance information", function () {
+    it('should preserve luminance information', function () {
       const colorImageData = {
         width: 1,
         height: 1,
@@ -223,8 +223,8 @@ describe("Sepia", function () {
     });
   });
 
-  describe("Edge cases", function () {
-    it("should handle empty imageData", function () {
+  describe('Edge cases', function () {
+    it('should handle empty imageData', function () {
       const emptyImageData = {
         width: 0,
         height: 0,
@@ -237,7 +237,7 @@ describe("Sepia", function () {
       assert.strictEqual(result.data.length, 0);
     });
 
-    it("should handle single pixel image", function () {
+    it('should handle single pixel image', function () {
       const singlePixelImageData = {
         width: 1,
         height: 1,
@@ -253,7 +253,7 @@ describe("Sepia", function () {
       assert.strictEqual(singlePixelImageData.data[3], 255); // Alpha unchanged
     });
 
-    it("should handle large image data", function () {
+    it('should handle large image data', function () {
       const largeImageData = {
         width: 100,
         height: 100,
@@ -279,8 +279,8 @@ describe("Sepia", function () {
     });
   });
 
-  describe("Value overflow", function () {
-    it("should clamp red channel when it would exceed 255", function () {
+  describe('Value overflow', function () {
+    it('should clamp red channel when it would exceed 255', function () {
       const brightImageData = {
         width: 1,
         height: 1,
@@ -295,7 +295,7 @@ describe("Sepia", function () {
       assert.strictEqual(brightImageData.data[2], clampedRound(200)); // 200
     });
 
-    it("should clamp green channel when it would exceed 255", function () {
+    it('should clamp green channel when it would exceed 255', function () {
       const veryBrightImageData = {
         width: 1,
         height: 1,
@@ -311,8 +311,8 @@ describe("Sepia", function () {
     });
   });
 
-  describe("Floating point precision", function () {
-    it("should handle fractional luminance values", function () {
+  describe('Floating point precision', function () {
+    it('should handle fractional luminance values', function () {
       const imageData = {
         width: 1,
         height: 1,
@@ -328,17 +328,17 @@ describe("Sepia", function () {
     });
   });
 
-  describe("Data integrity", function () {
-    it("should maintain imageData structure", function () {
+  describe('Data integrity', function () {
+    it('should maintain imageData structure', function () {
       const result = Sepia(mockImageData);
 
-      assert(result.hasOwnProperty("width"));
-      assert(result.hasOwnProperty("height"));
-      assert(result.hasOwnProperty("data"));
+      assert(result.hasOwnProperty('width'));
+      assert(result.hasOwnProperty('height'));
+      assert(result.hasOwnProperty('data'));
       assert(result.data instanceof Uint8ClampedArray);
     });
 
-    it("should not change imageData dimensions", function () {
+    it('should not change imageData dimensions', function () {
       const originalWidth = mockImageData.width;
       const originalHeight = mockImageData.height;
       const originalLength = mockImageData.data.length;
@@ -350,17 +350,17 @@ describe("Sepia", function () {
       assert.strictEqual(mockImageData.data.length, originalLength);
     });
 
-    it("should process all pixels", function () {
+    it('should process all pixels', function () {
       const pixelCount = mockImageData.width * mockImageData.height;
 
       Sepia(mockImageData);
 
       // Verify all pixels were processed
       for (let i = 0; i < pixelCount * 4; i += 4) {
-        assert(typeof mockImageData.data[i] === "number"); // Red
-        assert(typeof mockImageData.data[i + 1] === "number"); // Green
-        assert(typeof mockImageData.data[i + 2] === "number"); // Blue
-        assert(typeof mockImageData.data[i + 3] === "number"); // Alpha
+        assert(typeof mockImageData.data[i] === 'number'); // Red
+        assert(typeof mockImageData.data[i + 1] === 'number'); // Green
+        assert(typeof mockImageData.data[i + 2] === 'number'); // Blue
+        assert(typeof mockImageData.data[i + 3] === 'number'); // Alpha
 
         // Verify sepia characteristics: Red >= Green >= Blue
         assert(mockImageData.data[i] >= mockImageData.data[i + 1]);

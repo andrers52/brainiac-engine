@@ -1,14 +1,14 @@
-"use strict";
+'use strict';
 
-import { Assert, Sound } from "arslib";
-import { BECommonDefinitions } from "../common/BECommonDefinitions.js";
-import { getSharedLocalSocket } from "../common/fakeSocket.js";
-import { rect } from "../common/geometry/Rectangle.js";
-import { BEClientDefinitions } from "./BEClientDefinitions.js";
-import { ParticlesContainer } from "./ParticlesContainer.js";
-import { ResourceStore } from "./ResourceStore.js";
-import { Screen } from "./Screen.js";
-import { UserEvents } from "./UserEvents.js";
+import { Assert, Sound } from 'arslib';
+import { BECommonDefinitions } from '../common/BECommonDefinitions.js';
+import { getSharedLocalSocket } from '../common/fakeSocket.js';
+import { rect } from '../common/geometry/Rectangle.js';
+import { BEClientDefinitions } from './BEClientDefinitions.js';
+import { ParticlesContainer } from './ParticlesContainer.js';
+import { ResourceStore } from './ResourceStore.js';
+import { Screen } from './Screen.js';
+import { UserEvents } from './UserEvents.js';
 
 /**
  * @fileoverview Brainiac Engine Client - Main client-side game engine controller.
@@ -33,8 +33,8 @@ import { UserEvents } from "./UserEvents.js";
  */
 function BEClient() {
   // Instance state
-  this.userName = "";
-  this.gameContainerId = "contentArea";
+  this.userName = '';
+  this.gameContainerId = 'contentArea';
   this.onAfterDrawAgent = null;
   this.onBeforeDrawAgent = null;
   this.onAfterDrawScreen = null;
@@ -176,7 +176,7 @@ function BEClient() {
    * Removes the loading message element from the DOM.
    */
   function removeLoadingMessage() {
-    let loading = document.getElementById("loading");
+    let loading = document.getElementById('loading');
     loading && loading.parentNode.removeChild(loading);
   }
 
@@ -192,8 +192,8 @@ function BEClient() {
       clientCamera: camera, // Include camera/client information for viewport filtering
     };
     //propagate to server
-    this.socket.emit("userEvent", eventAndArg);
-    if (event.includes("Mouse")) return;
+    this.socket.emit('userEvent', eventAndArg);
+    if (event.includes('Mouse')) return;
     //propagate to client
     window.dispatchEvent(
       new CustomEvent(event, {
@@ -212,23 +212,23 @@ function BEClient() {
     if (this.config.localApp) {
       this.socket = getSharedLocalSocket();
       // *** IF LOCALAPP EMIT 'connection' ***
-      this.socket.emit("connection", {}, () => {});
+      this.socket.emit('connection', {}, () => {});
     } else {
       // Import Socket.IO dynamically for multiplayer mode
-      import("socket.io-client")
+      import('socket.io-client')
         .then(({ io }) => {
           this.socket = io(BECommonDefinitions.WEB_SOCKET_ADDRESS);
           this.setupSocketHandlers();
         })
         .catch((error) => {
           console.error(
-            "❌ Failed to load Socket.IO for multiplayer mode:",
+            '❌ Failed to load Socket.IO for multiplayer mode:',
             error,
           );
-          console.log("💡 Falling back to local app mode");
+          console.log('💡 Falling back to local app mode');
           this.config.localApp = true;
           this.socket = getSharedLocalSocket();
-          this.socket.emit("connection", {}, () => {});
+          this.socket.emit('connection', {}, () => {});
           this.setupSocketHandlers();
         });
       return; // Exit early, socket handlers will be set up in the import callback
@@ -242,52 +242,52 @@ function BEClient() {
    */
   this.setupSocketHandlers = () => {
     //dispatch server messages
-    this.socket.on("connect", () => {});
+    this.socket.on('connect', () => {});
 
-    this.socket.on("disconnect", (reason) => {
+    this.socket.on('disconnect', (reason) => {
       userEvents.stop();
       location.reload();
     });
 
-    this.socket.on("update", (visibleAgentsInput) => {
+    this.socket.on('update', (visibleAgentsInput) => {
       this.setVisibleAgents(visibleAgentsInput);
     });
-    this.socket.on("Sound.playSound", (soundName) => {
+    this.socket.on('Sound.playSound', (soundName) => {
       Sound.playSound(soundName);
     });
-    this.socket.on("playDescr", (soundObjName) => {
+    this.socket.on('playDescr', (soundObjName) => {
       var s = new SoundEffect(
         this.app.getSoundEffectDescription(soundObjName),
       ).generate();
       s.getAudio().play();
     });
-    this.socket.on("Sound.playSoundLoop", (soundName) => {
+    this.socket.on('Sound.playSoundLoop', (soundName) => {
       Sound.playSoundLoop(soundName);
     });
-    this.socket.on("camera", (cameraToSet) => {
+    this.socket.on('camera', (cameraToSet) => {
       console.log(`Camera received: ${cameraToSet.toString()}`);
       setCamera(cameraToSet);
     });
-    this.socket.on("messageToGameClient", (messageAndContentObj) => {
+    this.socket.on('messageToGameClient', (messageAndContentObj) => {
       if (!this.app[messageAndContentObj.message])
         console.log(
-          "Server message not understood: " + messageAndContentObj.message,
+          'Server message not understood: ' + messageAndContentObj.message,
         );
       this.app[messageAndContentObj.message](
         messageAndContentObj.contentObject,
       );
     });
 
-    this.socket.on("BEClient.openModalLink", () => {
-      document.getElementById("openModalLink").click();
+    this.socket.on('BEClient.openModalLink', () => {
+      document.getElementById('openModalLink').click();
     });
     // NOTE: not using localization for now...
-    this.socket.on("BEClient.localization.setCurrentLanguage", (language) => {
+    this.socket.on('BEClient.localization.setCurrentLanguage', (language) => {
       //BEClient.localization.setCurrentLanguage(language)
       console.log(`${language}: Not using localization for now...`);
     });
 
-    this.socket.on("disconnect", () => {
+    this.socket.on('disconnect', () => {
       userEvents.stop();
       location.reload();
     });
@@ -311,7 +311,7 @@ function BEClient() {
       );
       BECommonDefinitions.start(this.config);
       _startConnection();
-      if (BECommonDefinitions.config.buildType === "deploy")
+      if (BECommonDefinitions.config.buildType === 'deploy')
         Assert.disableAllVerifications = true;
       this.connectToGameServer();
     };
@@ -375,7 +375,7 @@ function BEClient() {
       } else {
         // Fallback or error if the method isn't defined on the app
         console.warn(
-          "BEClient: app.showInitialScreenAndReturnUserName is not defined. Using default username.",
+          'BEClient: app.showInitialScreenAndReturnUserName is not defined. Using default username.',
         );
         this.userName = BECommonDefinitions.DEFAULT_USER_NAME;
       }
@@ -386,7 +386,7 @@ function BEClient() {
       };
 
       this.socket.on(
-        "BEServer.clientStartReady",
+        'BEServer.clientStartReady',
         (userIdAndBackgroundImageName) => {
           let userId = userIdAndBackgroundImageName.userAgentId;
           this.setBackgroundImageName(
@@ -409,7 +409,7 @@ function BEClient() {
         },
       );
 
-      this.socket.emit("BEServer.clientStart", connectionArgsStr);
+      this.socket.emit('BEServer.clientStart', connectionArgsStr);
     };
 
     //game interface for definning its resources
@@ -440,7 +440,7 @@ function BEClient() {
       userName: this.userName,
       cameraSize: camera.rectangle.size,
     };
-    this.socket.emit("BEServer.clientStart", connectionArgsStr);
+    this.socket.emit('BEServer.clientStart', connectionArgsStr);
   };
 
   /**

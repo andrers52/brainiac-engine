@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { RadialGradient } from "./RadialGradient.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { RadialGradient } from './RadialGradient.js';
 
-describe("RadialGradient", function () {
+describe('RadialGradient', function () {
   let mockContext;
   let mockCanvas;
   let mockGradient;
@@ -26,19 +26,19 @@ describe("RadialGradient", function () {
       fillRect: sinon.spy(),
       fill: sinon.spy(),
       stroke: sinon.spy(),
-      fillStyle: "",
-      strokeStyle: "",
-      globalCompositeOperation: "source-over",
+      fillStyle: '',
+      strokeStyle: '',
+      globalCompositeOperation: 'source-over',
     };
   });
 
-  describe("Gradient creation", function () {
-    it("should create radial gradient with correct center and radius for fillRect", function () {
+  describe('Gradient creation', function () {
+    it('should create radial gradient with correct center and radius for fillRect', function () {
       const parameters = {
-        startColor: "#ff0000",
-        endColor: "#0000ff",
+        startColor: '#ff0000',
+        endColor: '#0000ff',
         fillRect: true,
-        combineOption: "multiply",
+        combineOption: 'multiply',
       };
 
       RadialGradient(mockContext, parameters);
@@ -54,12 +54,12 @@ describe("RadialGradient", function () {
       assert.strictEqual(call.args[5], 150); // outer radius = min(width, height)
     });
 
-    it("should create radial gradient with correct radius for circle mode", function () {
+    it('should create radial gradient with correct radius for circle mode', function () {
       const parameters = {
-        startColor: "#ff0000",
-        endColor: "#0000ff",
+        startColor: '#ff0000',
+        endColor: '#0000ff',
         fillRect: false,
-        combineOption: "overlay",
+        combineOption: 'overlay',
       };
 
       RadialGradient(mockContext, parameters);
@@ -70,39 +70,39 @@ describe("RadialGradient", function () {
       assert.strictEqual(call.args[5], 75); // outer radius = min(width/2, height/2)
     });
 
-    it("should add color stops correctly", function () {
+    it('should add color stops correctly', function () {
       const parameters = {
-        startColor: "#ff0000",
-        endColor: "#0000ff",
+        startColor: '#ff0000',
+        endColor: '#0000ff',
         fillRect: true,
       };
 
       RadialGradient(mockContext, parameters);
 
       assert(mockGradient.addColorStop.calledTwice);
-      assert(mockGradient.addColorStop.calledWith(0, "#ff0000"));
-      assert(mockGradient.addColorStop.calledWith(1, "#0000ff"));
+      assert(mockGradient.addColorStop.calledWith(0, '#ff0000'));
+      assert(mockGradient.addColorStop.calledWith(1, '#0000ff'));
     });
   });
 
-  describe("Composite operation", function () {
-    it("should set global composite operation when provided", function () {
+  describe('Composite operation', function () {
+    it('should set global composite operation when provided', function () {
       const parameters = {
-        startColor: "#ff0000",
-        endColor: "#0000ff",
-        combineOption: "multiply",
+        startColor: '#ff0000',
+        endColor: '#0000ff',
+        combineOption: 'multiply',
         fillRect: true,
       };
 
       RadialGradient(mockContext, parameters);
 
-      assert.strictEqual(mockContext.globalCompositeOperation, "multiply");
+      assert.strictEqual(mockContext.globalCompositeOperation, 'multiply');
     });
 
-    it("should handle undefined combine option", function () {
+    it('should handle undefined combine option', function () {
       const parameters = {
-        startColor: "#ff0000",
-        endColor: "#0000ff",
+        startColor: '#ff0000',
+        endColor: '#0000ff',
         fillRect: true,
       };
 
@@ -112,11 +112,11 @@ describe("RadialGradient", function () {
     });
   });
 
-  describe("Fill rectangle mode", function () {
-    it("should fill entire rectangle when fillRect is true", function () {
+  describe('Fill rectangle mode', function () {
+    it('should fill entire rectangle when fillRect is true', function () {
       const parameters = {
-        startColor: "#ff0000",
-        endColor: "#0000ff",
+        startColor: '#ff0000',
+        endColor: '#0000ff',
         fillRect: true,
       };
 
@@ -133,11 +133,11 @@ describe("RadialGradient", function () {
     });
   });
 
-  describe("Circle mode", function () {
-    it("should draw circle when fillRect is false", function () {
+  describe('Circle mode', function () {
+    it('should draw circle when fillRect is false', function () {
       const parameters = {
-        startColor: "#ff0000",
-        endColor: "#0000ff",
+        startColor: '#ff0000',
+        endColor: '#0000ff',
         fillRect: false,
       };
 
@@ -153,10 +153,10 @@ describe("RadialGradient", function () {
       assert(mockContext.fillRect.notCalled);
     });
 
-    it("should draw circle with correct parameters", function () {
+    it('should draw circle with correct parameters', function () {
       const parameters = {
-        startColor: "#ff0000",
-        endColor: "#0000ff",
+        startColor: '#ff0000',
+        endColor: '#0000ff',
         fillRect: false,
       };
 
@@ -173,28 +173,28 @@ describe("RadialGradient", function () {
       );
     });
 
-    it("should set stroke style to black", function () {
+    it('should set stroke style to black', function () {
       const parameters = {
-        startColor: "#ff0000",
-        endColor: "#0000ff",
+        startColor: '#ff0000',
+        endColor: '#0000ff',
         fillRect: false,
       };
 
       RadialGradient(mockContext, parameters);
 
-      assert.strictEqual(mockContext.strokeStyle, "black");
+      assert.strictEqual(mockContext.strokeStyle, 'black');
       assert.strictEqual(mockContext.fillStyle, mockGradient);
     });
   });
 
-  describe("Edge cases", function () {
-    it("should handle square canvas correctly", function () {
+  describe('Edge cases', function () {
+    it('should handle square canvas correctly', function () {
       mockCanvas.width = 100;
       mockCanvas.height = 100;
 
       const parameters = {
-        startColor: "#ff0000",
-        endColor: "#0000ff",
+        startColor: '#ff0000',
+        endColor: '#0000ff',
         fillRect: false,
       };
 
@@ -208,13 +208,13 @@ describe("RadialGradient", function () {
       assert.strictEqual(arcCall.args[2], 50); // arc radius should be 50
     });
 
-    it("should handle very small canvas", function () {
+    it('should handle very small canvas', function () {
       mockCanvas.width = 10;
       mockCanvas.height = 5;
 
       const parameters = {
-        startColor: "#ff0000",
-        endColor: "#0000ff",
+        startColor: '#ff0000',
+        endColor: '#0000ff',
         fillRect: true,
       };
 
@@ -224,7 +224,7 @@ describe("RadialGradient", function () {
       assert.strictEqual(gradientCall.args[5], 5); // radius should be min(10, 5) = 5
     });
 
-    it("should handle missing parameters gracefully", function () {
+    it('should handle missing parameters gracefully', function () {
       const parameters = {};
 
       // Should not throw
@@ -238,7 +238,7 @@ describe("RadialGradient", function () {
       assert(mockGradient.addColorStop.calledWith(1, undefined));
     });
 
-    it("should handle null parameters", function () {
+    it('should handle null parameters', function () {
       assert.doesNotThrow(() => {
         RadialGradient(mockContext, null);
       });
@@ -249,14 +249,14 @@ describe("RadialGradient", function () {
     });
   });
 
-  describe("Different canvas dimensions", function () {
-    it("should handle wide canvas correctly", function () {
+  describe('Different canvas dimensions', function () {
+    it('should handle wide canvas correctly', function () {
       mockCanvas.width = 300;
       mockCanvas.height = 100;
 
       const parameters = {
-        startColor: "#ff0000",
-        endColor: "#0000ff",
+        startColor: '#ff0000',
+        endColor: '#0000ff',
         fillRect: false,
       };
 
@@ -269,13 +269,13 @@ describe("RadialGradient", function () {
       assert.strictEqual(arcCall.args[2], 50); // radius = min(150, 50)
     });
 
-    it("should handle tall canvas correctly", function () {
+    it('should handle tall canvas correctly', function () {
       mockCanvas.width = 100;
       mockCanvas.height = 300;
 
       const parameters = {
-        startColor: "#ff0000",
-        endColor: "#0000ff",
+        startColor: '#ff0000',
+        endColor: '#0000ff',
         fillRect: true,
       };
 

@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-import { Assert, EFunction } from "arslib";
-import { Rectangle } from "../../common/geometry/Rectangle.js";
-import { Vector } from "../../common/geometry/Vector.js";
-import { createAgent } from "./Agent.js";
+import { Assert, EFunction } from 'arslib';
+import { Rectangle } from '../../common/geometry/Rectangle.js';
+import { Vector } from '../../common/geometry/Vector.js';
+import { createAgent } from './Agent.js';
 
 /**
  * @file Container system for organizing and managing groups of agents.
@@ -42,13 +42,13 @@ export function createContainer(
   orientation &&
     Assert.assertIsValidString(
       orientation,
-      ["vertical", "horizontal"],
-      "Invalid container orientation given:" + orientation,
+      ['vertical', 'horizontal'],
+      'Invalid container orientation given:' + orientation,
     );
   /** @type {boolean} Containers are invisible by default */
   container.isVisible = false; //default
   /** @type {string} Layout orientation for contained agents */
-  container.orientation = orientation || "horizontal"; //default orientation
+  container.orientation = orientation || 'horizontal'; //default orientation
   //if no rectangle given just define a basic one to allow the user to start from that
   container.rectangle = rectangle || new Rectangle(null, new Vector(10, 10));
   /** @type {boolean} Containers are non-solid */
@@ -67,16 +67,16 @@ export function createContainer(
     let totalPadding = container.padding * (containedCollection.length - 1);
     let totalHorizontalSize =
       container.rectangle.size.x -
-      (container.orientation === "horizontal" ? totalPadding : 0);
+      (container.orientation === 'horizontal' ? totalPadding : 0);
     let agentHorizontalSize =
       totalHorizontalSize /
-      (container.orientation === "horizontal" ? containedCollection.length : 1);
+      (container.orientation === 'horizontal' ? containedCollection.length : 1);
     let totalVerticalSize =
       container.rectangle.size.y -
-      (container.orientation === "vertical" ? totalPadding : 0);
+      (container.orientation === 'vertical' ? totalPadding : 0);
     let agentVerticalSize =
       totalVerticalSize /
-      (container.orientation === "vertical" ? containedCollection.length : 1);
+      (container.orientation === 'vertical' ? containedCollection.length : 1);
     containedCollection.forEach(function (agent) {
       agent.setSize(new Vector(agentHorizontalSize, agentVerticalSize));
     });
@@ -88,8 +88,8 @@ export function createContainer(
    */
   function placeRemainingAgentsWithFirstAsAnchor() {
     let agentOrientationEquivalence = {
-      vertical: "below",
-      horizontal: "right",
+      vertical: 'below',
+      horizontal: 'right',
     };
     containedCollection.forEach(function (agent, index) {
       if (index === 0) return;
@@ -110,7 +110,7 @@ export function createContainer(
     let agentSize = containedCollection.first().getSize();
     let xPos, yPos;
     //vertical placement
-    if (container.orientation === "vertical") {
+    if (container.orientation === 'vertical') {
       xPos = container.getPosition().x;
       yPos = container.rectangle.topLeft().y - agentSize.y / 2;
     } else {

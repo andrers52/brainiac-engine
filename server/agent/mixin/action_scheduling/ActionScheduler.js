@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import { EFunction } from "arslib";
-import { Action } from "./Action.js";
+import { EFunction } from 'arslib';
+import { Action } from './Action.js';
 
 /**
  * @fileoverview Action scheduling system for managing sequential task execution.

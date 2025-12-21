@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Circle } from "./Circle.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Circle } from './Circle.js';
 
-describe("Circle", function () {
+describe('Circle', function () {
   let mockContext;
   let mockCanvas;
 
@@ -21,7 +21,7 @@ describe("Circle", function () {
     };
   });
 
-  it("should draw a circle centered on the canvas", function () {
+  it('should draw a circle centered on the canvas', function () {
     Circle(mockContext);
 
     assert(mockContext.beginPath.calledOnce);
@@ -37,12 +37,12 @@ describe("Circle", function () {
     assert.strictEqual(arcCall.args[4], 2 * Math.PI); // end angle
   });
 
-  it("should set line width to 2", function () {
+  it('should set line width to 2', function () {
     Circle(mockContext);
     assert.strictEqual(mockContext.lineWidth, 2);
   });
 
-  it("should adjust radius based on canvas dimensions", function () {
+  it('should adjust radius based on canvas dimensions', function () {
     mockContext.canvas.width = 80;
     mockContext.canvas.height = 120;
 
@@ -53,7 +53,7 @@ describe("Circle", function () {
     assert.strictEqual(arcCall.args[2], 38); // (80/2) - 2
   });
 
-  it("should center circle on non-square canvas", function () {
+  it('should center circle on non-square canvas', function () {
     mockContext.canvas.width = 80;
     mockContext.canvas.height = 120;
 

@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-import { Assert } from "arslib";
-import { Vector } from "../../common/geometry/Vector.js";
+import { Assert } from 'arslib';
+import { Vector } from '../../common/geometry/Vector.js';
 // import {BECommonDefinitions} from '../../common/BECommonDefinitions.js'
-import { createAgent, createAgentWithRectangle } from "../agent/Agent.js";
+import { createAgent, createAgentWithRectangle } from '../agent/Agent.js';
 
 /**
  * @file Base widget system for UI components in the Brainiac Engine.
@@ -43,7 +43,7 @@ function addVisibilityTestToCheckMove(camera) {
   this.checkMove = (distance) => {
     Assert.assert(
       distance instanceof Vector,
-      "BEClient.Widget#checkMove: distance is not a Vector",
+      'BEClient.Widget#checkMove: distance is not a Vector',
     );
     let testRectangle = this.rectangle.clone();
     testRectangle.move(distance);

@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import { Assert } from "arslib";
-import { Rectangle } from "../../../common/geometry/Rectangle.js";
-import { Vector } from "../../../common/geometry/Vector.js";
+import { Assert } from 'arslib';
+import { Rectangle } from '../../../common/geometry/Rectangle.js';
+import { Vector } from '../../../common/geometry/Vector.js';
 
 /**
  * @fileoverview State-based image and audio management for agents.
@@ -34,7 +34,7 @@ export function ChangesImageWithState(beServer, configurationObj) {
   let self = this;
 
   let states = [];
-  let defaultState = "notInitialized";
+  let defaultState = 'notInitialized';
 
   //state -> image name
   let imagePerState = {};
@@ -50,7 +50,7 @@ export function ChangesImageWithState(beServer, configurationObj) {
    * @type {string}
    * @description Current state name of the agent.
    */
-  this.currentState = "notInitialized"; //TODO: CHANGE TO READ ONLY PROPERTY
+  this.currentState = 'notInitialized'; //TODO: CHANGE TO READ ONLY PROPERTY
 
   /**
    * Initializes the state system from configuration.
@@ -69,13 +69,13 @@ export function ChangesImageWithState(beServer, configurationObj) {
       updateImageAndAudio(defaultState);
     } catch (exception) {
       throw (
-        "ChangesImageWithState initialization error: resources descriptor reading: " +
+        'ChangesImageWithState initialization error: resources descriptor reading: ' +
         exception
       );
     }
     Assert.assert(
       states.includes(defaultState),
-      "ChangesImageWithState error: resources integrity check failed",
+      'ChangesImageWithState error: resources integrity check failed',
     );
 
     self.currentState = defaultState;
@@ -117,7 +117,7 @@ export function ChangesImageWithState(beServer, configurationObj) {
   this.changeState = function (newState) {
     Assert.assert(
       isValidState(newState),
-      `Invalid state: ${newState}. Valid states are: ${states.join(", ")}`,
+      `Invalid state: ${newState}. Valid states are: ${states.join(', ')}`,
     );
 
     //test if needs to perform action at end of animation
@@ -143,11 +143,11 @@ export function ChangesImageWithState(beServer, configurationObj) {
   this.addActionToExecuteAtStateChange = function (state, action) {
     Assert.assert(
       isValidState(state),
-      "ChangesImageWithState#addActionToExecuteAtStateChange error -> invalid state",
+      'ChangesImageWithState#addActionToExecuteAtStateChange error -> invalid state',
     );
     Assert.assertIsFunction(
       action,
-      "ChangesImageWithState#addActionToExecuteAtStateChange error -> action expected to be a function",
+      'ChangesImageWithState#addActionToExecuteAtStateChange error -> action expected to be a function',
     );
     actionsToExecuteAtStateChange[state] = action;
     return this;

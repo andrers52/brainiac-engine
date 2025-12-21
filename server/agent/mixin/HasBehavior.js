@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { Assert, EFunction } from "arslib";
+import { Assert, EFunction } from 'arslib';
 
 /**
  * @fileoverview Behavior management mixin for agents.
@@ -13,7 +13,7 @@ import { Assert, EFunction } from "arslib";
  * @throws {Error} If behaviorToSet is not provided.
  */
 export function HasBehavior(behaviorToSet) {
-  Assert.assert(behaviorToSet, "HasBehavior mixin needs a behavior");
+  Assert.assert(behaviorToSet, 'HasBehavior mixin needs a behavior');
 
   /**
    * Aggregates a new behavior with existing behaviors.

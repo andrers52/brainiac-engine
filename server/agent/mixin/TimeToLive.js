@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * @file Mixin that provides automatic agent destruction after a specified time period.

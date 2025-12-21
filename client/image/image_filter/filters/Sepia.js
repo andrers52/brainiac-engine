@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Applies a sepia tone effect to image data

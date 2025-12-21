@@ -1,6 +1,6 @@
-import { ImageFilter } from "../ImageFilter.js";
+import { ImageFilter } from '../ImageFilter.js';
 
-("use strict");
+('use strict');
 
 /**
  * Applies a sharpen effect to image data using a 3x3 convolution matrix

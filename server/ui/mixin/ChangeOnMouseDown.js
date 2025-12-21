@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import { Assert, EFunction } from "arslib";
-import { BECommonDefinitions } from "../../../common/BECommonDefinitions.js";
+import { Assert, EFunction } from 'arslib';
+import { BECommonDefinitions } from '../../../common/BECommonDefinitions.js';
 
 /**
  * @file Mixin that provides visual feedback for mouse interactions.
@@ -29,11 +29,11 @@ import { BECommonDefinitions } from "../../../common/BECommonDefinitions.js";
  * @throws {Error} If changeAction is not "grow" or "shrink"
  * @mixin
  */
-export function ChangeOnMouseDown(changeAction = "shrink") {
+export function ChangeOnMouseDown(changeAction = 'shrink') {
   Assert.assertIsValidString(
     changeAction,
-    ["grow", "shrink"],
-    "ChangeOnMouseDown. Error: Non valid action",
+    ['grow', 'shrink'],
+    'ChangeOnMouseDown. Error: Non valid action',
   );
 
   /** @type {boolean} Flag indicating this agent can change on mouse down */
@@ -61,10 +61,10 @@ export function ChangeOnMouseDown(changeAction = "shrink") {
 
   this.onMouseDownHit = this.onMouseDownHit
     ? EFunction.sequence(
-        this.onMouseDownHit,
-        executeChangeActionWhenMouseDown,
-        this,
-      )
+      this.onMouseDownHit,
+      executeChangeActionWhenMouseDown,
+      this,
+    )
     : executeChangeActionWhenMouseDown;
 
   /**
@@ -87,9 +87,9 @@ export function ChangeOnMouseDown(changeAction = "shrink") {
 
   this.onMouseUpHit = this.onMouseUpHit
     ? EFunction.sequence(
-        this.onMouseUpHit,
-        returnToOriginalFormWhenMouseUp,
-        this,
-      )
+      this.onMouseUpHit,
+      returnToOriginalFormWhenMouseUp,
+      this,
+    )
     : returnToOriginalFormWhenMouseUp;
 }

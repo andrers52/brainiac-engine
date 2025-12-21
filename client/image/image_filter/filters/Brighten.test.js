@@ -1,8 +1,8 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Brighten } from "./Brighten.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Brighten } from './Brighten.js';
 
-describe("Brighten", function () {
+describe('Brighten', function () {
   let sandbox;
   let mockImageData;
 
@@ -36,8 +36,8 @@ describe("Brighten", function () {
     delete global.Assert;
   });
 
-  describe("Basic functionality", function () {
-    it("should brighten all RGB channels by the specified amount", function () {
+  describe('Basic functionality', function () {
+    it('should brighten all RGB channels by the specified amount', function () {
       const brightenAmount = 50;
       const originalData = new Uint8ClampedArray(mockImageData.data);
 
@@ -58,13 +58,13 @@ describe("Brighten", function () {
       }
     });
 
-    it("should return the modified imageData object", function () {
+    it('should return the modified imageData object', function () {
       const result = Brighten(mockImageData, 25);
 
       assert.strictEqual(result, mockImageData);
     });
 
-    it("should not modify alpha channel", function () {
+    it('should not modify alpha channel', function () {
       const originalAlpha = Array.from(mockImageData.data).filter(
         (_, i) => i % 4 === 3,
       );
@@ -78,34 +78,34 @@ describe("Brighten", function () {
     });
   });
 
-  describe("Parameter validation", function () {
-    it("should throw error when BrightenAdjustment is not provided", function () {
+  describe('Parameter validation', function () {
+    it('should throw error when BrightenAdjustment is not provided', function () {
       assert.throws(() => {
         Brighten(mockImageData);
       }, /The Brighten effect needs a BrightenAdjustment property/);
     });
 
-    it("should throw error when BrightenAdjustment is null", function () {
+    it('should throw error when BrightenAdjustment is null', function () {
       assert.throws(() => {
         Brighten(mockImageData, null);
       }, /The Brighten effect needs a BrightenAdjustment property/);
     });
 
-    it("should not throw error when BrightenAdjustment is 0", function () {
+    it('should not throw error when BrightenAdjustment is 0', function () {
       assert.doesNotThrow(() => {
         Brighten(mockImageData, 0);
       });
     });
 
-    it("should not throw error when valid BrightenAdjustment is provided", function () {
+    it('should not throw error when valid BrightenAdjustment is provided', function () {
       assert.doesNotThrow(() => {
         Brighten(mockImageData, 50);
       });
     });
   });
 
-  describe("Different brightness values", function () {
-    it("should handle positive brightness adjustment", function () {
+  describe('Different brightness values', function () {
+    it('should handle positive brightness adjustment', function () {
       const brightenAmount = 75;
       const originalRed = mockImageData.data[0];
 
@@ -114,7 +114,7 @@ describe("Brighten", function () {
       assert.strictEqual(mockImageData.data[0], originalRed + brightenAmount);
     });
 
-    it("should handle negative brightness adjustment (darkening)", function () {
+    it('should handle negative brightness adjustment (darkening)', function () {
       const darkenAmount = -25;
       const originalRed = mockImageData.data[0];
 
@@ -123,7 +123,7 @@ describe("Brighten", function () {
       assert.strictEqual(mockImageData.data[0], originalRed + darkenAmount);
     });
 
-    it("should handle zero brightness adjustment", function () {
+    it('should handle zero brightness adjustment', function () {
       const originalData = new Uint8ClampedArray(mockImageData.data);
 
       Brighten(mockImageData, 0);
@@ -131,7 +131,7 @@ describe("Brighten", function () {
       assert.deepStrictEqual(mockImageData.data, originalData);
     });
 
-    it("should handle maximum brightness adjustment (with clamping)", function () {
+    it('should handle maximum brightness adjustment (with clamping)', function () {
       Brighten(mockImageData, 255);
 
       // First pixel should be brightened, but clamped to 255 by Uint8ClampedArray
@@ -141,8 +141,8 @@ describe("Brighten", function () {
     });
   });
 
-  describe("Edge cases", function () {
-    it("should handle empty imageData", function () {
+  describe('Edge cases', function () {
+    it('should handle empty imageData', function () {
       const emptyImageData = {
         width: 0,
         height: 0,
@@ -155,7 +155,7 @@ describe("Brighten", function () {
       assert.strictEqual(result.data.length, 0);
     });
 
-    it("should handle single pixel image", function () {
+    it('should handle single pixel image', function () {
       const singlePixelImageData = {
         width: 1,
         height: 1,
@@ -170,7 +170,7 @@ describe("Brighten", function () {
       assert.strictEqual(singlePixelImageData.data[3], 255);
     });
 
-    it("should handle large image data", function () {
+    it('should handle large image data', function () {
       const largeImageData = {
         width: 100,
         height: 100,
@@ -186,8 +186,8 @@ describe("Brighten", function () {
     });
   });
 
-  describe("Pixel value bounds (Uint8ClampedArray behavior)", function () {
-    it("should clamp values that exceed 255 to 255", function () {
+  describe('Pixel value bounds (Uint8ClampedArray behavior)', function () {
+    it('should clamp values that exceed 255 to 255', function () {
       const highValueImageData = {
         width: 1,
         height: 1,
@@ -202,7 +202,7 @@ describe("Brighten", function () {
       assert.strictEqual(highValueImageData.data[2], 255); // 240 + 100 = 340, clamped to 255
     });
 
-    it("should clamp values that go below 0 to 0", function () {
+    it('should clamp values that go below 0 to 0', function () {
       const lowValueImageData = {
         width: 1,
         height: 1,
@@ -218,17 +218,17 @@ describe("Brighten", function () {
     });
   });
 
-  describe("Data integrity", function () {
-    it("should maintain imageData structure", function () {
+  describe('Data integrity', function () {
+    it('should maintain imageData structure', function () {
       const result = Brighten(mockImageData, 50);
 
-      assert(result.hasOwnProperty("width"));
-      assert(result.hasOwnProperty("height"));
-      assert(result.hasOwnProperty("data"));
+      assert(result.hasOwnProperty('width'));
+      assert(result.hasOwnProperty('height'));
+      assert(result.hasOwnProperty('data'));
       assert(result.data instanceof Uint8ClampedArray);
     });
 
-    it("should not change imageData dimensions", function () {
+    it('should not change imageData dimensions', function () {
       const originalWidth = mockImageData.width;
       const originalHeight = mockImageData.height;
       const originalLength = mockImageData.data.length;
@@ -240,7 +240,7 @@ describe("Brighten", function () {
       assert.strictEqual(mockImageData.data.length, originalLength);
     });
 
-    it("should process all pixels", function () {
+    it('should process all pixels', function () {
       const pixelCount = mockImageData.width * mockImageData.height;
       const expectedDataLength = pixelCount * 4;
 
@@ -252,10 +252,10 @@ describe("Brighten", function () {
       for (let i = 0; i < mockImageData.data.length; i += 4) {
         // We can't easily verify the exact values without storing originals,
         // but we can verify the structure is intact
-        assert(typeof mockImageData.data[i] === "number"); // Red
-        assert(typeof mockImageData.data[i + 1] === "number"); // Green
-        assert(typeof mockImageData.data[i + 2] === "number"); // Blue
-        assert(typeof mockImageData.data[i + 3] === "number"); // Alpha
+        assert(typeof mockImageData.data[i] === 'number'); // Red
+        assert(typeof mockImageData.data[i + 1] === 'number'); // Green
+        assert(typeof mockImageData.data[i + 2] === 'number'); // Blue
+        assert(typeof mockImageData.data[i + 3] === 'number'); // Alpha
       }
     });
   });

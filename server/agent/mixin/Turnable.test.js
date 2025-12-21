@@ -1,7 +1,7 @@
-import { strict as assert } from "assert";
-import { Turnable } from "./Turnable.js";
+import { strict as assert } from 'assert';
+import { Turnable } from './Turnable.js';
 
-describe("Turnable", function () {
+describe('Turnable', function () {
   let turnable;
 
   beforeEach(function () {
@@ -9,7 +9,7 @@ describe("Turnable", function () {
     Turnable.call(turnable, 1); // Initialize with default speed
   });
 
-  it("should initialize with default values", function () {
+  it('should initialize with default values', function () {
     assert.strictEqual(turnable.orientation, 0);
     assert.strictEqual(
       turnable.TURNABLE_DEFAULT_ROTATE_ANGLE,
@@ -17,13 +17,13 @@ describe("Turnable", function () {
     );
   });
 
-  it("should reset orientation", function () {
+  it('should reset orientation', function () {
     turnable.orientation = Math.PI;
     turnable.resetOrientation();
     assert.strictEqual(turnable.orientation, 0);
   });
 
-  it("should rotate clockwise", function () {
+  it('should rotate clockwise', function () {
     turnable.rotateClockwise();
     assert.strictEqual(
       turnable.orientation,
@@ -37,7 +37,7 @@ describe("Turnable", function () {
     );
   });
 
-  it("should rotate counterclockwise", function () {
+  it('should rotate counterclockwise', function () {
     turnable.rotateCounterclockwise();
     assert.strictEqual(
       turnable.orientation,
@@ -51,7 +51,7 @@ describe("Turnable", function () {
     );
   });
 
-  it("should calculate angle to turn to face position", function () {
+  it('should calculate angle to turn to face position', function () {
     turnable.rectangle = {
       center: { x: 0, y: 0 },
     };

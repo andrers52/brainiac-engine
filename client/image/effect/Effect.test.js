@@ -1,6 +1,6 @@
-import { strict as assert } from "assert";
-import sinon from "sinon";
-import { Effect } from "./Effect.js";
+import { strict as assert } from 'assert';
+import sinon from 'sinon';
+import { Effect } from './Effect.js';
 
 // Mock dependencies
 global.document = global.document || {
@@ -13,15 +13,15 @@ global.document = global.document || {
       restore: sinon.spy(),
       fill: sinon.spy(),
       stroke: sinon.spy(),
-      fillStyle: "#000000",
-      strokeStyle: "#000000",
+      fillStyle: '#000000',
+      strokeStyle: '#000000',
       globalAlpha: 1,
-      globalCompositeOperation: "source-over",
+      globalCompositeOperation: 'source-over',
     }),
   }),
 };
 
-describe("Effect", function () {
+describe('Effect', function () {
   let mockResourceStore;
   let mockCanvas;
   let mockContext;
@@ -54,13 +54,13 @@ describe("Effect", function () {
       createRadialGradient: sinon.stub().returns({
         addColorStop: sinon.spy(),
       }),
-      fillStyle: "#000000",
-      strokeStyle: "#000000",
+      fillStyle: '#000000',
+      strokeStyle: '#000000',
       globalAlpha: 1,
-      globalCompositeOperation: "source-over",
+      globalCompositeOperation: 'source-over',
       lineWidth: 1,
       shadowBlur: 0,
-      shadowColor: "",
+      shadowColor: '',
     };
 
     mockCanvas = {
@@ -76,7 +76,7 @@ describe("Effect", function () {
 
     mockResourceStore = {
       retrieveResourceObject: sinon.stub().returns(mockImage),
-      createNewImageName: sinon.stub().returns("generated_image_123.jpg"),
+      createNewImageName: sinon.stub().returns('generated_image_123.jpg'),
       addLocalResource: sinon.spy(),
     };
   });
@@ -86,17 +86,17 @@ describe("Effect", function () {
     sinon.restore();
   });
 
-  describe("Canvas creation and sizing", function () {
-    it("should create canvas with image dimensions when imageName provided", function () {
+  describe('Canvas creation and sizing', function () {
+    it('should create canvas with image dimensions when imageName provided', function () {
       Effect(
         mockResourceStore,
-        "test_image.png",
+        'test_image.png',
         null,
         null,
         null,
         null,
         null,
-        "Circle",
+        'Circle',
         null,
       );
 
@@ -105,7 +105,7 @@ describe("Effect", function () {
       assert(mockContext.drawImage.calledWith(mockImage, 0, 0));
     });
 
-    it("should create canvas with imageSize dimensions when provided", function () {
+    it('should create canvas with imageSize dimensions when provided', function () {
       const imageSize = { x: 200, y: 150 };
 
       Effect(
@@ -116,7 +116,7 @@ describe("Effect", function () {
         null,
         null,
         null,
-        "Circle",
+        'Circle',
         null,
       );
 
@@ -125,18 +125,18 @@ describe("Effect", function () {
       assert.strictEqual(mockContext.drawImage.callCount, 0);
     });
 
-    it("should prioritize imageSize over image dimensions", function () {
+    it('should prioritize imageSize over image dimensions', function () {
       const imageSize = { x: 300, y: 250 };
 
       Effect(
         mockResourceStore,
-        "test_image.png",
+        'test_image.png',
         imageSize,
         null,
         null,
         null,
         null,
-        "Circle",
+        'Circle',
         null,
       );
 
@@ -145,17 +145,17 @@ describe("Effect", function () {
     });
   });
 
-  describe("Context state management", function () {
-    it("should save and restore context", function () {
+  describe('Context state management', function () {
+    it('should save and restore context', function () {
       Effect(
         mockResourceStore,
-        "test_image.png",
+        'test_image.png',
         null,
         null,
         null,
         null,
         null,
-        "Circle",
+        'Circle',
         null,
       );
 
@@ -165,107 +165,107 @@ describe("Effect", function () {
       assert(mockContext.stroke.calledOnce);
     });
 
-    it("should set default styles when context styles are black", function () {
+    it('should set default styles when context styles are black', function () {
       Effect(
         mockResourceStore,
-        "test_image.png",
+        'test_image.png',
         null,
         null,
         null,
         null,
         null,
-        "Circle",
+        'Circle',
         null,
       );
 
-      assert.strictEqual(mockContext.fillStyle, "white");
-      assert.strictEqual(mockContext.strokeStyle, "white");
+      assert.strictEqual(mockContext.fillStyle, 'white');
+      assert.strictEqual(mockContext.strokeStyle, 'white');
     });
 
-    it("should apply opacity when provided", function () {
+    it('should apply opacity when provided', function () {
       Effect(
         mockResourceStore,
-        "test_image.png",
+        'test_image.png',
         null,
         0.5,
         null,
         null,
         null,
-        "Circle",
+        'Circle',
         null,
       );
 
       assert.strictEqual(mockContext.globalAlpha, 0.5);
     });
 
-    it("should apply fill and stroke colors when provided", function () {
+    it('should apply fill and stroke colors when provided', function () {
       Effect(
         mockResourceStore,
-        "test_image.png",
+        'test_image.png',
         null,
         null,
-        "red",
-        "blue",
+        'red',
+        'blue',
         null,
-        "Circle",
+        'Circle',
         null,
       );
 
-      assert.strictEqual(mockContext.fillStyle, "red");
-      assert.strictEqual(mockContext.strokeStyle, "blue");
+      assert.strictEqual(mockContext.fillStyle, 'red');
+      assert.strictEqual(mockContext.strokeStyle, 'blue');
     });
 
-    it("should apply combine option when provided", function () {
+    it('should apply combine option when provided', function () {
       Effect(
         mockResourceStore,
-        "test_image.png",
+        'test_image.png',
         null,
         null,
         null,
         null,
         null,
-        "Circle",
+        'Circle',
         null,
-        "multiply",
+        'multiply',
       );
 
-      assert.strictEqual(mockContext.globalCompositeOperation, "multiply");
+      assert.strictEqual(mockContext.globalCompositeOperation, 'multiply');
     });
   });
 
-  describe("Effect switching", function () {
-    it("should handle RadialGradient effect", function () {
+  describe('Effect switching', function () {
+    it('should handle RadialGradient effect', function () {
       const result = Effect(
         mockResourceStore,
-        "test_image.png",
+        'test_image.png',
         null,
         null,
         null,
         null,
         null,
-        "RadialGradient",
-        { startColor: "red", endColor: "blue" },
+        'RadialGradient',
+        { startColor: 'red', endColor: 'blue' },
       );
 
-      assert.strictEqual(result, "test_image.png");
+      assert.strictEqual(result, 'test_image.png');
       assert(
         mockResourceStore.addLocalResource.calledWith(
-          "test_image.png",
+          'test_image.png',
           mockCanvas,
         ),
       );
     });
 
-    it("should handle Ship effect", function () {
+    it('should handle Ship effect', function () {
       Effect(
         mockResourceStore,
-        "test_image.png",
+        'test_image.png',
         null,
         null,
         null,
         null,
         null,
-        "Ship",
+        'Ship',
         null,
       );
 
@@ -273,16 +273,16 @@ describe("Effect", function () {
       assert(mockContext.restore.calledOnce);
     });
 
-    it("should handle Triangle effect", function () {
+    it('should handle Triangle effect', function () {
       Effect(
         mockResourceStore,
-        "test_image.png",
+        'test_image.png',
         null,
         null,
         null,
         null,
         null,
-        "Triangle",
+        'Triangle',
         null,
       );
 
@@ -290,18 +290,18 @@ describe("Effect", function () {
       assert(mockContext.restore.calledOnce);
     });
 
-    it("should handle Star effect", function () {
+    it('should handle Star effect', function () {
       // Test that it executes without error
       assert.doesNotThrow(() => {
         Effect(
           mockResourceStore,
-          "test_image.png",
+          'test_image.png',
           null,
           null,
           null,
           null,
           null,
-          "Star",
+          'Star',
           null,
         );
       });
@@ -311,16 +311,16 @@ describe("Effect", function () {
       assert(mockCanvas.getContext.called);
     });
 
-    it("should handle Circle effect", function () {
+    it('should handle Circle effect', function () {
       Effect(
         mockResourceStore,
-        "test_image.png",
+        'test_image.png',
         null,
         null,
         null,
         null,
         null,
-        "Circle",
+        'Circle',
         null,
       );
 
@@ -328,16 +328,16 @@ describe("Effect", function () {
       assert(mockContext.restore.calledOnce);
     });
 
-    it("should handle DottedRectangle effect", function () {
+    it('should handle DottedRectangle effect', function () {
       Effect(
         mockResourceStore,
-        "test_image.png",
+        'test_image.png',
         null,
         null,
         null,
         null,
         null,
-        "DottedRectangle",
+        'DottedRectangle',
         null,
       );
 
@@ -346,8 +346,8 @@ describe("Effect", function () {
     });
   });
 
-  describe("Image creation and storage", function () {
-    it("should create new image when no imageName provided", function () {
+  describe('Image creation and storage', function () {
+    it('should create new image when no imageName provided', function () {
       const result = Effect(
         mockResourceStore,
         null,
@@ -356,21 +356,21 @@ describe("Effect", function () {
         null,
         null,
         null,
-        "Circle",
+        'Circle',
         null,
       );
 
-      assert.strictEqual(result, "generated_image_123.jpg");
+      assert.strictEqual(result, 'generated_image_123.jpg');
       assert(mockResourceStore.createNewImageName.calledOnce);
       assert(
         mockResourceStore.addLocalResource.calledWith(
-          "generated_image_123.jpg",
+          'generated_image_123.jpg',
           mockCanvas,
         ),
       );
     });
 
-    it("should use provided newImageName when creating new image", function () {
+    it('should use provided newImageName when creating new image', function () {
       const result = Effect(
         mockResourceStore,
         null,
@@ -378,64 +378,64 @@ describe("Effect", function () {
         null,
         null,
         null,
-        "custom_name.png",
-        "Circle",
+        'custom_name.png',
+        'Circle',
         null,
       );
 
-      assert.strictEqual(result, "custom_name.png");
+      assert.strictEqual(result, 'custom_name.png');
       assert.strictEqual(mockResourceStore.createNewImageName.callCount, 0);
       assert(
         mockResourceStore.addLocalResource.calledWith(
-          "custom_name.png",
+          'custom_name.png',
           mockCanvas,
         ),
       );
     });
 
-    it("should overwrite existing image when imageName provided", function () {
+    it('should overwrite existing image when imageName provided', function () {
       const result = Effect(
         mockResourceStore,
-        "existing_image.png",
+        'existing_image.png',
         null,
         null,
         null,
         null,
         null,
-        "Circle",
+        'Circle',
         null,
       );
 
-      assert.strictEqual(result, "existing_image.png");
+      assert.strictEqual(result, 'existing_image.png');
       assert(
         mockResourceStore.addLocalResource.calledWith(
-          "existing_image.png",
+          'existing_image.png',
           mockCanvas,
         ),
       );
     });
   });
 
-  describe("Resource store interaction", function () {
-    it("should retrieve image from resource store when imageName provided", function () {
+  describe('Resource store interaction', function () {
+    it('should retrieve image from resource store when imageName provided', function () {
       Effect(
         mockResourceStore,
-        "test_image.png",
+        'test_image.png',
         null,
         null,
         null,
         null,
         null,
-        "Circle",
+        'Circle',
         null,
       );
 
       assert(
-        mockResourceStore.retrieveResourceObject.calledWith("test_image.png"),
+        mockResourceStore.retrieveResourceObject.calledWith('test_image.png'),
       );
     });
 
-    it("should not retrieve image when no imageName provided", function () {
+    it('should not retrieve image when no imageName provided', function () {
       Effect(
         mockResourceStore,
         null,
@@ -444,7 +444,7 @@ describe("Effect", function () {
         null,
         null,
         null,
-        "Circle",
+        'Circle',
         null,
       );
 
@@ -452,19 +452,19 @@ describe("Effect", function () {
     });
   });
 
-  describe("Parameter handling", function () {
-    it("should handle all parameters together", function () {
+  describe('Parameter handling', function () {
+    it('should handle all parameters together', function () {
       const result = Effect(
         mockResourceStore,
-        "base_image.png",
+        'base_image.png',
         { x: 150, y: 120 },
         0.8,
-        "yellow",
-        "green",
-        "result_image.png",
-        "Star",
+        'yellow',
+        'green',
+        'result_image.png',
+        'Star',
         { points: 5 },
-        "overlay",
+        'overlay',
       );
 
       // Should use imageSize dimensions
@@ -473,15 +473,15 @@ describe("Effect", function () {
 
       // Should apply all style parameters
       assert.strictEqual(mockContext.globalAlpha, 0.8);
-      assert.strictEqual(mockContext.fillStyle, "yellow");
-      assert.strictEqual(mockContext.strokeStyle, "green");
-      assert.strictEqual(mockContext.globalCompositeOperation, "overlay");
+      assert.strictEqual(mockContext.fillStyle, 'yellow');
+      assert.strictEqual(mockContext.strokeStyle, 'green');
+      assert.strictEqual(mockContext.globalCompositeOperation, 'overlay');
 
       // Should overwrite existing image (not create new one)
-      assert.strictEqual(result, "base_image.png");
+      assert.strictEqual(result, 'base_image.png');
     });
 
-    it("should handle undefined/null parameters gracefully", function () {
+    it('should handle undefined/null parameters gracefully', function () {
       assert.doesNotThrow(() => {
         Effect(
           mockResourceStore,
@@ -491,7 +491,7 @@ describe("Effect", function () {
           null,
           null,
           null,
-          "Circle",
+          'Circle',
           null,
           null,
         );

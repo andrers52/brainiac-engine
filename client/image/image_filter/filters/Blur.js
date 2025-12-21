@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { ImageFilter } from "../ImageFilter.js";
+import { ImageFilter } from '../ImageFilter.js';
 
 /**
  * Applies a blur effect to image data using a 3x3 convolution matrix
